@@ -1651,6 +1651,21 @@ app.post('/api/payment/test', authenticateToken, async (req, res) => {
   }
 });
 
+// Örnek Yakalayıcı Kod
+app.get('/:sunucuYolu', async (req, res) => {
+    const yol = req.params.sunucuYolu;
+    
+    // Veritabanında bu isimde bir sunucu ara
+    const sunucu = await db.servers.findOne({ path: yol });
+    
+    if(sunucu) {
+        // Sunucu bilgilerini HTML'e bas ve gönder
+        return res.render('server_template', { data: sunucu });
+    } else {
+        return res.status(404).send("Böyle bir sunucu bulunamadı!");
+    }
+});
+
 // ==================== EXPORT ====================
 
 module.exports = app;
