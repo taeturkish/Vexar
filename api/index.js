@@ -42,122 +42,6 @@ const upload = multer({ storage: storage });
 
 // ==================== MODELS ====================
 
-// ==================== SPIN PRIZE ADMIN ROUTES ====================
-
-// Ödülleri Getir (Herkese açık - çark için)
-app.get('/api/spin/prizes', async (req, res) => {
-  try {
-    const server = await getServerFromRequest(req);
-    let prizes = await SpinPrize.find({ 
-      serverId: server._id.toString(),
-      active: true 
-    }).sort({ order: 1 });
-    
-    // Eğer hiç ödül yoksa varsayılanları oluştur
-    if (prizes.length === 0) {
-      const defaultPrizes = [
-        { name: '100 Kredi', type: 'credits', value: '100', weight: 30, color: '#00ff88', icon: 'fa-coins' },
-        { name: '250 Kredi', type: 'credits', value: '250', weight: 25, color: '#00ff88', icon: 'fa-coins' },
-        { name: '500 Kredi', type: 'credits', value: '500', weight: 20, color: '#00ff88', icon: 'fa-coins' },
-        { name: '1000 Kredi', type: 'credits', value: '1000', weight: 15, color: '#5865F2', icon: 'fa-coins' },
-        { name: 'VIP Rütbesi', type: 'rank', value: 'VIP', weight: 5, color: '#FFD700', icon: 'fa-crown' },
-        { name: 'MVP Rütbesi', type: 'rank', value: 'MVP', weight: 3, color: '#FF6B6B', icon: 'fa-crown' },
-        { name: '5000 Kredi', type: 'credits', value: '5000', weight: 2, color: '#FFD700', icon: 'fa-gem' }
-      ];
-      
-      for (const p of defaultPrizes) {
-        const prize = new SpinPrize({ ...p, serverId: server._id.toString(), order: defaultPrizes.indexOf(p) });
-        await prize.save();
-        prizes.push(prize);
-      }
-    }
-    
-    res.json(prizes);
-  } catch (error) {
-    res.status(500).json({ error: 'Ödüller alınamadı' });
-  }
-});
-
-// Admin - Tüm Ödülleri Getir
-app.get('/api/admin/spin/prizes', authenticateToken, requireAdmin, async (req, res) => {
-  try {
-    const { serverId } = req.user;
-    const prizes = await SpinPrize.find({ serverId }).sort({ order: 1 });
-    res.json(prizes);
-  } catch (error) {
-    res.status(500).json({ error: 'Ödüller alınamadı' });
-  }
-});
-
-// Admin - Ödül Ekle
-app.post('/api/admin/spin/prizes', authenticateToken, requireAdmin, async (req, res) => {
-  try {
-    const { serverId } = req.user;
-    const { name, type, value, weight, color, icon, active, order } = req.body;
-    
-    const prize = new SpinPrize({
-      serverId,
-      name,
-      type,
-      value,
-      weight: parseInt(weight) || 10,
-      color: color || '#5865F2',
-      icon: icon || 'fa-gift',
-      active: active !== false,
-      order: parseInt(order) || 0
-    });
-    
-    await prize.save();
-    res.json(prize);
-  } catch (error) {
-    res.status(500).json({ error: 'Ödül eklenemedi' });
-  }
-});
-
-// Admin - Ödül Güncelle
-app.put('/api/admin/spin/prizes/:id', authenticateToken, requireAdmin, async (req, res) => {
-  try {
-    const updates = { ...req.body };
-    if (updates.weight) updates.weight = parseInt(updates.weight);
-    if (updates.order) updates.order = parseInt(updates.order);
-    if (updates.active !== undefined) updates.active = updates.active === 'true' || updates.active === true;
-    
-    const prize = await SpinPrize.findByIdAndUpdate(
-      req.params.id,
-      updates,
-      { new: true }
-    );
-    res.json(prize);
-  } catch (error) {
-    res.status(500).json({ error: 'Ödül güncellenemedi' });
-  }
-});
-
-// Admin - Ödül Sil
-app.delete('/api/admin/spin/prizes/:id', authenticateToken, requireAdmin, async (req, res) => {
-  try {
-    await SpinPrize.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Ödül silindi' });
-  } catch (error) {
-    res.status(500).json({ error: 'Ödül silinemedi' });
-  }
-});
-
-// Admin - Ödül Sıralamasını Güncelle
-app.put('/api/admin/spin/prizes/reorder', authenticateToken, requireAdmin, async (req, res) => {
-  try {
-    const { orders } = req.body; // [{ id: 'xxx', order: 0 }, ...]
-    
-    for (const item of orders) {
-      await SpinPrize.findByIdAndUpdate(item.id, { order: item.order });
-    }
-    
-    res.json({ message: 'Sıralama güncellendi' });
-  } catch (error) {
-    res.status(500).json({ error: 'Sıralama güncellenemedi' });
-  }
-});
-
 // Kullanıcı Modeli
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -562,6 +446,219 @@ app.get('/api/server/play', async (req, res) => {
     res.json({ ip: `${server.ip}:${server.port}` });
   } catch (error) {
     res.status(500).json({ error: 'IP bilgisi alınamadı' });
+  }
+});
+
+// ==================== SETUP ROUTES ====================
+
+// Site Kurulumu - Sunucu Oluştur
+app.post('/api/setup/create-server', authenticateToken, async (req, res) => {
+  try {
+    const { name, subdomain, ip, port, rconPort, rconPassword, version } = req.body;
+    
+    // Subdomain kullanımda mı kontrol et
+    const existingServer = await Server.findOne({ subdomain });
+    if (existingServer) {
+      return res.status(400).json({ error: 'Bu alt alan adı zaten kullanılıyor!' });
+    }
+    
+    // Yeni sunucu oluştur
+    const server = new Server({
+      name,
+      subdomain,
+      ip,
+      port: port || 25565,
+      rconPort: rconPort || 25575,
+      rconPassword,
+      version: version || '1.20.4',
+      ownerId: req.user.userId,
+      status: 'active'
+    });
+    
+    await server.save();
+    
+    // Kullanıcının serverId'sini güncelle ve admin yap
+    const user = await User.findById(req.user.userId);
+    user.serverId = server._id.toString();
+    user.role = 'admin';
+    await user.save();
+    
+    // Varsayılan ayarları oluştur
+    const settings = new Settings({
+      serverId: server._id.toString(),
+      siteName: name,
+      testMode: true
+    });
+    await settings.save();
+    
+    // Varsayılan kategoriler oluştur
+    const defaultCategories = [
+      { name: 'VIP', description: 'VIP rütbeleri ve avantajları', icon: 'fas fa-crown', order: 0 },
+      { name: 'Kredi', description: 'Sunucu içi kredi paketleri', icon: 'fas fa-coins', order: 1 },
+      { name: 'Eşya', description: 'Özel eşya ve kitler', icon: 'fas fa-box', order: 2 }
+    ];
+    
+    for (const cat of defaultCategories) {
+      const category = new Category({
+        serverId: server._id.toString(),
+        ...cat
+      });
+      await category.save();
+    }
+    
+    // Varsayılan çark ödüllerini oluştur
+    const defaultPrizes = [
+      { name: '100 Kredi', type: 'credits', value: '100', weight: 30, color: '#00ff88', icon: 'fa-coins', active: true, order: 0 },
+      { name: '250 Kredi', type: 'credits', value: '250', weight: 25, color: '#00ff88', icon: 'fa-coins', active: true, order: 1 },
+      { name: '500 Kredi', type: 'credits', value: '500', weight: 20, color: '#00ff88', icon: 'fa-coins', active: true, order: 2 },
+      { name: '1000 Kredi', type: 'credits', value: '1000', weight: 15, color: '#5865F2', icon: 'fa-coins', active: true, order: 3 },
+      { name: 'VIP Rütbesi', type: 'rank', value: 'VIP', weight: 5, color: '#FFD700', icon: 'fa-crown', active: true, order: 4 },
+      { name: 'MVP Rütbesi', type: 'rank', value: 'MVP', weight: 3, color: '#FF6B6B', icon: 'fa-crown', active: true, order: 5 },
+      { name: '5000 Kredi', type: 'credits', value: '5000', weight: 2, color: '#FFD700', icon: 'fa-gem', active: true, order: 6 }
+    ];
+    
+    const SpinPrize = mongoose.model('SpinPrize');
+    for (const prize of defaultPrizes) {
+      const newPrize = new SpinPrize({
+        serverId: server._id.toString(),
+        ...prize
+      });
+      await newPrize.save();
+    }
+    
+    // Yeni token oluştur (güncellenmiş serverId ile)
+    const newToken = jwt.sign(
+      { userId: user._id, username: user.username, role: user.role, serverId: server._id.toString() },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    
+    res.json({
+      server,
+      token: newToken,
+      siteURL: `https://${subdomain}.vexar.net`,
+      adminURL: `https://${subdomain}.vexar.net/admin`
+    });
+    
+  } catch (error) {
+    console.error('Sunucu oluşturma hatası:', error);
+    res.status(500).json({ error: 'Sunucu oluşturulamadı: ' + error.message });
+  }
+});
+
+// ==================== SPIN PRIZE ADMIN ROUTES ====================
+
+// Ödülleri Getir (Herkese açık - çark için)
+app.get('/api/spin/prizes', async (req, res) => {
+  try {
+    const server = await getServerFromRequest(req);
+    let prizes = await SpinPrize.find({ 
+      serverId: server._id.toString(),
+      active: true 
+    }).sort({ order: 1 });
+    
+    // Eğer hiç ödül yoksa varsayılanları oluştur
+    if (prizes.length === 0) {
+      const defaultPrizes = [
+        { name: '100 Kredi', type: 'credits', value: '100', weight: 30, color: '#00ff88', icon: 'fa-coins' },
+        { name: '250 Kredi', type: 'credits', value: '250', weight: 25, color: '#00ff88', icon: 'fa-coins' },
+        { name: '500 Kredi', type: 'credits', value: '500', weight: 20, color: '#00ff88', icon: 'fa-coins' },
+        { name: '1000 Kredi', type: 'credits', value: '1000', weight: 15, color: '#5865F2', icon: 'fa-coins' },
+        { name: 'VIP Rütbesi', type: 'rank', value: 'VIP', weight: 5, color: '#FFD700', icon: 'fa-crown' },
+        { name: 'MVP Rütbesi', type: 'rank', value: 'MVP', weight: 3, color: '#FF6B6B', icon: 'fa-crown' },
+        { name: '5000 Kredi', type: 'credits', value: '5000', weight: 2, color: '#FFD700', icon: 'fa-gem' }
+      ];
+      
+      for (const p of defaultPrizes) {
+        const prize = new SpinPrize({ ...p, serverId: server._id.toString(), order: defaultPrizes.indexOf(p) });
+        await prize.save();
+        prizes.push(prize);
+      }
+    }
+    
+    res.json(prizes);
+  } catch (error) {
+    res.status(500).json({ error: 'Ödüller alınamadı' });
+  }
+});
+
+// Admin - Tüm Ödülleri Getir
+app.get('/api/admin/spin/prizes', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { serverId } = req.user;
+    const prizes = await SpinPrize.find({ serverId }).sort({ order: 1 });
+    res.json(prizes);
+  } catch (error) {
+    res.status(500).json({ error: 'Ödüller alınamadı' });
+  }
+});
+
+// Admin - Ödül Ekle
+app.post('/api/admin/spin/prizes', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { serverId } = req.user;
+    const { name, type, value, weight, color, icon, active, order } = req.body;
+    
+    const prize = new SpinPrize({
+      serverId,
+      name,
+      type,
+      value,
+      weight: parseInt(weight) || 10,
+      color: color || '#5865F2',
+      icon: icon || 'fa-gift',
+      active: active !== false,
+      order: parseInt(order) || 0
+    });
+    
+    await prize.save();
+    res.json(prize);
+  } catch (error) {
+    res.status(500).json({ error: 'Ödül eklenemedi' });
+  }
+});
+
+// Admin - Ödül Güncelle
+app.put('/api/admin/spin/prizes/:id', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const updates = { ...req.body };
+    if (updates.weight) updates.weight = parseInt(updates.weight);
+    if (updates.order) updates.order = parseInt(updates.order);
+    if (updates.active !== undefined) updates.active = updates.active === 'true' || updates.active === true;
+    
+    const prize = await SpinPrize.findByIdAndUpdate(
+      req.params.id,
+      updates,
+      { new: true }
+    );
+    res.json(prize);
+  } catch (error) {
+    res.status(500).json({ error: 'Ödül güncellenemedi' });
+  }
+});
+
+// Admin - Ödül Sil
+app.delete('/api/admin/spin/prizes/:id', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    await SpinPrize.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Ödül silindi' });
+  } catch (error) {
+    res.status(500).json({ error: 'Ödül silinemedi' });
+  }
+});
+
+// Admin - Ödül Sıralamasını Güncelle
+app.put('/api/admin/spin/prizes/reorder', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { orders } = req.body; // [{ id: 'xxx', order: 0 }, ...]
+    
+    for (const item of orders) {
+      await SpinPrize.findByIdAndUpdate(item.id, { order: item.order });
+    }
+    
+    res.json({ message: 'Sıralama güncellendi' });
+  } catch (error) {
+    res.status(500).json({ error: 'Sıralama güncellenemedi' });
   }
 });
 
