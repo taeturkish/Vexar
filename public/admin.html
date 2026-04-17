@@ -15,6 +15,9 @@
         .sidebar-item:hover { background: rgba(88, 101, 242, 0.1); }
         .sidebar-item.active { background: rgba(88, 101, 242, 0.2); border-left: 3px solid #5865F2; }
         .glass-card { background: rgba(20, 25, 35, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .modal { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); }
+        .prize-card { transition: all 0.2s; }
+        .prize-card:hover { transform: translateY(-2px); border-color: rgba(88, 101, 242, 0.3); }
     </style>
 </head>
 <body class="text-gray-200">
@@ -55,6 +58,10 @@
             <a href="#purchases" onclick="showSection('purchases')" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg" data-section="purchases">
                 <i class="fas fa-receipt w-5"></i>
                 <span class="nav-text">Alımlar</span>
+            </a>
+            <a href="#dailyspin" onclick="showSection('dailyspin')" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg" data-section="dailyspin">
+                <i class="fas fa-circle-notch w-5"></i>
+                <span class="nav-text">Çark Ödülleri</span>
             </a>
             <a href="#staff" onclick="showSection('staff')" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg" data-section="staff">
                 <i class="fas fa-user-shield w-5"></i>
@@ -151,13 +158,11 @@
                 </div>
             </div>
             
-            <!-- Kategoriler -->
             <div class="glass-card rounded-xl p-6 mb-6">
                 <h2 class="text-lg font-semibold mb-4">Kategoriler</h2>
                 <div class="space-y-2" id="categoriesList"></div>
             </div>
             
-            <!-- Ürünler -->
             <div class="glass-card rounded-xl p-6">
                 <h2 class="text-lg font-semibold mb-4">Ürünler</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="productsList"></div>
@@ -195,7 +200,7 @@
             
             <div class="glass-card rounded-xl p-6">
                 <div class="flex gap-4 mb-4">
-                    <select id="ticketFilter" class="glass px-4 py-2 rounded-lg">
+                    <select id="ticketFilter" class="glass px-4 py-2 rounded-lg" onchange="filterTickets()">
                         <option value="all">Tümü</option>
                         <option value="open">Açık</option>
                         <option value="closed">Kapalı</option>
@@ -248,6 +253,36 @@
             </div>
         </div>
         
+        <!-- Daily Spin Çark Ödülleri Yönetimi -->
+        <div id="dailyspinSection" class="section hidden">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">Çark Ödülleri Yönetimi</h1>
+                    <p class="text-gray-400">Daily Spin çarkındaki ödülleri düzenleyin</p>
+                </div>
+                <button onclick="openAddPrizeModal()" class="bg-[#5865F2] px-4 py-2 rounded-lg hover:bg-[#4752C4]">
+                    <i class="fas fa-plus mr-2"></i>Ödül Ekle
+                </button>
+            </div>
+            
+            <!-- Ağırlık Bilgilendirmesi -->
+            <div class="glass-card rounded-xl p-4 mb-6 bg-[#5865F2]/10 border-[#5865F2]/30">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-info-circle text-[#5865F2] text-xl mt-0.5"></i>
+                    <div>
+                        <h3 class="font-semibold mb-1">Ağırlık Sistemi Nedir?</h3>
+                        <p class="text-gray-400 text-sm">Ağırlık değeri, ödülün çıkma olasılığını belirler. Örneğin: Ağırlığı 30 olan bir ödül, ağırlığı 10 olan bir ödüle göre 3 kat daha fazla çıkma şansına sahiptir.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ödül Listesi -->
+            <div class="glass-card rounded-xl p-6">
+                <h2 class="text-lg font-semibold mb-4">Aktif Ödüller</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="prizesList"></div>
+            </div>
+        </div>
+        
         <!-- Yetkili Alımı -->
         <div id="staffSection" class="section hidden">
             <div class="flex justify-between items-center mb-6">
@@ -260,13 +295,11 @@
                 </button>
             </div>
             
-            <!-- Başvurular -->
             <div class="glass-card rounded-xl p-6 mb-6">
                 <h2 class="text-lg font-semibold mb-4">Başvurular</h2>
                 <div id="applicationsList"></div>
             </div>
             
-            <!-- Sorular -->
             <div class="glass-card rounded-xl p-6">
                 <h2 class="text-lg font-semibold mb-4">Başvuru Soruları</h2>
                 <div id="questionsList"></div>
@@ -280,7 +313,6 @@
             
             <div class="glass-card rounded-xl p-6">
                 <form id="settingsForm" class="space-y-6">
-                    <!-- Genel Ayarlar -->
                     <div>
                         <h3 class="text-lg font-semibold mb-4">Genel Ayarlar</h3>
                         <div class="grid md:grid-cols-2 gap-4">
@@ -303,7 +335,6 @@
                         </div>
                     </div>
                     
-                    <!-- Görsel Ayarlar -->
                     <div>
                         <h3 class="text-lg font-semibold mb-4">Görsel Ayarlar</h3>
                         <div class="grid md:grid-cols-2 gap-4">
@@ -334,7 +365,6 @@
                         </div>
                     </div>
                     
-                    <!-- Ödeme Ayarları -->
                     <div>
                         <h3 class="text-lg font-semibold mb-4">Ödeme Ayarları</h3>
                         <div class="mb-4">
@@ -377,7 +407,6 @@
                         </div>
                     </div>
                     
-                    <!-- SEO -->
                     <div>
                         <h3 class="text-lg font-semibold mb-4">SEO Ayarları</h3>
                         <div>
@@ -395,9 +424,73 @@
     </main>
 </div>
 
+<!-- Ödül Ekleme/Düzenleme Modal -->
+<div id="prizeModal" class="modal fixed inset-0 flex items-center justify-center z-50 hidden">
+    <div class="glass-card rounded-2xl p-6 w-full max-w-md">
+        <h2 class="text-xl font-bold mb-4" id="prizeModalTitle">Ödül Ekle</h2>
+        <form id="prizeForm">
+            <input type="hidden" id="prizeId">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Ödül Adı</label>
+                    <input type="text" id="prizeName" class="w-full glass px-4 py-2 rounded-lg" placeholder="örn: 500 Kredi" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Ödül Tipi</label>
+                    <select id="prizeType" class="w-full glass px-4 py-2 rounded-lg" required>
+                        <option value="credits">Kredi</option>
+                        <option value="rank">Rütbe</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Değer</label>
+                    <input type="text" id="prizeValue" class="w-full glass px-4 py-2 rounded-lg" placeholder="örn: 500 veya VIP" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Ağırlık (Çıkma Şansı)</label>
+                    <input type="number" id="prizeWeight" class="w-full glass px-4 py-2 rounded-lg" value="10" min="1" max="100" required>
+                    <p class="text-xs text-gray-500 mt-1">Yüksek değer = Daha fazla çıkma şansı</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Renk (Hex)</label>
+                        <input type="color" id="prizeColor" class="w-full h-10 glass rounded-lg" value="#5865F2">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">İkon (FontAwesome)</label>
+                        <select id="prizeIcon" class="w-full glass px-4 py-2 rounded-lg">
+                            <option value="fa-coins">💰 Kredi</option>
+                            <option value="fa-crown">👑 Rütbe</option>
+                            <option value="fa-gem">💎 Özel</option>
+                            <option value="fa-gift">🎁 Hediye</option>
+                            <option value="fa-star">⭐ Yıldız</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" id="prizeActive" class="w-4 h-4" checked>
+                        <span>Aktif</span>
+                    </label>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button type="submit" class="bg-[#5865F2] px-4 py-2 rounded-lg hover:bg-[#4752C4] flex-1">
+                    <i class="fas fa-save mr-2"></i>Kaydet
+                </button>
+                <button type="button" onclick="closePrizeModal()" class="glass px-4 py-2 rounded-lg hover:bg-white/10 flex-1">
+                    İptal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 const token = localStorage.getItem('token');
 if (!token) location.href = '/login';
+
+let allTickets = [];
 
 // Sidebar toggle
 function toggleSidebar() {
@@ -417,7 +510,6 @@ function showSection(section) {
     document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
     document.querySelector(`[data-section="${section}"]`).classList.add('active');
     
-    // İlgili verileri yükle
     switch(section) {
         case 'dashboard': loadDashboard(); break;
         case 'store': loadStore(); break;
@@ -425,12 +517,152 @@ function showSection(section) {
         case 'tickets': loadTickets(); break;
         case 'news': loadNews(); break;
         case 'purchases': loadPurchases(); break;
+        case 'dailyspin': loadSpinPrizes(); break;
         case 'staff': loadStaffApplications(); break;
         case 'settings': loadSettings(); break;
     }
 }
 
-// Dashboard yükle
+// ==================== DAILY SPIN YÖNETİMİ ====================
+
+async function loadSpinPrizes() {
+    const res = await fetch('/api/admin/spin/prizes', {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const prizes = await res.json();
+    
+    const container = document.getElementById('prizesList');
+    
+    if (prizes.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 col-span-full text-center py-8">Henüz ödül eklenmemiş.</p>';
+        return;
+    }
+    
+    container.innerHTML = prizes.map(p => `
+        <div class="prize-card glass rounded-xl p-4 border ${p.active ? 'border-green-500/30' : 'border-red-500/30'}">
+            <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: ${p.color}20;">
+                        <i class="fas ${p.icon}" style="color: ${p.color};"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">${p.name}</h4>
+                        <span class="text-xs ${p.active ? 'text-green-400' : 'text-red-400'}">${p.active ? 'Aktif' : 'Pasif'}</span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="editPrize('${p._id}')" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deletePrize('${p._id}')" class="text-red-400 hover:text-red-300">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="space-y-1 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Tip:</span>
+                    <span>${p.type === 'credits' ? '💰 Kredi' : '👑 Rütbe'}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Değer:</span>
+                    <span class="text-[#00ff88]">${p.value}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Ağırlık:</span>
+                    <span class="text-[#5865F2]">${p.weight}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openAddPrizeModal() {
+    document.getElementById('prizeModalTitle').textContent = 'Ödül Ekle';
+    document.getElementById('prizeId').value = '';
+    document.getElementById('prizeName').value = '';
+    document.getElementById('prizeType').value = 'credits';
+    document.getElementById('prizeValue').value = '';
+    document.getElementById('prizeWeight').value = '10';
+    document.getElementById('prizeColor').value = '#5865F2';
+    document.getElementById('prizeIcon').value = 'fa-coins';
+    document.getElementById('prizeActive').checked = true;
+    document.getElementById('prizeModal').classList.remove('hidden');
+}
+
+async function editPrize(id) {
+    const res = await fetch('/api/admin/spin/prizes', {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const prizes = await res.json();
+    const prize = prizes.find(p => p._id === id);
+    
+    if (!prize) return;
+    
+    document.getElementById('prizeModalTitle').textContent = 'Ödül Düzenle';
+    document.getElementById('prizeId').value = prize._id;
+    document.getElementById('prizeName').value = prize.name;
+    document.getElementById('prizeType').value = prize.type;
+    document.getElementById('prizeValue').value = prize.value;
+    document.getElementById('prizeWeight').value = prize.weight;
+    document.getElementById('prizeColor').value = prize.color;
+    document.getElementById('prizeIcon').value = prize.icon;
+    document.getElementById('prizeActive').checked = prize.active;
+    document.getElementById('prizeModal').classList.remove('hidden');
+}
+
+function closePrizeModal() {
+    document.getElementById('prizeModal').classList.add('hidden');
+}
+
+async function deletePrize(id) {
+    if (!confirm('Bu ödülü silmek istediğinizden emin misiniz?')) return;
+    
+    const res = await fetch(`/api/admin/spin/prizes/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (res.ok) {
+        loadSpinPrizes();
+    }
+}
+
+document.getElementById('prizeForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const id = document.getElementById('prizeId').value;
+    const data = {
+        name: document.getElementById('prizeName').value,
+        type: document.getElementById('prizeType').value,
+        value: document.getElementById('prizeValue').value,
+        weight: parseInt(document.getElementById('prizeWeight').value),
+        color: document.getElementById('prizeColor').value,
+        icon: document.getElementById('prizeIcon').value,
+        active: document.getElementById('prizeActive').checked
+    };
+    
+    const url = id ? `/api/admin/spin/prizes/${id}` : '/api/admin/spin/prizes';
+    const method = id ? 'PUT' : 'POST';
+    
+    const res = await fetch(url, {
+        method,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    
+    if (res.ok) {
+        closePrizeModal();
+        loadSpinPrizes();
+    } else {
+        alert('İşlem başarısız!');
+    }
+});
+
+// ==================== DASHBOARD ====================
 async function loadDashboard() {
     const res = await fetch('/api/admin/stats', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -454,7 +686,7 @@ async function loadDashboard() {
     `).join('') || '<tr><td colspan="5" class="py-6 text-center text-gray-500">Henüz alım yapılmamış</td></tr>';
 }
 
-// Mağaza yükle
+// ==================== MAĞAZA ====================
 async function loadStore() {
     const [categoriesRes, productsRes] = await Promise.all([
         fetch('/api/store/categories'),
@@ -493,7 +725,7 @@ async function loadStore() {
     `).join('');
 }
 
-// Oyuncuları yükle
+// ==================== OYUNCULAR ====================
 async function loadPlayers() {
     const res = await fetch('/api/players', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -516,14 +748,24 @@ async function loadPlayers() {
     `).join('');
 }
 
-// Destek taleplerini yükle
+// ==================== DESTEK ====================
 async function loadTickets() {
     const res = await fetch('/api/tickets/all', {
         headers: { 'Authorization': `Bearer ${token}` }
     });
-    const tickets = await res.json();
+    allTickets = await res.json();
+    renderTickets();
+}
+
+function filterTickets() {
+    renderTickets();
+}
+
+function renderTickets() {
+    const filter = document.getElementById('ticketFilter').value;
+    const filteredTickets = filter === 'all' ? allTickets : allTickets.filter(t => t.status === filter);
     
-    document.getElementById('ticketsList').innerHTML = tickets.map(t => `
+    document.getElementById('ticketsList').innerHTML = filteredTickets.map(t => `
         <div class="glass rounded-xl p-4 mb-3">
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-3">
@@ -540,7 +782,7 @@ async function loadTickets() {
     `).join('');
 }
 
-// Haberleri yükle
+// ==================== HABERLER ====================
 async function loadNews() {
     const res = await fetch('/api/news');
     const news = await res.json();
@@ -563,18 +805,12 @@ async function loadNews() {
     `).join('');
 }
 
-// Alımları yükle
+// ==================== ALIMLAR ====================
 async function loadPurchases() {
-    const res = await fetch('/api/admin/stats', {
+    const res = await fetch('/api/admin/purchases', {
         headers: { 'Authorization': `Bearer ${token}` }
     });
-    const data = await res.json();
-    
-    // Tüm alımları getir
-    const purchasesRes = await fetch('/api/purchases/all', {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const purchases = await purchasesRes.json();
+    const purchases = await res.json();
     
     document.getElementById('purchasesList').innerHTML = purchases.map(p => `
         <tr class="border-b border-white/5">
@@ -589,7 +825,7 @@ async function loadPurchases() {
     `).join('');
 }
 
-// Yetkili başvurularını yükle
+// ==================== YETKİLİ ALIMI ====================
 async function loadStaffApplications() {
     const [appsRes, questionsRes] = await Promise.all([
         fetch('/api/staff/applications', { headers: { 'Authorization': `Bearer ${token}` } }),
@@ -629,7 +865,7 @@ async function loadStaffApplications() {
     `).join('');
 }
 
-// Ayarları yükle
+// ==================== AYARLAR ====================
 async function loadSettings() {
     const res = await fetch('/api/admin/settings', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -637,23 +873,22 @@ async function loadSettings() {
     const data = await res.json();
     
     const form = document.getElementById('settingsForm');
-    form.siteName.value = data.server.name || '';
-    form.ip.value = data.server.ip || '';
-    form.rconPort.value = data.server.rconPort || '';
-    form.rconPassword.value = data.server.rconPassword || '';
-    form.logo.value = data.server.logo || '';
-    form.wallpaper.value = data.server.wallpaper || '';
-    form.storeWallpaper.value = data.server.storeWallpaper || '';
-    form.supportWallpaper.value = data.server.supportWallpaper || '';
-    form.primaryColor.value = data.server.primaryColor || '#5865F2';
-    form.secondaryColor.value = data.server.secondaryColor || '#00ff88';
-    form.testMode.checked = data.settings.testMode || false;
-    form.shopierApiKey.value = data.settings.paymentMethods?.shopier?.apiKey || '';
-    form.paytrMerchantId.value = data.settings.paymentMethods?.paytr?.merchantId || '';
-    form.googleSearchConsole.value = data.settings.googleSearchConsole || '';
+    form.siteName.value = data.server?.name || '';
+    form.ip.value = data.server?.ip || '';
+    form.rconPort.value = data.server?.rconPort || '';
+    form.rconPassword.value = data.server?.rconPassword || '';
+    form.logo.value = data.server?.logo || '';
+    form.wallpaper.value = data.server?.wallpaper || '';
+    form.storeWallpaper.value = data.server?.storeWallpaper || '';
+    form.supportWallpaper.value = data.server?.supportWallpaper || '';
+    form.primaryColor.value = data.server?.primaryColor || '#5865F2';
+    form.secondaryColor.value = data.server?.secondaryColor || '#00ff88';
+    form.testMode.checked = data.settings?.testMode || false;
+    form.shopierApiKey.value = data.settings?.paymentMethods?.shopier?.apiKey || '';
+    form.paytrMerchantId.value = data.settings?.paymentMethods?.paytr?.merchantId || '';
+    form.googleSearchConsole.value = data.settings?.googleSearchConsole || '';
 }
 
-// Form submit
 document.getElementById('settingsForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -669,14 +904,42 @@ document.getElementById('settingsForm').addEventListener('submit', async (e) => 
     }
 });
 
+// ==================== YARDIMCI FONKSİYONLAR ====================
 function logout() {
     localStorage.removeItem('token');
     location.href = '/';
 }
 
+function openAddCategoryModal() {
+    alert('Kategori ekleme modülü geliştiriliyor...');
+}
+
+function openAddProductModal() {
+    alert('Ürün ekleme modülü geliştiriliyor...');
+}
+
+function openAddNewsModal() {
+    alert('Haber ekleme modülü geliştiriliyor...');
+}
+
+function openAddQuestionModal() {
+    alert('Soru ekleme modülü geliştiriliyor...');
+}
+
+function managePlayer(id) {
+    alert('Oyuncu yönetimi geliştiriliyor...');
+}
+
+function viewTicket(id) {
+    alert('Talep detayı geliştiriliyor...');
+}
+
+function reviewApplication(id) {
+    alert('Başvuru inceleme geliştiriliyor...');
+}
+
 // Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', () => {
-    // Admin bilgilerini getir
     fetch('/api/players/profile', {
         headers: { 'Authorization': `Bearer ${token}` }
     })
@@ -686,6 +949,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.forcePasswordChange) {
             location.href = '/change-password';
         }
+    })
+    .catch(() => {
+        localStorage.removeItem('token');
+        location.href = '/login';
     });
     
     loadDashboard();
