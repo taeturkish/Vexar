@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEXAR PROJECT | Minecraft Sunucuları için Tamamen Ücretsiz Web Script</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a0c10;
+            color: #ffffff;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* dfgre tarzı arka plan efektleri */
+        .bg-glow {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 150, 255, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 150, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 150, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navigation - dfgre tarzı şeffaf & blur */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s ease;
+            background: rgba(10, 12, 16, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 150, 255, 0.15);
+        }
+
+        nav.scrolled {
+            padding: 12px 0;
+            background: rgba(10, 12, 16, 0.85);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #00d4ff, #0066ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+        }
+
+        .logo i {
+            color: #00d4ff;
+            font-size: 2rem;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .free-tag {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            color: #0a0c10;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 8px;
+            text-transform: none;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            color: #a0aab5;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4ff, #0066ff);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #00d4ff, #0066ff);
+            color: #0a0c10 !important;
+            padding: 10px 24px !important;
+            border-radius: 50px;
+            font-weight: 600 !important;
+            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.5);
+            color: #0a0c10 !important;
+        }
+
+        .nav-btn::after {
+            display: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 120px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #00ff88;
+            margin-bottom: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge i {
+            margin-right: 8px;
+        }
+
+        .hero h1 {
+            font-size: 4.2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+            background: linear-gradient(to right, #ffffff, #b0d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-gradient-text {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #b0c4de;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5865F2, #4752C4);
+            color: #ffffff;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary i {
+            font-size: 1.1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(88, 101, 242, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 255, 136, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .dashboard-preview {
+            background: rgba(20, 30, 45, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+            transition: transform 0.5s ease;
+        }
+
+        .dashboard-preview:hover {
+            transform: perspective(1000px) rotateY(-2deg) rotateX(2deg);
+        }
+
+        .preview-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .preview-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f56;
+        }
+
+        .preview-dot:nth-child(2) { background: #ffbd2e; }
+        .preview-dot:nth-child(3) { background: #27c93f; }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .preview-card {
+            background: rgba(10, 20, 35, 0.7);
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .preview-line {
+            height: 8px;
+            background: linear-gradient(90deg, #0066ff, #00d4ff);
+            border-radius: 4px;
+            margin: 10px 0;
+            width: 70%;
+        }
+
+        .preview-line.short { width: 40%; }
+
+        .preview-bar {
+            height: 60px;
+            background: linear-gradient(180deg, #0066ff30, #00d4ff10);
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        /* Minecraft Özel Özellikler */
+        .minecraft-features {
+            padding: 100px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #00ff88;
+            margin-bottom: 24px;
+            backdrop-filter: blur(5px);
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, #fff, #b0d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            color: #8a9cb0;
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(15, 25, 40, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 150, 255, 0.1);
+            border-radius: 28px;
+            padding: 40px 30px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(0, 255, 136, 0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(0, 255, 136, 0.4);
+            box-shadow: 0 30px 50px -20px rgba(0, 204, 106, 0.3);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #00ff8820, #00cc6a20);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            box-shadow: 0 10px 30px rgba(0, 204, 106, 0.5);
+        }
+
+        .feature-icon i {
+            font-size: 2.2rem;
+            color: #00ff88;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon i {
+            color: #0a0c10;
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .feature-card p {
+            color: #a0b5cc;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .free-label {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            color: #0a0c10;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 10px;
+            text-transform: uppercase;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-card {
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(71, 82, 196, 0.05));
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            border-radius: 50px;
+            padding: 70px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .cta-card h3 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #b0d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .cta-card p {
+            color: #b0c4de;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(0, 150, 255, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #0066ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .footer-links a {
+            color: #7a8a9e;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #00ff88;
+        }
+
+        .footer-copyright {
+            text-align: center;
+            margin-top: 50px;
+            color: #5a6a7e;
+            font-size: 0.9rem;
+        }
+
+        /* Animasyonlar */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 3.2rem; }
+            .hero-content { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navigasyon -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-cube"></i>
+                <span>VEXAR PROJECT <span class="free-tag">BEDAVA</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="#">Anasayfa</a>
+                <a href="#">Özellikler</a>
+                <a href="#">Kurulum</a>
+                <a href="#">Döküman</a>
+                <a href="https://deneme.com" class="nav-btn" target="_blank"><i class="fas fa-user"></i> Müşteri Paneli</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <span class="hero-badge animate__animated animate__fadeInDown">
+                        <i class="fas fa-gem"></i> TAMAMEN ÜCRETSİZ
+                    </span>
+                    <h1 class="animate__animated animate__fadeInUp">
+                        Minecraft Sunucun İçin<br>
+                        <span class="hero-gradient-text">Profesyonel Web Script</span>
+                    </h1>
+                    <p class="animate__animated animate__fadeInUp animate__delay-1s">
+                        Vexar Project ile Minecraft sunucuna özel web sitesi, otomatik mağaza ve oyuncu paneli tamamen ücretsiz!
+                    </p>
+                    <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
+                        <a href="https://discord.gg/rPWZMuCkR9" class="btn-primary" target="_blank"><i class="fab fa-discord"></i> Discord Topluluğu</a>
+                        <a href="#" class="btn-secondary"><i class="fas fa-book"></i> Dökümantasyon</a>
+                    </div>
+                </div>
+                <div class="hero-visual animate__animated animate__fadeInRight">
+                    <div class="dashboard-preview floating">
+                        <div class="preview-header">
+                            <div class="preview-dot"></div>
+                            <div class="preview-dot"></div>
+                            <div class="preview-dot"></div>
+                        </div>
+                        <div class="preview-grid">
+                            <div class="preview-card">
+                                <div style="color: #8a9cb0; font-size: 0.8rem;"><i class="fab fa-minecraft"></i> Oyuncu Sayısı</div>
+                                <div style="font-size: 1.8rem; font-weight: 700; color: #00ff88;">127</div>
+                                <div class="preview-line" style="background: linear-gradient(90deg, #00ff88, #00cc6a);"></div>
+                                <div style="color: #00ff88;">▲ 12 yeni oyuncu</div>
+                            </div>
+                            <div class="preview-card">
+                                <div style="color: #8a9cb0; font-size: 0.8rem;"><i class="fas fa-coins"></i> Sunucu TPS</div>
+                                <div style="font-size: 1.8rem; font-weight: 700;">20.0</div>
+                                <div class="preview-line short" style="background: linear-gradient(90deg, #00ff88, #00cc6a);"></div>
+                                <div style="color: #00ff88;">Mükemmel</div>
+                            </div>
+                        </div>
+                        <div class="preview-bar" style="background: linear-gradient(180deg, #00ff8830, #00cc6a10);"></div>
+                        <div style="margin-top: 15px; color: #8a9cb0; font-size: 0.8rem; text-align: center;">
+                            <i class="fas fa-check-circle" style="color: #00ff88;"></i> Vexar v1.0.0
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Minecraft Özellikleri -->
+        <section class="minecraft-features">
+            <div class="section-header">
+                <span class="section-badge"><i class="fab fa-minecraft"></i> MINECRAFT ÖZEL</span>
+                <h2>Sunucun İçin İhtiyacın Olan Her Şey</h2>
+                <p>Vexar Project, Minecraft sunucuları için özel olarak geliştirilmiş, tamamen ücretsiz bir web scriptidir.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <h3>Otomatik Mağaza <span class="free-label">Ücretsiz</span></h3>
+                    <p>Oyuncuların anında satın alabileceği, RCON ile entegre çalışan tam otomatik mağaza sistemi.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>Oyuncu Paneli <span class="free-label">Ücretsiz</span></h3>
+                    <p>Oyuncularınız skin değiştirebilir, istatistiklerini görebilir ve satın aldıkları ürünleri yönetebilir.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Canlı Sunucu İstatistikleri <span class="free-label">Ücretsiz</span></h3>
+                    <p>Oyuncu sayısı, TPS, RAM kullanımı gibi kritik metrikleri anlık olarak web sitenizde gösterin.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-vote-yea"></i></div>
+                    <h3>Oylama Sistemi <span class="free-label">Ücretsiz</span></h3>
+                    <p>Oyuncularınız oy kullandıkça otomatik ödüller kazansın.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-gavel"></i></div>
+                    <h3>Ban & Mute Yönetimi <span class="free-label">Ücretsiz</span></h3>
+                    <p>Web panel üzerinden oyuncuları banlayın, mute atın, ceza geçmişini görüntüleyin.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-map"></i></div>
+                    <h3>Dynmap Entegrasyonu <span class="free-label">Ücretsiz</span></h3>
+                    <p>Sunucunuzun haritasını web sitenizde canlı olarak gösterin.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- CTA Section -->
+    <div class="container">
+        <section class="cta-section">
+            <div class="cta-card">
+                <h3>Discord Topluluğumuza Katıl</h3>
+                <p>Sorularını sor, yardım al, güncellemeleri takip et.</p>
+                <div style="display: flex; gap: 20px; justify-content: center;">
+                    <a href="https://discord.gg/rPWZMuCkR9" class="btn-primary" target="_blank"><i class="fab fa-discord"></i> Discord'a Katıl</a>
+                    <a href="#" class="btn-secondary"><i class="fas fa-book"></i> Dökümantasyon</a>
+                </div>
+                <p style="margin-top: 30px; color: #00ff88; font-size: 0.9rem;">
+                    <i class="fas fa-heart"></i> Tamamen açık kaynak ve sonsuza kadar ücretsiz.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-cube"></i> VEXAR PROJECT
+                </div>
+                <div class="footer-links">
+                    <a href="#">Hakkımızda</a>
+                    <a href="#">Dökümantasyon</a>
+                    <a href="https://discord.gg/rPWZMuCkR9" target="_blank">Discord</a>
+                    <a href="#">İletişim</a>
+                </div>
+                <div style="color: #5a6a7e;">
+                    <i class="fab fa-discord"></i> discord.gg/rPWZMuCkR9
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>© 2026 VEXAR PROJECT • Tamamen Ücretsiz ve Açık Kaynak • Minecraft sunucuları için geliştirilmiştir.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll efekti
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
