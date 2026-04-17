@@ -1,0 +1,21 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/magaza", "destination": "/store.html" },
+    { "source": "/profil", "destination": "/profile.html" },
+    { "source": "/destek", "destination": "/support.html" },
+    { "source": "/yetkili-basvuru", "destination": "/staff-apply.html" },
+    { "source": "/api/:path*", "destination": "/api/index.js" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    }
+  ]
+}
