@@ -1651,21 +1651,473 @@ app.post('/api/payment/test', authenticateToken, async (req, res) => {
   }
 });
 
-// Örnek Yakalayıcı Kod
+// ==================== PAYMENT ROUTES ====================
+
+// Shopier Ödeme
+app.post('/api/payment/shopier', authenticateToken, async (req, res) => {
+  try {
+    const { purchaseId } = req.body;
+    const purchase = await Purchase.findById(purchaseId);
+    
+    if (!purchase) {
+      return res.status(404).json({ error: 'Satın alma bulunamadı' });
+    }
+    
+    const settings = await Settings.findOne({ serverId: purchase.serverId });
+    
+    if (!settings?.paymentMethods?.shopier?.enabled) {
+      return res.status(400).json({ error: 'Shopier ödeme yöntemi aktif değil' });
+    }
+    
+    // Shopier API entegrasyonu
+    const shopierData = {
+      API_key: settings.paymentMethods.shopier.apiKey,
+      product_name: purchase.productName,
+      product_price: purchase.price,
+      buyer_name: req.user.username,
+      buyer_email: req.user.email,
+      buyer_phone: '5550000000',
+      success_url: `${req.headers.origin}/payment/success`,
+      fail_url: `${req.headers.origin}/payment/fail`,
+      platform_order_id: purchase._id.toString()
+    };
+    
+    // Test modu için
+    if (settings.testMode) {
+      purchase.status = 'completed';
+      purchase.paymentId = 'TEST_' + Date.now();
+      await purchase.save();
+      return res.json({ success: true, testMode: true });
+    }
+    
+    res.json({ 
+      paymentUrl: 'https://www.shopier.com/ShowProduct/api_pay.php',
+      data: shopierData 
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Ödeme başlatılamadı' });
+  }
+});
+
+// PayTR Ödeme
+app.post('/api/payment/paytr', authenticateToken, async (req, res) => {
+  try {
+    const { purchaseId } = req.body;
+    const purchase = await Purchase.findById(purchaseId);
+    
+    if (!purchase) {
+      return res.status(404).json({ error: 'Satın alma bulunamadı' });
+    }
+    
+    const settings = await Settings.findOne({ serverId: purchase.serverId });
+    
+    if (!settings?.paymentMethods?.paytr?.enabled) {
+      return res.status(400).json({ error: 'PayTR ödeme yöntemi aktif değil' });
+    }
+    
+    // Test modu için
+    if (settings.testMode) {
+      purchase.status = 'completed';
+      purchase.paymentId = 'TEST_' + Date.now();
+      await purchase.save();
+      
+      // RCON komutlarını çalıştır
+      await executeRconCommands(purchase);
+      
+      return res.json({ success: true, testMode: true });
+    }
+    
+    // PayTR API entegrasyonu
+    const crypto = require('crypto');
+    const merchant_id = settings.paymentMethods.paytr.merchantId;
+    const merchant_key = settings.paymentMethods.paytr.merchantKey;
+    const merchant_salt = settings.paymentMethods.paytr.merchantSalt;
+    
+    const user = await User.findById(purchase.userId);
+    
+    const paytrData = {
+      merchant_id,
+      user_ip: req.ip,
+      merchant_oid: purchase._id.toString(),
+      email: user.email,
+      payment_amount: purchase.price * 100,
+      currency: 'TL',
+      user_name: user.username,
+      user_address: 'Adres girilmedi',
+      user_phone: '5550000000',
+      merchant_ok_url: `${req.headers.origin}/payment/success`,
+      merchant_fail_url: `${req.headers.origin}/payment/fail`,
+      timeout_limit: 30,
+      debug_on: 1,
+      test_mode: settings.testMode ? 1 : 0,
+      no_installment: 0,
+      max_installment: 0
+    };
+    
+    const hash_str = `${merchant_id}${paytrData.user_ip}${paytrData.merchant_oid}${paytrData.email}${paytrData.payment_amount}${paytrData.user_name}${paytrData.user_address}${paytrData.user_phone}${paytrData.merchant_ok_url}${paytrData.merchant_fail_url}${paytrData.timeout_limit}${paytrData.debug_on}${paytrData.test_mode}${paytrData.no_installment}${paytrData.max_installment}${merchant_salt}`;
+    
+    const token = crypto.createHmac('sha256', merchant_key).update(hash_str).digest('base64');
+    paytrData.paytr_token = token;
+    
+    res.json({ 
+      paymentUrl: 'https://www.paytr.com/odeme/api/get-token',
+      data: paytrData 
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Ödeme başlatılamadı' });
+  }
+});
+
+// RCON komutlarını çalıştır
+async function executeRconCommands(purchase) {
+  try {
+    const server = await Server.findById(purchase.serverId);
+    const product = await Product.findById(purchase.productId);
+    
+    if (!server || !product || !product.rconCommands.length) return;
+    
+    const { Rcon } = require('rcon-client');
+    const rcon = await Rcon.connect({
+      host: server.ip,
+      port: server.rconPort,
+      password: server.rconPassword
+    });
+    
+    for (const command of product.rconCommands) {
+      const formattedCommand = command.replace('{player}', purchase.minecraftUsername);
+      await rcon.send(formattedCommand);
+    }
+    
+    rcon.end();
+    
+    purchase.rconStatus = 'sent';
+    await purchase.save();
+  } catch (error) {
+    console.error('RCON komut hatası:', error);
+    purchase.rconStatus = 'failed';
+    await purchase.save();
+  }
+}
+
+// Ödeme Başarılı Callback
+app.post('/api/payment/callback', async (req, res) => {
+  try {
+    const { merchant_oid, status } = req.body;
+    
+    if (status === 'success') {
+      const purchase = await Purchase.findById(merchant_oid);
+      if (purchase) {
+        purchase.status = 'completed';
+        await purchase.save();
+        
+        // RCON komutlarını çalıştır
+        await executeRconCommands(purchase);
+      }
+    }
+    
+    res.json({ status: 'OK' });
+  } catch (error) {
+    res.status(500).json({ error: 'Callback işlenemedi' });
+  }
+});
+
+// Test Ödemesi
+app.post('/api/payment/test', authenticateToken, async (req, res) => {
+  try {
+    const { purchaseId } = req.body;
+    const settings = await Settings.findOne({ serverId: req.user.serverId });
+    
+    if (!settings?.testMode) {
+      return res.status(400).json({ error: 'Test modu aktif değil' });
+    }
+    
+    const purchase = await Purchase.findById(purchaseId);
+    if (!purchase) {
+      return res.status(404).json({ error: 'Satın alma bulunamadı' });
+    }
+    
+    purchase.status = 'completed';
+    purchase.paymentId = 'TEST_' + Date.now();
+    await purchase.save();
+    
+    await executeRconCommands(purchase);
+    
+    res.json({ success: true, purchase });
+  } catch (error) {
+    res.status(500).json({ error: 'Test ödemesi başarısız' });
+  }
+});
+
+// ==================== PATH TABANLI SUNUCU YAKALAYICI ====================
+// Bu route EN SONDA olmalı! SADECE BİR TANE!
+
 app.get('/:sunucuYolu', async (req, res) => {
-    const yol = req.params.sunucuYolu;
+    try {
+        const sunucuYolu = req.params.sunucuYolu;
+        
+        // API, assets ve özel sayfaları yakalama
+        const ozelYollar = [
+            'api', 'assets', 'css', 'js', 'favicon.ico',
+            'admin', 'login', 'register', 'setup', 
+            'magaza', 'profil', 'destek', 'change-password',
+            'yetkili-basvuru', 'index.html', 'store.html'
+        ];
+        
+        // Dosya uzantılı istekleri yakalama (.html, .css, .js, .png vs)
+        if (sunucuYolu.includes('.') || ozelYollar.includes(sunucuYolu)) {
+            return res.status(404).send('Sayfa bulunamadı');
+        }
+        
+        // Veritabanında sunucuyu ara (subdomain veya path olarak)
+        const Server = mongoose.model('Server');
+        const sunucu = await Server.findOne({ 
+            $or: [
+                { subdomain: sunucuYolu },
+                { path: sunucuYolu }
+            ]
+        });
+        
+        if (sunucu) {
+            // Sunucu bulundu - siteyi göster
+            console.log(`✅ Sunucu bulundu: ${sunucuYolu} -> ${sunucu.name}`);
+            
+            // RCON ile online oyuncu sayısını güncelle (opsiyonel)
+            let onlinePlayers = sunucu.onlinePlayers || 0;
+            try {
+                if (sunucu.rconPort && sunucu.rconPassword) {
+                    const { Rcon } = require('rcon-client');
+                    const rcon = await Rcon.connect({
+                        host: sunucu.ip,
+                        port: sunucu.rconPort,
+                        password: sunucu.rconPassword,
+                        timeout: 3000
+                    });
+                    const response = await rcon.send('list');
+                    const match = response.match(/There are (\d+) of a max of (\d+) players online/);
+                    if (match) {
+                        onlinePlayers = parseInt(match[1]);
+                        sunucu.onlinePlayers = onlinePlayers;
+                        sunucu.maxPlayers = parseInt(match[2]);
+                        await sunucu.save();
+                    }
+                    rcon.end();
+                }
+            } catch (rconError) {
+                // RCON başarısız olursa eski değeri kullan
+            }
+            
+            // HTML sayfasını oluştur
+            const html = `
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${sunucu.name} | Minecraft Sunucusu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { 
+            background-image: url('${sunucu.wallpaper || '/assets/default-wallpaper.jpg'}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 11, 14, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+        .glass { 
+            background: rgba(20, 25, 35, 0.7); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+        .btn-primary { 
+            background: ${sunucu.primaryColor || '#5865F2'}; 
+            transition: all 0.3s;
+        }
+        .btn-primary:hover { 
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, ${sunucu.primaryColor || '#5865F2'}, ${sunucu.secondaryColor || '#00ff88'});
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+    <!-- Navbar -->
+    <nav class="glass fixed top-0 left-0 right-0 z-50 px-6 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="/${sunucuYolu}" class="flex items-center gap-3">
+                ${sunucu.logo ? 
+                    `<img src="${sunucu.logo}" class="h-10 w-auto" alt="${sunucu.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-cube text-2xl\'></i><span class=\'text-xl font-bold\'>${sunucu.name}</span>'">` : 
+                    '<i class="fas fa-cube text-2xl"></i>'
+                }
+                <span class="text-xl font-bold gradient-text">${sunucu.name}</span>
+            </a>
+            
+            <div class="flex items-center gap-6">
+                <a href="/${sunucuYolu}/magaza" class="text-gray-300 hover:text-white transition">Mağaza</a>
+                <a href="/${sunucuYolu}/profil" class="text-gray-300 hover:text-white transition">Profil</a>
+                <a href="/${sunucuYolu}/destek" class="text-gray-300 hover:text-white transition">Destek</a>
+                
+                <div class="flex items-center gap-3">
+                    <div class="glass px-4 py-1.5 rounded-full flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full ${onlinePlayers > 0 ? 'bg-green-400' : 'bg-red-400'}"></span>
+                        <span class="text-sm">${onlinePlayers}/${sunucu.maxPlayers || 100}</span>
+                    </div>
+                    
+                    <button onclick="copyIP('${sunucu.ip}:${sunucu.port}')" class="btn-primary px-5 py-2 rounded-full font-medium flex items-center gap-2">
+                        <i class="fas fa-play text-sm"></i>
+                        <span>Oyna</span>
+                    </button>
+                    
+                    <a href="/login" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-user-circle text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
     
-    // Veritabanında bu isimde bir sunucu ara
-    const sunucu = await db.servers.findOne({ path: yol });
+    <!-- Hero Section -->
+    <main class="pt-28 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="glass rounded-3xl p-12 text-center">
+                ${sunucu.logo ? `<img src="${sunucu.logo}" class="h-24 w-auto mx-auto mb-6" alt="${sunucu.name}" onerror="this.style.display='none'">` : ''}
+                <h1 class="text-5xl font-bold mb-4 gradient-text">${sunucu.name}</h1>
+                <p class="text-gray-400 text-lg mb-8">Minecraft Sunucusuna Hoş Geldiniz!</p>
+                
+                <div class="flex flex-wrap gap-4 justify-center mb-8">
+                    <div class="glass px-6 py-4 rounded-xl flex items-center gap-3">
+                        <i class="fas fa-network-wired text-2xl" style="color: ${sunucu.primaryColor || '#5865F2'}"></i>
+                        <div class="text-left">
+                            <div class="text-xs text-gray-400">Sunucu IP</div>
+                            <div class="font-mono text-lg">${sunucu.ip}:${sunucu.port}</div>
+                        </div>
+                        <button onclick="copyIP('${sunucu.ip}:${sunucu.port}')" class="ml-2 text-gray-400 hover:text-white">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="glass px-6 py-4 rounded-xl flex items-center gap-3">
+                        <i class="fas fa-users text-2xl" style="color: ${sunucu.secondaryColor || '#00ff88'}"></i>
+                        <div class="text-left">
+                            <div class="text-xs text-gray-400">Oyuncu</div>
+                            <div class="font-mono text-lg">${onlinePlayers}/${sunucu.maxPlayers || 100}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass px-6 py-4 rounded-xl flex items-center gap-3">
+                        <i class="fas fa-code-branch text-2xl" style="color: ${sunucu.primaryColor || '#5865F2'}"></i>
+                        <div class="text-left">
+                            <div class="text-xs text-gray-400">Versiyon</div>
+                            <div class="font-mono text-lg">${sunucu.version || '1.20.4'}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 justify-center">
+                    <a href="/${sunucuYolu}/magaza" class="btn-primary px-8 py-3 rounded-full font-medium">
+                        <i class="fas fa-shopping-cart mr-2"></i>Mağazaya Git
+                    </a>
+                    <button onclick="copyIP('${sunucu.ip}:${sunucu.port}')" class="glass px-8 py-3 rounded-full font-medium hover:bg-white/10">
+                        <i class="fas fa-copy mr-2"></i>IP Kopyala
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Özellikler -->
+            <div class="grid md:grid-cols-3 gap-6 mt-8">
+                <div class="glass rounded-2xl p-6 text-center">
+                    <i class="fas fa-gift text-3xl mb-3" style="color: ${sunucu.secondaryColor || '#00ff88'}"></i>
+                    <h3 class="font-semibold mb-2">Daily Spin</h3>
+                    <p class="text-gray-400 text-sm">Her gün çark çevir, ödül kazan!</p>
+                </div>
+                <div class="glass rounded-2xl p-6 text-center">
+                    <i class="fas fa-headset text-3xl mb-3" style="color: ${sunucu.primaryColor || '#5865F2'}"></i>
+                    <h3 class="font-semibold mb-2">7/24 Destek</h3>
+                    <p class="text-gray-400 text-sm">Ticket sistemi ile anında yardım</p>
+                </div>
+                <div class="glass rounded-2xl p-6 text-center">
+                    <i class="fas fa-shield-alt text-3xl mb-3" style="color: ${sunucu.secondaryColor || '#00ff88'}"></i>
+                    <h3 class="font-semibold mb-2">Güvenli Alışveriş</h3>
+                    <p class="text-gray-400 text-sm">Shopier ve PayTR ile güvenli ödeme</p>
+                </div>
+            </div>
+        </div>
+    </main>
     
-    if(sunucu) {
-        // Sunucu bilgilerini HTML'e bas ve gönder
-        return res.render('server_template', { data: sunucu });
-    } else {
-        return res.status(404).send("Böyle bir sunucu bulunamadı!");
+    <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-white/5">
+        <p>© 2024 ${sunucu.name} | Vexar Project ile oluşturuldu</p>
+    </footer>
+    
+    <script>
+        function copyIP(ip) {
+            navigator.clipboard.writeText(ip).then(() => {
+                alert('✅ IP kopyalandı: ' + ip);
+            }).catch(() => {
+                prompt('IP adresi:', ip);
+            });
+        }
+        
+        // 30 saniyede bir oyuncu sayısını güncelle
+        setInterval(async () => {
+            try {
+                const res = await fetch('/api/server/info');
+                const data = await res.json();
+                document.querySelector('.glass.px-4.py-1\\.5 span:last-child').textContent = 
+                    data.onlinePlayers + '/' + data.maxPlayers;
+            } catch (e) {}
+        }, 30000);
+    </script>
+</body>
+</html>`;
+            
+            return res.send(html);
+            
+        } else {
+            // Sunucu bulunamadı
+            return res.status(404).send(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>404 - Sunucu Bulunamadı</title>
+                    <meta charset="UTF-8">
+                    <script src="https://cdn.tailwindcss.com"></script>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                </head>
+                <body class="bg-[#0a0b0e] text-white flex items-center justify-center min-h-screen">
+                    <div class="text-center">
+                        <i class="fas fa-server text-6xl text-gray-600 mb-6"></i>
+                        <h1 class="text-4xl font-bold mb-4">Sunucu Bulunamadı</h1>
+                        <p class="text-gray-400 mb-6">"${sunucuYolu}" adında bir sunucu mevcut değil.</p>
+                        <div class="flex gap-4 justify-center">
+                            <a href="/" class="bg-[#5865F2] px-6 py-3 rounded-lg hover:bg-[#4752C4] transition">Ana Sayfa</a>
+                            <a href="/setup" class="glass px-6 py-3 rounded-lg hover:bg-white/10 transition">Sunucu Oluştur</a>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+        
+    } catch (error) {
+        console.error('Sunucu yakalayıcı hatası:', error);
+        res.status(500).send('Sunucu hatası!');
     }
 });
 
 // ==================== EXPORT ====================
-
 module.exports = app;
