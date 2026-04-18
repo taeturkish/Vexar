@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Admin - Vexar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .crown {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
+        }
+        .error {
+            color: #f87171;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="crown">👑</div>
+        <h1>Global Admin</h1>
+        <input type="password" id="password" placeholder="Admin Şifresi" autofocus>
+        <button onclick="login()">Giriş Yap</button>
+        <div class="error" id="error"></div>
+    </div>
+
+    <script>
+        async function login() {
+            const password = document.getElementById('password').value;
+            const error = document.getElementById('error');
+            
+            try {
+                const response = await fetch('/api/global-admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    window.location.href = data.redirect;
+                } else {
+                    error.textContent = data.error;
+                    error.style.display = 'block';
+                }
+            } catch (err) {
+                error.textContent = 'Bağlantı hatası!';
+                error.style.display = 'block';
+            }
+        }
+        
+        document.getElementById('password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>
