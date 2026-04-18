@@ -72,6 +72,9 @@
                     Devam Et <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </form>
+            <p class="text-center text-gray-400 text-sm mt-4">
+                Zaten hesabınız var mı? <a href="/login" class="text-[#5865F2]">Giriş Yap</a>
+            </p>
         </div>
         
         <!-- Adım 2: Sunucu Bilgileri -->
@@ -80,20 +83,20 @@
             <form id="serverForm">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1">Site Adı / Sunucu Adı</label>
+                        <label class="block text-sm text-gray-400 mb-1">Site Adı</label>
                         <input type="text" id="serverName" class="w-full glass px-4 py-3 rounded-lg" placeholder="örn: Vexar Network" required>
                     </div>
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1">Sunucu Yolu (URL)</label>
+                        <label class="block text-sm text-gray-400 mb-1">Sunucu Adı (URL)</label>
                         <div class="flex items-center">
                             <span class="glass px-4 py-3 rounded-l-lg border-r-0 text-gray-400">vexar.vercel.app/</span>
                             <input type="text" id="subdomain" class="flex-1 glass px-4 py-3 rounded-r-lg" placeholder="örn: dada" required>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Siteniz bu adreste yayınlanacak</p>
+                        <p class="text-xs text-gray-500 mt-1">Siteniz bu adreste yayınlanacak. Sadece harf, rakam ve tire kullanın.</p>
                     </div>
                     <div>
                         <label class="block text-sm text-gray-400 mb-1">Minecraft Sunucu IP</label>
-                        <input type="text" id="serverIP" class="w-full glass px-4 py-3 rounded-lg" placeholder="örn: mc.hypixel.net" required>
+                        <input type="text" id="serverIP" class="w-full glass px-4 py-3 rounded-lg" placeholder="örn: mc.hypixel.net veya 192.168.1.1" required>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -101,13 +104,9 @@
                             <input type="number" id="serverPort" class="w-full glass px-4 py-3 rounded-lg" value="25565" required>
                         </div>
                         <div>
-                            <label class="block text-sm text-gray-400 mb-1">RCON Port (Opsiyonel)</label>
-                            <input type="number" id="rconPort" class="w-full glass px-4 py-3 rounded-lg" placeholder="25575">
+                            <label class="block text-sm text-gray-400 mb-1">Sürüm</label>
+                            <input type="text" id="serverVersion" class="w-full glass px-4 py-3 rounded-lg" placeholder="örn: 1.20.4" value="1.20.4" required>
                         </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-1">RCON Şifresi (Opsiyonel)</label>
-                        <input type="password" id="rconPassword" class="w-full glass px-4 py-3 rounded-lg" placeholder="server.properties içindeki rcon.password">
                     </div>
                 </div>
                 <div class="flex gap-3 mt-6">
@@ -145,16 +144,15 @@
                             <span class="text-gray-400">Kullanıcı Adı:</span>
                             <span id="finalUsername">-</span>
                         </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Şifre:</span>
-                            <span id="finalPassword">-</span>
-                        </div>
                     </div>
                 </div>
                 
                 <div class="flex gap-3">
                     <a href="#" id="goToSiteBtn" class="btn-primary flex-1 py-3 rounded-lg font-medium" target="_blank">
                         <i class="fas fa-external-link-alt mr-2"></i>Siteye Git
+                    </a>
+                    <a href="#" id="goToAdminBtn" class="glass px-6 py-3 rounded-lg hover:bg-white/10">
+                        <i class="fas fa-cog mr-2"></i>Admin Panel
                     </a>
                 </div>
             </div>
@@ -211,8 +209,25 @@ document.getElementById('accountForm').addEventListener('submit', async (e) => {
         return;
     }
     
-    accountData = { username, email, password };
-    goToStep(2);
+    try {
+        const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+            accountData = { username, email, password };
+            localStorage.setItem('token', data.token);
+            goToStep(2);
+        } else {
+            alert(data.error || 'Hesap oluşturulamadı!');
+        }
+    } catch (error) {
+        alert('Bağlantı hatası! Lütfen tekrar deneyin.');
+    }
 });
 
 // Adım 2: Sunucu Oluştur
@@ -223,41 +238,55 @@ document.getElementById('serverForm').addEventListener('submit', async (e) => {
     const subdomain = document.getElementById('subdomain').value.toLowerCase().replace(/[^a-z0-9-]/g, '');
     const serverIP = document.getElementById('serverIP').value;
     const serverPort = document.getElementById('serverPort').value;
+    const serverVersion = document.getElementById('serverVersion').value || '1.20.4';
     
     if (!subdomain || subdomain.length < 3) {
-        alert('Sunucu yolu en az 3 karakter olmalıdır!');
+        alert('Sunucu adı en az 3 karakter olmalıdır!');
         return;
     }
     
-    // Site URL'lerini oluştur
-    const siteURL = `/${subdomain}`;
-    const fullURL = window.location.origin + siteURL;
-    const adminURL = window.location.origin + '/admin';
+    const token = localStorage.getItem('token');
     
-    // Final bilgilerini göster
-    document.getElementById('finalSiteURL').textContent = fullURL;
-    document.getElementById('finalAdminURL').textContent = adminURL;
-    document.getElementById('finalUsername').textContent = accountData.username;
-    document.getElementById('finalPassword').textContent = accountData.password;
-    
-    document.getElementById('goToSiteBtn').href = fullURL;
-    
-    // LocalStorage'a kaydet (veritabanı yerine)
-    const sunucular = JSON.parse(localStorage.getItem('vexar_sunucular') || '[]');
-    sunucular.push({
-        name: serverName,
-        subdomain: subdomain,
-        ip: serverIP,
-        port: serverPort,
-        owner: accountData.username,
-        createdAt: new Date().toISOString()
-    });
-    localStorage.setItem('vexar_sunucular', JSON.stringify(sunucular));
-    
-    // Token oluştur
-    localStorage.setItem('token', 'user-token-' + Date.now());
-    
-    goToStep(3);
+    try {
+        const res = await fetch('/api/setup/create-server', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                name: serverName,
+                subdomain: subdomain,
+                ip: serverIP,
+                port: parseInt(serverPort),
+                version: serverVersion
+            })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
+            
+            const siteURL = window.location.origin + '/' + subdomain;
+            const adminURL = window.location.origin + '/admin';
+            
+            document.getElementById('finalSiteURL').textContent = siteURL;
+            document.getElementById('finalAdminURL').textContent = adminURL;
+            document.getElementById('finalUsername').textContent = accountData.username;
+            
+            document.getElementById('goToSiteBtn').href = siteURL;
+            document.getElementById('goToAdminBtn').href = adminURL;
+            
+            goToStep(3);
+        } else {
+            alert(data.error || 'Sunucu oluşturulamadı!');
+        }
+    } catch (error) {
+        alert('Bağlantı hatası! Lütfen tekrar deneyin.');
+    }
 });
 </script>
 </body>
