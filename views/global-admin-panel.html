@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Admin Panel - Vexar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logout {
+            padding: 10px 20px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            color: #f87171;
+            cursor: pointer;
+        }
+        .add-section {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            display: flex;
+            gap: 15px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1.5px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+        }
+        .input-group button {
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .feature-name {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .global-badge {
+            background: #667eea;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+        .delete-btn {
+            padding: 8px 16px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 6px;
+            color: #f87171;
+            cursor: pointer;
+        }
+        .available-templates {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .template-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .template-tag {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span>👑</span>
+                Global Admin Panel
+            </h1>
+            <button class="logout" onclick="logout()">Çıkış Yap</button>
+        </div>
+        
+        <div class="add-section">
+            <h2 style="margin-bottom: 20px;">✨ Yeni Global Özellik Ekle</h2>
+            <div class="input-group">
+                <input type="text" id="featureName" placeholder="Özellik adı (örn: cark, blog, iletisim)">
+                <button onclick="addFeature()">Tüm Sitelere Ekle</button>
+            </div>
+            <div id="message" class="message"></div>
+        </div>
+        
+        <h2 style="margin-bottom: 20px;">🌍 Aktif Global Özellikler</h2>
+        <div class="features-grid" id="featuresList">
+            Yükleniyor...
+        </div>
+        
+        <div class="available-templates">
+            <h2>📁 Hazır Template Dosyaları</h2>
+            <div class="template-list" id="templateList"></div>
+            <p style="margin-top: 15px; opacity: 0.6; font-size: 14px;">
+                💡 Templates klasörüne yeni .html dosyası at, burada görünsün!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('/api/global-admin/features');
+                const data = await response.json();
+                
+                // Global özellikleri göster
+                const featuresList = document.getElementById('featuresList');
+                featuresList.innerHTML = data.globalFeatures.map(feature => `
+                    <div class="feature-card">
+                        <div class="feature-name">
+                            ${feature}
+                            <span class="global-badge">GLOBAL</span>
+                        </div>
+                        <button class="delete-btn" onclick="deleteFeature('${feature}')">Sil</button>
+                    </div>
+                `).join('');
+                
+                // Template dosyalarını göster
+                const templateList = document.getElementById('templateList');
+                templateList.innerHTML = data.availableTemplates.map(template => `
+                    <span class="template-tag">📄 ${template}.html</span>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Veri yüklenemedi:', error);
+            }
+        }
+        
+        async function addFeature() {
+            const feature = document.getElementById('featureName').value.trim().toLowerCase();
+            if (!feature) {
+                showMessage('Lütfen bir özellik adı girin!', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/global-admin/features/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ feature })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(data.message, 'success');
+                    document.getElementById('featureName').value = '';
+                    loadData();
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Bir hata oluştu!', 'error');
+            }
+        }
+        
+        async function deleteFeature(feature) {
+            if (!confirm(`${feature} özelliğini TÜM sitelerden kaldırmak istediğine emin misin?`)) return;
+            
+            try {
+                const response = await fetch(`/api/global-admin/features/${feature}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(data.message, 'success');
+                    loadData();
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Bir hata oluştu!', 'error');
+            }
+        }
+        
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+            
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+        
+        function logout() {
+            window.location.href = '/api/global-admin/logout';
+        }
+        
+        // Sayfa yüklendiğinde verileri getir
+        loadData();
+    </script>
+</body>
+</html>
