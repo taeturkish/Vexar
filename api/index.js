@@ -454,22 +454,39 @@ app.get('/api/server/play', async (req, res) => {
 // Site Kurulumu - Sunucu Oluştur
 app.post('/api/setup/create-server', authenticateToken, async (req, res) => {
   try {
-    const { name, subdomain, ip, port, rconPort, rconPassword, version } = req.body;
+    const { name, subdomain, ip, port, version } = req.body;
+    
+    // Validasyon
+    if (!name || !subdomain || !ip) {
+      return res.status(400).json({ error: 'Tüm alanları doldurun!' });
+    }
+    
+    // Subdomain temizleme
+    const cleanSubdomain = subdomain.toLowerCase().replace(/[^a-z0-9-]/g, '');
+    
+    if (cleanSubdomain.length < 3) {
+      return res.status(400).json({ error: 'Sunucu adı en az 3 karakter olmalı!' });
+    }
+    
+    // Yasaklı isimler
+    const yasakliIsimler = ['admin', 'api', 'login', 'register', 'setup', 'magaza', 'profil', 'destek', 'change-password', 'yetkili-basvuru'];
+    if (yasakliIsimler.includes(cleanSubdomain)) {
+      return res.status(400).json({ error: 'Bu isim kullanılamaz!' });
+    }
     
     // Subdomain kullanımda mı kontrol et
-    const existingServer = await Server.findOne({ subdomain });
+    const existingServer = await Server.findOne({ subdomain: cleanSubdomain });
     if (existingServer) {
-      return res.status(400).json({ error: 'Bu alt alan adı zaten kullanılıyor!' });
+      return res.status(400).json({ error: 'Bu sunucu adı zaten kullanılıyor!' });
     }
     
     // Yeni sunucu oluştur
     const server = new Server({
       name,
-      subdomain,
+      subdomain: cleanSubdomain,
+      path: cleanSubdomain,
       ip,
       port: port || 25565,
-      rconPort: rconPort || 25575,
-      rconPassword,
       version: version || '1.20.4',
       ownerId: req.user.userId,
       status: 'active'
@@ -534,10 +551,19 @@ app.post('/api/setup/create-server', authenticateToken, async (req, res) => {
     );
     
     res.json({
-      server,
+      success: true,
+      message: 'Sunucu başarıyla oluşturuldu!',
+      server: {
+        id: server._id,
+        name: server.name,
+        subdomain: server.subdomain,
+        ip: server.ip,
+        port: server.port,
+        version: server.version
+      },
       token: newToken,
-      siteURL: `https://${subdomain}.vexar.net`,
-      adminURL: `https://${subdomain}.vexar.net/admin`
+      siteURL: `/${cleanSubdomain}`,
+      adminURL: `/admin`
     });
     
   } catch (error) {
