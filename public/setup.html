@@ -84,16 +84,16 @@
                         <input type="text" id="serverName" class="w-full glass px-4 py-3 rounded-lg" placeholder="örn: Vexar Network" required>
                     </div>
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1">Alt Alan Adı (Subdomain)</label>
+                        <label class="block text-sm text-gray-400 mb-1">Sunucu Yolu (URL)</label>
                         <div class="flex items-center">
-                            <input type="text" id="subdomain" class="flex-1 glass px-4 py-3 rounded-l-lg" placeholder="örn: play" required>
-                            <span class="glass px-4 py-3 rounded-r-lg border-l-0 text-gray-400">.vexar.net</span>
+                            <span class="glass px-4 py-3 rounded-l-lg border-r-0 text-gray-400">vexar.vercel.app/</span>
+                            <input type="text" id="subdomain" class="flex-1 glass px-4 py-3 rounded-r-lg" placeholder="örn: dada" required>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Siteniz play.vexar.net adresinde yayınlanacak</p>
+                        <p class="text-xs text-gray-500 mt-1">Siteniz bu adreste yayınlanacak</p>
                     </div>
                     <div>
                         <label class="block text-sm text-gray-400 mb-1">Minecraft Sunucu IP</label>
-                        <input type="text" id="serverIP" class="w-full glass px-4 py-3 rounded-lg" placeholder="örn: 192.168.1.1 veya mc.host.com" required>
+                        <input type="text" id="serverIP" class="w-full glass px-4 py-3 rounded-lg" placeholder="örn: mc.hypixel.net" required>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -101,25 +101,13 @@
                             <input type="number" id="serverPort" class="w-full glass px-4 py-3 rounded-lg" value="25565" required>
                         </div>
                         <div>
-                            <label class="block text-sm text-gray-400 mb-1">RCON Port</label>
+                            <label class="block text-sm text-gray-400 mb-1">RCON Port (Opsiyonel)</label>
                             <input type="number" id="rconPort" class="w-full glass px-4 py-3 rounded-lg" placeholder="25575">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1">RCON Şifresi</label>
+                        <label class="block text-sm text-gray-400 mb-1">RCON Şifresi (Opsiyonel)</label>
                         <input type="password" id="rconPassword" class="w-full glass px-4 py-3 rounded-lg" placeholder="server.properties içindeki rcon.password">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-1">Minecraft Sürümü</label>
-                        <select id="serverVersion" class="w-full glass px-4 py-3 rounded-lg">
-                            <option value="1.20.4">1.20.4</option>
-                            <option value="1.20.2">1.20.2</option>
-                            <option value="1.20.1">1.20.1</option>
-                            <option value="1.19.4">1.19.4</option>
-                            <option value="1.18.2">1.18.2</option>
-                            <option value="1.17.1">1.17.1</option>
-                            <option value="1.16.5">1.16.5</option>
-                        </select>
                     </div>
                 </div>
                 <div class="flex gap-3 mt-6">
@@ -127,7 +115,7 @@
                         <i class="fas fa-arrow-left mr-2"></i>Geri
                     </button>
                     <button type="submit" class="btn-primary flex-1 py-3 rounded-lg font-medium">
-                        Devam Et <i class="fas fa-arrow-right ml-2"></i>
+                        Siteyi Oluştur <i class="fas fa-check ml-2"></i>
                     </button>
                 </div>
             </form>
@@ -164,17 +152,9 @@
                     </div>
                 </div>
                 
-                <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-6">
-                    <i class="fas fa-exclamation-triangle text-yellow-400 mr-2"></i>
-                    <span class="text-sm">İlk girişinizde şifrenizi değiştirmeniz istenecektir.</span>
-                </div>
-                
                 <div class="flex gap-3">
                     <a href="#" id="goToSiteBtn" class="btn-primary flex-1 py-3 rounded-lg font-medium" target="_blank">
                         <i class="fas fa-external-link-alt mr-2"></i>Siteye Git
-                    </a>
-                    <a href="#" id="goToAdminBtn" class="glass px-6 py-3 rounded-lg hover:bg-white/10" target="_blank">
-                        <i class="fas fa-cog mr-2"></i>Admin Panel
                     </a>
                 </div>
             </div>
@@ -183,7 +163,6 @@
 
 <script>
 let accountData = null;
-let serverData = null;
 
 function goToStep(step) {
     document.querySelectorAll('[id^="step"]').forEach(el => {
@@ -194,7 +173,6 @@ function goToStep(step) {
         }
     });
     
-    // Indicator güncelle
     for (let i = 1; i <= 3; i++) {
         const indicator = document.getElementById('step' + i + 'Indicator');
         const text = document.getElementById('step' + i + 'Text');
@@ -237,87 +215,50 @@ document.getElementById('accountForm').addEventListener('submit', async (e) => {
     goToStep(2);
 });
 
-// Adım 2: Sunucu Bilgileri
+// Adım 2: Sunucu Oluştur
 document.getElementById('serverForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    serverData = {
-        name: document.getElementById('serverName').value,
-        subdomain: document.getElementById('subdomain').value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
-        ip: document.getElementById('serverIP').value,
-        port: parseInt(document.getElementById('serverPort').value),
-        rconPort: parseInt(document.getElementById('rconPort').value) || 25575,
-        rconPassword: document.getElementById('rconPassword').value,
-        version: document.getElementById('serverVersion').value
-    };
+    const serverName = document.getElementById('serverName').value;
+    const subdomain = document.getElementById('subdomain').value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+    const serverIP = document.getElementById('serverIP').value;
+    const serverPort = document.getElementById('serverPort').value;
     
-    // Subdomain kontrolü
-    if (!serverData.subdomain || serverData.subdomain.length < 3) {
-        alert('Alt alan adı en az 3 karakter olmalıdır!');
+    if (!subdomain || subdomain.length < 3) {
+        alert('Sunucu yolu en az 3 karakter olmalıdır!');
         return;
     }
     
-    try {
-        // Hesap oluştur
-        const registerRes = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                ...accountData,
-                serverId: 'temp'
-            })
-        });
-        
-        if (!registerRes.ok) {
-            const error = await registerRes.json();
-            alert(error.error || 'Hesap oluşturulamadı!');
-            return;
-        }
-        
-        const userData = await registerRes.json();
-        const token = userData.token;
-        
-        // Sunucu oluştur
-        const serverRes = await fetch('/api/setup/create-server', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(serverData)
-        });
-        
-        if (!serverRes.ok) {
-            const error = await serverRes.json();
-            alert(error.error || 'Sunucu oluşturulamadı!');
-            return;
-        }
-        
-        const createdServer = await serverRes.json();
-        
-        // Final bilgilerini göster
-        const siteURL = `https://${serverData.subdomain}.vexar.net`;
-        const adminURL = `https://${serverData.subdomain}.vexar.net/admin`;
-        
-        document.getElementById('finalSiteURL').textContent = siteURL;
-        document.getElementById('finalAdminURL').textContent = adminURL;
-        document.getElementById('finalUsername').textContent = accountData.username;
-        document.getElementById('finalPassword').textContent = accountData.password;
-        
-        document.getElementById('goToSiteBtn').href = siteURL;
-        document.getElementById('goToAdminBtn').href = adminURL;
-        
-        // Token'ı kaydet
-        localStorage.setItem('token', token);
-        
-        goToStep(3);
-        
-    } catch (error) {
-        console.error('Kurulum hatası:', error);
-        alert('Bir hata oluştu: ' + error.message);
-    }
+    // Site URL'lerini oluştur
+    const siteURL = `/${subdomain}`;
+    const fullURL = window.location.origin + siteURL;
+    const adminURL = window.location.origin + '/admin';
+    
+    // Final bilgilerini göster
+    document.getElementById('finalSiteURL').textContent = fullURL;
+    document.getElementById('finalAdminURL').textContent = adminURL;
+    document.getElementById('finalUsername').textContent = accountData.username;
+    document.getElementById('finalPassword').textContent = accountData.password;
+    
+    document.getElementById('goToSiteBtn').href = fullURL;
+    
+    // LocalStorage'a kaydet (veritabanı yerine)
+    const sunucular = JSON.parse(localStorage.getItem('vexar_sunucular') || '[]');
+    sunucular.push({
+        name: serverName,
+        subdomain: subdomain,
+        ip: serverIP,
+        port: serverPort,
+        owner: accountData.username,
+        createdAt: new Date().toISOString()
+    });
+    localStorage.setItem('vexar_sunucular', JSON.stringify(sunucular));
+    
+    // Token oluştur
+    localStorage.setItem('token', 'user-token-' + Date.now());
+    
+    goToStep(3);
 });
 </script>
-
 </body>
 </html>
