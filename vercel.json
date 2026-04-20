@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/eski-sayfa",
+      "destination": "/yeni-sayfa",
+      "permanent": true
+    }
+  ]
+}
