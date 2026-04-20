@@ -59,6 +59,22 @@
       gap: 6px;
     }
     .nav-links a:hover { color: white; }
+    .user-auth { display: flex; align-items: center; gap: 12px; }
+    .user-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .user-btn:hover { background: rgba(255, 255, 255, 0.1); }
     .admin-badge {
       background: rgba(168, 85, 247, 0.15);
       color: #c084fc;
@@ -141,6 +157,7 @@
       justify-content: center;
       gap: 16px;
       margin: 40px 0 20px;
+      flex-wrap: wrap;
     }
     .category-btn {
       padding: 14px 32px;
@@ -191,7 +208,7 @@
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
     }
     .package-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .package-name { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .package-name { font-size: 24px; font-weight: 800; }
     .package-menu {
       position: relative;
       cursor: pointer;
@@ -318,6 +335,7 @@
       max-height: 85vh;
       overflow-y: auto;
     }
+    .modal-content.large { max-width: 800px; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
     .modal-header h2 { font-size: 28px; font-weight: 800; }
     .close-modal {
@@ -342,6 +360,7 @@
     }
     .form-group textarea { min-height: 100px; resize: vertical; }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #a855f7; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .submit-btn {
       width: 100%;
       padding: 16px;
@@ -354,10 +373,9 @@
       cursor: pointer;
       font-family: 'Montserrat', sans-serif;
     }
-    .delete-btn {
-      background: #ef4444;
-      margin-top: 10px;
-    }
+    .delete-btn { background: #ef4444; margin-top: 10px; }
+    .checkbox-group { display: flex; align-items: center; gap: 12px; }
+    .checkbox-group input { width: 20px; height: 20px; cursor: pointer; }
 
     /* Panel */
     .panel-container { display: none; min-height: 100vh; }
@@ -499,6 +517,7 @@
       margin-bottom: 24px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 16px;
+      flex-wrap: wrap;
     }
     .admin-tab {
       padding: 10px 20px;
@@ -516,7 +535,7 @@
       background: rgba(168, 85, 247, 0.1);
       color: white;
     }
-    .category-item, .package-item, .testimonial-item {
+    .category-item, .package-item, .testimonial-item, .code-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -566,12 +585,6 @@
       transition: transform 0.2s;
     }
     .toggle-switch.active::after { transform: translateX(24px); }
-    .network-stats-panel {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin: 20px 0;
-    }
   </style>
 </head>
 <body>
@@ -600,10 +613,10 @@
       <nav class="navbar">
         <div class="logo">VEXAR</div>
         <div class="nav-links">
-          <a href="#"><i class="fas fa-home"></i> Ana Sayfa</a>
-          <a href="#"><i class="fas fa-box"></i> Paketler</a>
-          <div class="admin-badge" onclick="openAdminModal()"><i class="fas fa-crown"></i> Admin</div>
-          <div class="admin-badge" onclick="openCodeModal()"><i class="fas fa-key"></i> Kod ile Giriş</div>
+          <a href="#" onclick="showHome()"><i class="fas fa-home"></i> Ana Sayfa</a>
+          <a href="#" onclick="showPackages()"><i class="fas fa-box"></i> Paketler</a>
+          <div class="user-auth" id="userAuthSection"></div>
+          <div class="admin-badge" id="adminBtn" onclick="openAdminPanel()" style="display: none;"><i class="fas fa-crown"></i> Admin Panel</div>
         </div>
       </nav>
 
@@ -627,7 +640,7 @@
       <div class="footer">
         <div class="footer-content">
           <div class="footer-section"><h4>VEXAR HOSTING</h4><p style="color:#a1a1aa;font-size:14px">Profesyonel Minecraft hosting.</p><div class="social-links"><a href="#" onclick="window.open('https://discord.gg/JzynaecG','_blank')"><i class="fab fa-discord"></i></a></div></div>
-          <div class="footer-section"><h4>Hızlı Linkler</h4><ul><li><a href="#">Ana Sayfa</a></li><li><a href="#">Paketler</a></li></ul></div>
+          <div class="footer-section"><h4>Hızlı Linkler</h4><ul><li><a href="#" onclick="showHome()">Ana Sayfa</a></li><li><a href="#" onclick="showPackages()">Paketler</a></li></ul></div>
           <div class="footer-section"><h4>İletişim</h4><ul><li><a href="#">destek@vexar.host</a></li><li><a href="#">discord.gg/JzynaecG</a></li></ul></div>
         </div>
         <div class="footer-bottom">© 2024 Vexar Hosting.</div>
@@ -635,6 +648,7 @@
     </div>
   </div>
 
+  <!-- Panel Page -->
   <div id="panelPage" class="panel-container">
     <div class="container">
       <div style="display:flex;align-items:center;gap:12px;padding:24px 0">
@@ -671,26 +685,93 @@
     </div>
   </div>
 
-  <!-- Admin Modal -->
-  <div id="adminModal" class="modal">
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
     <div class="modal-content">
-      <div class="modal-header"><h2><i class="fas fa-crown"></i> Admin Girişi</h2><button class="close-modal" onclick="closeAdminModal()">&times;</button></div>
-      <div class="form-group"><label>Admin Kodu</label><input type="password" id="adminCodeInput"></div>
-      <div id="adminError" style="color:#ef4444;font-size:14px"></div>
-      <button class="submit-btn" onclick="verifyAdmin()">Giriş Yap</button>
+      <div class="modal-header"><h2><i class="fas fa-sign-in-alt"></i> Giriş Yap</h2><button class="close-modal" onclick="closeLoginModal()">&times;</button></div>
+      <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="loginUsername"></div>
+      <div class="form-group"><label>Şifre</label><input type="password" id="loginPassword"></div>
+      <div id="loginError" style="color:#ef4444;font-size:14px;margin-bottom:16px"></div>
+      <button class="submit-btn" onclick="login()">Giriş Yap</button>
+      <p style="color:#a1a1aa;font-size:13px;margin-top:16px;text-align:center">
+        Hesabın yok mu? <a href="#" onclick="switchToRegister()" style="color:#a855f7">Kayıt Ol</a>
+      </p>
     </div>
   </div>
 
-  <!-- Code Modal -->
-  <div id="codeModal" class="modal">
+  <!-- Register Modal -->
+  <div id="registerModal" class="modal">
     <div class="modal-content">
-      <div class="modal-header"><h2><i class="fas fa-key"></i> Satın Alım Kodu</h2><button class="close-modal" onclick="closeCodeModal()">&times;</button></div>
-      <div class="form-group"><label>Satın Alım Kodunuz</label><input type="text" id="purchaseCodeInput" placeholder="VEX-XXXXXX-XXXX"></div>
-      <div id="codeError" style="color:#ef4444;font-size:14px"></div>
-      <button class="submit-btn" onclick="verifyPurchaseCode()">Panele Git</button>
+      <div class="modal-header"><h2><i class="fas fa-user-plus"></i> Kayıt Ol</h2><button class="close-modal" onclick="closeRegisterModal()">&times;</button></div>
+      <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="registerUsername"></div>
+      <div class="form-group"><label>E-posta</label><input type="email" id="registerEmail"></div>
+      <div class="form-group"><label>Şifre</label><input type="password" id="registerPassword"></div>
+      <div class="form-group"><label>Şifre Tekrar</label><input type="password" id="registerPasswordConfirm"></div>
+      <div id="registerError" style="color:#ef4444;font-size:14px;margin-bottom:16px"></div>
+      <button class="submit-btn" onclick="register()">Kayıt Ol</button>
       <p style="color:#a1a1aa;font-size:13px;margin-top:16px;text-align:center">
-        Kodunuz yoksa <a href="#" onclick="window.open('https://discord.gg/JzynaecG','_blank');return false;" style="color:#a855f7">Discord sunucumuza</a> gelip satın alabilirsiniz.
+        Zaten hesabın var mı? <a href="#" onclick="switchToLogin()" style="color:#a855f7">Giriş Yap</a>
       </p>
+    </div>
+  </div>
+
+  <!-- Admin Panel Modal -->
+  <div id="adminPanelModal" class="modal">
+    <div class="modal-content large">
+      <div class="modal-header"><h2><i class="fas fa-crown"></i> Admin Paneli</h2><button class="close-modal" onclick="closeAdminPanelModal()">&times;</button></div>
+      
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchAdminTab('categories')">Kategoriler</button>
+        <button class="admin-tab" onclick="switchAdminTab('packages')">Paketler</button>
+        <button class="admin-tab" onclick="switchAdminTab('codes')">Satın Alım Kodları</button>
+        <button class="admin-tab" onclick="switchAdminTab('testimonials')">Müşteri Yorumları</button>
+        <button class="admin-tab" onclick="switchAdminTab('settings')">Site Ayarları</button>
+        <button class="admin-tab" onclick="switchAdminTab('users')">Kullanıcılar</button>
+      </div>
+      
+      <div id="adminTabContent"></div>
+    </div>
+  </div>
+
+  <!-- Package Form Modal -->
+  <div id="packageFormModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header"><h2 id="packageFormTitle">Paket Ekle</h2><button class="close-modal" onclick="closePackageFormModal()">&times;</button></div>
+      <form id="packageForm" onsubmit="savePackage(event)">
+        <input type="hidden" id="packageEditIndex">
+        <input type="hidden" id="packageEditCategory">
+        <input type="hidden" id="packageEditCycle">
+        <div class="form-group"><label>Paket Adı</label><input type="text" id="packageName" required></div>
+        <div class="form-group"><label>Açıklama</label><input type="text" id="packageDesc" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>CPU</label><input type="text" id="packageCpu" placeholder="2 vCPU"></div>
+          <div class="form-group"><label>RAM</label><input type="text" id="packageRam" placeholder="4 GB"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Disk</label><input type="text" id="packageDisk" placeholder="20 GB"></div>
+          <div class="form-group"><label>Subdomain (Domain için)</label><input type="text" id="packageSubdomain" placeholder="play.sunucu.xyz"></div>
+        </div>
+        <div class="form-group"><label>Fiyat (TL)</label><input type="number" id="packagePrice" required></div>
+        <div class="form-group"><label>Kategori</label><select id="packageCategory"></select></div>
+        <div class="form-group"><label>Faturalandırma</label><select id="packageCycle"><option value="aylik">Aylık</option><option value="yillik">Yıllık</option><option value="sonsuz">Sonsuz</option></select></div>
+        <button type="submit" class="submit-btn">Kaydet</button>
+        <button type="button" class="submit-btn delete-btn" id="packageDeleteBtn" style="display: none;" onclick="deletePackageConfirm()">Sil</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Category Form Modal -->
+  <div id="categoryFormModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header"><h2 id="categoryFormTitle">Kategori Ekle</h2><button class="close-modal" onclick="closeCategoryFormModal()">&times;</button></div>
+      <form id="categoryForm" onsubmit="saveCategory(event)">
+        <input type="hidden" id="categoryEditId">
+        <div class="form-group"><label>Kategori Adı</label><input type="text" id="categoryName" required></div>
+        <div class="form-group"><label>İkon (Font Awesome)</label><input type="text" id="categoryIcon" placeholder="fa-cube" required></div>
+        <div class="checkbox-group"><input type="checkbox" id="categoryActive" checked> <label>Aktif</label></div>
+        <button type="submit" class="submit-btn">Kaydet</button>
+        <button type="button" class="submit-btn delete-btn" id="categoryDeleteBtn" style="display: none;" onclick="deleteCategoryConfirm()">Sil</button>
+      </form>
     </div>
   </div>
 
@@ -707,31 +788,10 @@
     </div>
   </div>
 
-  <!-- Admin Panel Modal -->
-  <div id="adminPanelModal" class="modal">
-    <div class="modal-content" style="max-width:800px">
-      <div class="modal-header"><h2><i class="fas fa-crown"></i> Admin Paneli</h2><button class="close-modal" onclick="closeAdminPanelModal()">&times;</button></div>
-      
-      <div class="admin-tabs">
-        <button class="admin-tab active" onclick="switchAdminTab('categories')">Kategoriler</button>
-        <button class="admin-tab" onclick="switchAdminTab('packages')">Paketler</button>
-        <button class="admin-tab" onclick="switchAdminTab('codes')">Kodlar</button>
-        <button class="admin-tab" onclick="switchAdminTab('testimonials')">Yorumlar</button>
-        <button class="admin-tab" onclick="switchAdminTab('settings')">Site Ayarları</button>
-      </div>
-      
-      <div id="adminTabContent"></div>
-    </div>
-  </div>
-
   <script>
-    const ADMIN = "vexarprojectzerlax";
-    let currentPackage = null;
-    let serverOnline = false;
-    let currentTab = 'console';
-    let currentCategory = 'minecraft';
-    let selectedBillingCycle = 'sonsuz';
-    let pendingPurchasePackage = null;
+    // ==================== VERİTABANI (localStorage) ====================
+    let users = JSON.parse(localStorage.getItem('vexarUsers')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('vexarCurrentUser')) || null;
     
     let siteSettings = JSON.parse(localStorage.getItem('vexarSiteSettings')) || {
       activeServers: 0,
@@ -792,67 +852,33 @@
           { name: 'GOD', desc: '1000 Oyuncu', cpu: '128 vCPU', ram: '512 GB', disk: '2 TB', price: 59900 }
         ]
       },
-      ddos: {
-        aylik: [
-          { name: 'LITE', desc: '2 Tbps Standart L3/L4', price: 45 },
-          { name: 'PRO', desc: '12 Tbps Anti-DDoS + Anti-Bot', price: 90 },
-          { name: 'ELITE', desc: 'L7 Filtreleme + Layer 7 Özel Koruma', price: 190 },
-          { name: 'TITAN', desc: 'Ultra Düşük Ping + Path.net Altyapı', price: 350 },
-          { name: 'GOD SHIELD', desc: '%100 Uptime + Özel Donanım Firewall', price: 650 }
-        ],
-        yillik: [
-          { name: 'LITE', desc: '2 Tbps Standart L3/L4', price: 350 },
-          { name: 'PRO', desc: '12 Tbps Anti-DDoS + Anti-Bot', price: 750 },
-          { name: 'ELITE', desc: 'L7 Filtreleme + Layer 7 Özel Koruma', price: 1600 },
-          { name: 'TITAN', desc: 'Ultra Düşük Ping + Path.net Altyapı', price: 3000 },
-          { name: 'GOD SHIELD', desc: '%100 Uptime + Özel Donanım Firewall', price: 5500 }
-        ],
-        sonsuz: [
-          { name: 'LITE', desc: '2 Tbps Standart L3/L4', price: 490 },
-          { name: 'PRO', desc: '12 Tbps Anti-DDoS + Anti-Bot', price: 990 },
-          { name: 'ELITE', desc: 'L7 Filtreleme + Layer 7 Özel Koruma', price: 2100 },
-          { name: 'TITAN', desc: 'Ultra Düşük Ping + Path.net Altyapı', price: 3900 },
-          { name: 'GOD SHIELD', desc: '%100 Uptime + Özel Donanım Firewall', price: 7500 }
-        ]
-      },
-      anticheat: {
-        aylik: [
-          { name: 'LITE', desc: 'Standart Hareket & Combat Kontrolü', price: 40 },
-          { name: 'PLUS', desc: 'Gelişmiş Aura & Reach Bloklama', price: 85 },
-          { name: 'PRO', desc: 'Makine Öğrenmesi & Log Analizi', price: 150 },
-          { name: 'ELITE', desc: '%99 Engelleme + Özel Config Desteği', price: 280 },
-          { name: 'ULTIMATE', desc: 'Client-Side (Zorunlu Başlatıcı) Desteği', price: 500 }
-        ],
-        yillik: [
-          { name: 'LITE', desc: 'Standart Hareket & Combat Kontrolü', price: 320 },
-          { name: 'PLUS', desc: 'Gelişmiş Aura & Reach Bloklama', price: 700 },
-          { name: 'PRO', desc: 'Makine Öğrenmesi & Log Analizi', price: 1250 },
-          { name: 'ELITE', desc: '%99 Engelleme + Özel Config Desteği', price: 2400 },
-          { name: 'ULTIMATE', desc: 'Client-Side (Zorunlu Başlatıcı) Desteği', price: 4200 }
-        ],
-        sonsuz: [
-          { name: 'LITE', desc: 'Standart Hareket & Combat Kontrolü', price: 450 },
-          { name: 'PLUS', desc: 'Gelişmiş Aura & Reach Bloklama', price: 890 },
-          { name: 'PRO', desc: 'Makine Öğrenmesi & Log Analizi', price: 1700 },
-          { name: 'ELITE', desc: '%99 Engelleme + Özel Config Desteği', price: 3200 },
-          { name: 'ULTIMATE', desc: 'Client-Side (Zorunlu Başlatıcı) Desteği', price: 5500 }
-        ]
-      },
-      domain: {
-        sonsuz: [
-          { name: '.xyz', desc: 'En Popüler', subdomain: 'play.sunucu.xyz', price: 100 },
-          { name: '.online', desc: 'Modern', subdomain: 'play.sunucun.online', price: 120 },
-          { name: '.com.tr', desc: 'Resmi', subdomain: 'play.sunucun.com.tr', price: 150 },
-          { name: '.network', desc: 'Pro', subdomain: 'play.sunucun.network', price: 180 },
-          { name: '.com', desc: 'Kral', subdomain: 'play.sunucun.com', price: 200 }
-        ]
-      }
+      ddos: { aylik: [], yillik: [], sonsuz: [] },
+      anticheat: { aylik: [], yillik: [], sonsuz: [] },
+      domain: { sonsuz: [] }
     };
 
-    let panelData = { players: [], plugins: [], files: [], network: { ping: 0, bandwidth: 0, ddos: 0, load: 0 } };
+    let currentCategory = 'minecraft';
+    let selectedBillingCycle = 'sonsuz';
+    let pendingPurchasePackage = null;
+    let serverOnline = false;
+    let currentTab = 'console';
+    let panelData = { players: [], plugins: [], files: [] };
     let serverSettings = { serverName: 'VEXAR Sunucu', version: 'Paper 1.20.4', gamemode: 'Survival', difficulty: 'Normal', maxPlayers: '20', motd: 'Vexar Hosting Sunucusu' };
 
-    // Site ayarlarını uygula
+    // Admin kontrolü
+    function isAdmin() { return currentUser && currentUser.role === 'admin'; }
+
+    // ==================== SAYFA YÜKLEME ====================
+    function init() {
+      applySiteSettings();
+      renderUserAuth();
+      renderCategories();
+      selectCategory('minecraft');
+      if (currentUser) {
+        document.getElementById('adminBtn').style.display = isAdmin() ? 'flex' : 'none';
+      }
+    }
+
     function applySiteSettings() {
       document.getElementById('activeServers').textContent = siteSettings.activeServers;
       document.getElementById('systemStatus').textContent = siteSettings.systemStatus;
@@ -861,6 +887,88 @@
       if (siteSettings.testimonialsEnabled) renderTestimonials();
     }
 
+    function renderUserAuth() {
+      const section = document.getElementById('userAuthSection');
+      if (currentUser) {
+        section.innerHTML = `
+          <div class="user-menu">
+            <button class="user-btn" onclick="toggleUserMenu()"><i class="fas fa-user"></i> ${currentUser.username}</button>
+            <div class="user-dropdown" id="userDropdown">
+              <div onclick="openPanel()"><i class="fas fa-server"></i> Sunucu Panelim</div>
+              <div onclick="openPurchaseCodeModal()"><i class="fas fa-key"></i> Kod ile Giriş</div>
+              <div onclick="logout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</div>
+            </div>
+          </div>
+        `;
+      } else {
+        section.innerHTML = `
+          <button class="user-btn" onclick="openLoginModal()"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
+          <button class="user-btn" onclick="openRegisterModal()"><i class="fas fa-user-plus"></i> Kayıt Ol</button>
+        `;
+      }
+    }
+
+    function toggleUserMenu() {
+      document.getElementById('userDropdown').classList.toggle('active');
+    }
+
+    // ==================== AUTH İŞLEMLERİ ====================
+    function openLoginModal() { document.getElementById('loginModal').classList.add('active'); }
+    function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); }
+    function openRegisterModal() { document.getElementById('registerModal').classList.add('active'); }
+    function closeRegisterModal() { document.getElementById('registerModal').classList.remove('active'); }
+    
+    function switchToRegister() { closeLoginModal(); openRegisterModal(); }
+    function switchToLogin() { closeRegisterModal(); openLoginModal(); }
+
+    function register() {
+      const username = document.getElementById('registerUsername').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const confirm = document.getElementById('registerPasswordConfirm').value;
+      const error = document.getElementById('registerError');
+      
+      if (!username || !email || !password) { error.textContent = 'Tüm alanları doldurun!'; return; }
+      if (password !== confirm) { error.textContent = 'Şifreler eşleşmiyor!'; return; }
+      if (users.find(u => u.username === username)) { error.textContent = 'Bu kullanıcı adı zaten kullanılıyor!'; return; }
+      
+      const newUser = { username, email, password, role: 'user', createdAt: new Date().toISOString() };
+      users.push(newUser);
+      localStorage.setItem('vexarUsers', JSON.stringify(users));
+      
+      currentUser = newUser;
+      localStorage.setItem('vexarCurrentUser', JSON.stringify(currentUser));
+      
+      closeRegisterModal();
+      renderUserAuth();
+      document.getElementById('adminBtn').style.display = 'none';
+    }
+
+    function login() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const error = document.getElementById('loginError');
+      
+      const user = users.find(u => u.username === username && u.password === password);
+      if (!user) { error.textContent = 'Kullanıcı adı veya şifre hatalı!'; return; }
+      
+      currentUser = user;
+      localStorage.setItem('vexarCurrentUser', JSON.stringify(currentUser));
+      
+      closeLoginModal();
+      renderUserAuth();
+      document.getElementById('adminBtn').style.display = isAdmin() ? 'flex' : 'none';
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('vexarCurrentUser');
+      renderUserAuth();
+      document.getElementById('adminBtn').style.display = 'none';
+      document.getElementById('userDropdown')?.classList.remove('active');
+    }
+
+    // ==================== KATEGORİ İŞLEMLERİ ====================
     function renderCategories() {
       const selector = document.getElementById('categorySelector');
       selector.innerHTML = categories.filter(c => c.active).map(cat => `
@@ -872,13 +980,14 @@
 
     function selectCategory(catId) {
       currentCategory = catId;
+      const cat = categories.find(c => c.id === catId);
       selectedBillingCycle = catId === 'domain' ? 'sonsuz' : 'sonsuz';
       renderCategories();
       renderPackages();
-      const cat = categories.find(c => c.id === catId);
       document.getElementById('categoryTitle').textContent = cat ? cat.name + ' Paketleri' : 'Paketler';
     }
 
+    // ==================== PAKET İŞLEMLERİ ====================
     function renderPackages() {
       const grid = document.getElementById('packagesGrid');
       const catPkgs = packages[currentCategory];
@@ -886,6 +995,8 @@
       
       const pkgList = catPkgs[selectedBillingCycle] || catPkgs.sonsuz || [];
       const billingText = selectedBillingCycle === 'aylik' ? '/ Ay' : selectedBillingCycle === 'yillik' ? '/ Yıl' : '/ Sonsuz';
+      
+      if (pkgList.length === 0) { grid.innerHTML = '<p style="color:#a1a1aa;text-align:center;grid-column:1/-1">Bu kategoride paket bulunmuyor.</p>'; return; }
       
       grid.innerHTML = pkgList.map((pkg, i) => `
         <div class="package-card">
@@ -933,6 +1044,7 @@
     }
 
     function openPurchaseModal(cat, cycle, idx) {
+      if (!currentUser) { openLoginModal(); return; }
       const pkg = packages[cat][cycle][idx];
       pendingPurchasePackage = { category: cat, package: pkg, packageName: pkg.name };
       document.getElementById('purchaseModalTitle').textContent = `Satın Al - ${pkg.name}`;
@@ -944,12 +1056,17 @@
       pendingPurchasePackage = null;
     }
 
+    function openPurchaseCodeModal() {
+      if (!currentUser) { openLoginModal(); return; }
+      document.getElementById('codeModal').classList.add('active');
+    }
+
     function checkPurchaseCode() {
       const code = document.getElementById('purchaseCodeCheckInput').value.trim().toUpperCase();
-      const found = purchaseCodes.find(c => c.code === code && c.packageName === pendingPurchasePackage.packageName);
+      const found = purchaseCodes.find(c => c.code === code);
       
       if (found) {
-        currentPackage = { name: pendingPurchasePackage.packageName, cpu: pendingPurchasePackage.package.cpu || 'N/A', ram: pendingPurchasePackage.package.ram || 'N/A', disk: pendingPurchasePackage.package.disk || 'N/A' };
+        currentPackage = { name: found.packageName, cpu: 'N/A', ram: 'N/A', disk: 'N/A' };
         closePurchaseModal();
         openPanel();
       } else {
@@ -957,6 +1074,7 @@
       }
     }
 
+    // ==================== YORUMLAR ====================
     function renderTestimonials() {
       const grid = document.getElementById('testimonialsGrid');
       if (!testimonials.length) {
@@ -965,7 +1083,7 @@
       }
       grid.innerHTML = testimonials.map(t => `
         <div class="package-card">
-          <div class="testimonial-header" style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
             <div style="width:48px;height:48px;background:${t.color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">${t.name[0]}</div>
             <div><h4>${t.name}</h4><p style="color:#a1a1aa;font-size:13px">${t.title}</p></div>
           </div>
@@ -975,187 +1093,23 @@
       `).join('');
     }
 
-    // Admin Panel
-    function openAdminModal() { document.getElementById('adminModal').classList.add('active'); }
-    function closeAdminModal() { document.getElementById('adminModal').classList.remove('active'); }
-    function verifyAdmin() {
-      if (document.getElementById('adminCodeInput').value === ADMIN) {
-        closeAdminModal();
-        openAdminPanelModal();
-      } else {
-        document.getElementById('adminError').textContent = 'Geçersiz admin kodu!';
-      }
-    }
-
-    function openAdminPanelModal() {
-      document.getElementById('adminPanelModal').classList.add('active');
-      switchAdminTab('categories');
-    }
-    function closeAdminPanelModal() { document.getElementById('adminPanelModal').classList.remove('active'); }
-
-    function switchAdminTab(tab) {
-      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      const content = document.getElementById('adminTabContent');
-      
-      if (tab === 'categories') {
-        content.innerHTML = `
-          <button class="submit-btn" style="margin-bottom:20px" onclick="addCategory()"><i class="fas fa-plus"></i> Kategori Ekle</button>
-          <div id="categoriesList">
-            ${categories.map((cat, i) => `
-              <div class="category-item">
-                <div><i class="fas ${cat.icon}"></i> ${cat.name} ${cat.active ? '' : '(Gizli)'}</div>
-                <div class="category-actions">
-                  <button class="edit-btn" onclick="editCategory(${i})"><i class="fas fa-edit"></i></button>
-                  <button class="delete-btn-sm" onclick="deleteCategory(${i})"><i class="fas fa-trash"></i></button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      } else if (tab === 'packages') {
-        let html = '<select id="adminPackageCategory" class="form-group" style="margin-bottom:20px">';
-        html += categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-        html += '</select>';
-        html += '<select id="adminPackageCycle" class="form-group" style="margin-bottom:20px"><option value="aylik">Aylık</option><option value="yillik">Yıllık</option><option value="sonsuz">Sonsuz</option></select>';
-        html += '<button class="submit-btn" onclick="addPackage()"><i class="fas fa-plus"></i> Paket Ekle</button>';
-        html += '<div id="packagesList" style="margin-top:20px"></div>';
-        content.innerHTML = html;
-        document.getElementById('adminPackageCategory').addEventListener('change', renderAdminPackages);
-        document.getElementById('adminPackageCycle').addEventListener('change', renderAdminPackages);
-        renderAdminPackages();
-      } else if (tab === 'codes') {
-        content.innerHTML = `
-          <button class="submit-btn" onclick="generateCode()"><i class="fas fa-plus"></i> Kod Oluştur</button>
-          <div id="codesList" style="margin-top:20px"></div>
-        `;
-        renderCodesList();
-      } else if (tab === 'testimonials') {
-        content.innerHTML = `
-          <div class="testimonials-toggle">
-            <span>Yorumları Göster</span>
-            <div class="toggle-switch ${siteSettings.testimonialsEnabled ? 'active' : ''}" onclick="toggleTestimonials()"></div>
-          </div>
-          <button class="submit-btn" onclick="addTestimonial()"><i class="fas fa-plus"></i> Yorum Ekle</button>
-          <div id="testimonialsList" style="margin-top:20px"></div>
-        `;
-        renderTestimonialsList();
-      } else if (tab === 'settings') {
-        content.innerHTML = `
-          <div class="form-group"><label>Aktif Sunucu Sayısı</label><input type="number" id="settingActiveServers" value="${siteSettings.activeServers}"></div>
-          <div class="form-group"><label>Sistem Durumu</label><input type="text" id="settingSystemStatus" value="${siteSettings.systemStatus}"></div>
-          <div class="form-group"><label>İndirim Banner Yazısı</label><input type="text" id="settingDiscountBanner" value="${siteSettings.discountBanner}"></div>
-          <button class="submit-btn" onclick="saveSiteSettings()">Kaydet</button>
-        `;
-      }
-    }
-
-    function renderAdminPackages() {
-      const cat = document.getElementById('adminPackageCategory').value;
-      const cycle = document.getElementById('adminPackageCycle').value;
-      const pkgs = packages[cat]?.[cycle] || [];
-      const list = document.getElementById('packagesList');
-      list.innerHTML = pkgs.map((p, i) => `
-        <div class="package-item">
-          <div>${p.name} - ${p.price} TL</div>
-          <div class="package-actions">
-            <button class="edit-btn" onclick="editPackage('${cat}', '${cycle}', ${i})">Düzenle</button>
-            <button class="delete-btn-sm" onclick="deletePackage('${cat}', '${cycle}', ${i})">Sil</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function generateCode() {
-      const pkgName = prompt('Paket adı girin (örn: STARTER):');
-      if (!pkgName) return;
-      const code = 'VEX-' + Math.random().toString(36).substring(2,8).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
-      purchaseCodes.push({ code, packageName: pkgName, createdAt: new Date().toLocaleDateString('tr-TR') });
-      localStorage.setItem('vexarCodes', JSON.stringify(purchaseCodes));
-      renderCodesList();
-    }
-
-    function renderCodesList() {
-      const list = document.getElementById('codesList');
-      if (!purchaseCodes.length) { list.innerHTML = '<p style="color:#a1a1aa">Kod yok</p>'; return; }
-      list.innerHTML = purchaseCodes.map((c, i) => `
-        <div class="code-item" style="display:flex;justify-content:space-between;padding:14px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:10px">
-          <div><strong>${c.code}</strong><br><span style="color:#a1a1aa;font-size:13px">${c.packageName} - ${c.createdAt}</span></div>
-          <button class="delete-btn-sm" onclick="deleteCode(${i})"><i class="fas fa-trash"></i></button>
-        </div>
-      `).join('');
-    }
-
-    function deleteCode(i) { purchaseCodes.splice(i, 1); localStorage.setItem('vexarCodes', JSON.stringify(purchaseCodes)); renderCodesList(); }
-
-    function toggleTestimonials() {
-      siteSettings.testimonialsEnabled = !siteSettings.testimonialsEnabled;
-      localStorage.setItem('vexarSiteSettings', JSON.stringify(siteSettings));
-      applySiteSettings();
-      switchAdminTab('testimonials');
-    }
-
-    function addTestimonial() {
-      const name = prompt('İsim:');
-      const title = prompt('Başlık (örn: Skyblock Sunucusu):');
-      const comment = prompt('Yorum:');
-      const rating = parseInt(prompt('Puan (1-5):'));
-      const color = '#' + Math.floor(Math.random()*16777215).toString(16);
-      if (name && comment && rating) {
-        testimonials.push({ name, title, comment, rating, color });
-        localStorage.setItem('vexarTestimonials', JSON.stringify(testimonials));
-        renderTestimonialsList();
-        applySiteSettings();
-      }
-    }
-
-    function renderTestimonialsList() {
-      const list = document.getElementById('testimonialsList');
-      list.innerHTML = testimonials.map((t, i) => `
-        <div class="testimonial-item" style="display:flex;justify-content:space-between;padding:14px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:10px">
-          <div><strong>${t.name}</strong> - ${'★'.repeat(t.rating)}<br><span style="color:#a1a1aa">${t.comment.substring(0,50)}...</span></div>
-          <button class="delete-btn-sm" onclick="deleteTestimonial(${i})"><i class="fas fa-trash"></i></button>
-        </div>
-      `).join('');
-    }
-
-    function deleteTestimonial(i) { testimonials.splice(i, 1); localStorage.setItem('vexarTestimonials', JSON.stringify(testimonials)); renderTestimonialsList(); applySiteSettings(); }
-
-    function saveSiteSettings() {
-      siteSettings.activeServers = parseInt(document.getElementById('settingActiveServers').value) || 0;
-      siteSettings.systemStatus = document.getElementById('settingSystemStatus').value;
-      siteSettings.discountBanner = document.getElementById('settingDiscountBanner').value;
-      localStorage.setItem('vexarSiteSettings', JSON.stringify(siteSettings));
-      applySiteSettings();
-      closeAdminPanelModal();
-    }
-
-    // Panel
-    function openCodeModal() { document.getElementById('codeModal').classList.add('active'); }
-    function closeCodeModal() { document.getElementById('codeModal').classList.remove('active'); }
-    function verifyPurchaseCode() {
-      const code = document.getElementById('purchaseCodeInput').value.trim().toUpperCase();
-      const found = purchaseCodes.find(c => c.code === code);
-      if (found) {
-        currentPackage = { name: found.packageName, cpu: 'N/A', ram: 'N/A', disk: 'N/A' };
-        closeCodeModal();
-        openPanel();
-      } else {
-        document.getElementById('codeError').textContent = 'Geçersiz kod!';
-      }
-    }
-
+    // ==================== PANEL İŞLEMLERİ ====================
     function openPanel() {
+      if (!currentUser) { openLoginModal(); return; }
       document.getElementById('mainPage').style.display = 'none';
       document.getElementById('panelPage').classList.add('active');
       document.getElementById('panelServerName').textContent = serverSettings.serverName;
-      document.getElementById('panelServerSpecs').textContent = `${currentPackage.cpu} | ${currentPackage.ram} | ${currentPackage.disk}`;
+      document.getElementById('panelServerSpecs').textContent = currentPackage ? `${currentPackage.cpu} | ${currentPackage.ram} | ${currentPackage.disk}` : 'Paket bilgisi';
       serverOnline = false;
       updateServerStatus();
       switchTab('console');
     }
 
-    function logoutPanel() { document.getElementById('mainPage').style.display = 'block'; document.getElementById('panelPage').classList.remove('active'); }
+    function logoutPanel() {
+      document.getElementById('mainPage').style.display = 'block';
+      document.getElementById('panelPage').classList.remove('active');
+    }
+
     function updateServerStatus() {
       const badge = document.getElementById('serverStatusBadge');
       const text = document.getElementById('statusText');
@@ -1192,7 +1146,7 @@
       } else if (tab === 'network') {
         content.innerHTML = `
           <h3 style="margin-bottom:24px">Network İstatistikleri</h3>
-          <div class="network-stats-panel">
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">
             <div class="stat-card"><div class="stat-label">Ping</div><div class="stat-value">${serverOnline ? '0.8ms' : '0ms'}</div></div>
             <div class="stat-card"><div class="stat-label">Bant Genişliği</div><div class="stat-value">${serverOnline ? '8.2 Gbps' : '0 Gbps'}</div></div>
             <div class="stat-card"><div class="stat-label">DDoS Filtre</div><div class="stat-value">${serverOnline ? '1.2 Tbps' : '0 Tbps'}</div></div>
@@ -1236,15 +1190,351 @@
       switchTab('settings');
     }
 
-    // Init
-    applySiteSettings();
-    renderCategories();
-    selectCategory('minecraft');
+    // ==================== ADMIN PANELİ ====================
+    function openAdminPanel() {
+      if (!isAdmin()) return;
+      document.getElementById('adminPanelModal').classList.add('active');
+      switchAdminTab('categories');
+    }
 
+    function closeAdminPanelModal() { document.getElementById('adminPanelModal').classList.remove('active'); }
+
+    function switchAdminTab(tab) {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      const content = document.getElementById('adminTabContent');
+      
+      if (tab === 'categories') {
+        content.innerHTML = `
+          <button class="submit-btn" style="margin-bottom:20px" onclick="openCategoryForm()"><i class="fas fa-plus"></i> Kategori Ekle</button>
+          <div id="categoriesList">
+            ${categories.map((cat, i) => `
+              <div class="category-item">
+                <div><i class="fas ${cat.icon}"></i> ${cat.name} ${cat.active ? '' : '(Gizli)'}</div>
+                <div class="category-actions">
+                  <button class="edit-btn" onclick="openCategoryForm('${cat.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="delete-btn-sm" onclick="deleteCategory('${cat.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (tab === 'packages') {
+        let html = '<button class="submit-btn" style="margin-bottom:20px" onclick="openPackageForm()"><i class="fas fa-plus"></i> Paket Ekle</button>';
+        html += '<select id="adminPackageCategory" class="form-group" onchange="renderAdminPackages()">';
+        html += categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        html += '</select>';
+        html += '<select id="adminPackageCycle" class="form-group" onchange="renderAdminPackages()"><option value="aylik">Aylık</option><option value="yillik">Yıllık</option><option value="sonsuz">Sonsuz</option></select>';
+        html += '<div id="packagesList" style="margin-top:20px"></div>';
+        content.innerHTML = html;
+        renderAdminPackages();
+      } else if (tab === 'codes') {
+        content.innerHTML = `
+          <button class="submit-btn" onclick="generateCode()"><i class="fas fa-plus"></i> Kod Oluştur</button>
+          <div id="codesList" style="margin-top:20px"></div>
+        `;
+        renderCodesList();
+      } else if (tab === 'testimonials') {
+        content.innerHTML = `
+          <div class="testimonials-toggle">
+            <span>Yorumları Göster</span>
+            <div class="toggle-switch ${siteSettings.testimonialsEnabled ? 'active' : ''}" onclick="toggleTestimonials()"></div>
+          </div>
+          <button class="submit-btn" onclick="addTestimonial()"><i class="fas fa-plus"></i> Yorum Ekle</button>
+          <div id="testimonialsList" style="margin-top:20px"></div>
+        `;
+        renderTestimonialsList();
+      } else if (tab === 'settings') {
+        content.innerHTML = `
+          <div class="form-group"><label>Aktif Sunucu Sayısı</label><input type="number" id="settingActiveServers" value="${siteSettings.activeServers}"></div>
+          <div class="form-group"><label>Sistem Durumu</label><input type="text" id="settingSystemStatus" value="${siteSettings.systemStatus}"></div>
+          <div class="form-group"><label>İndirim Banner Yazısı</label><input type="text" id="settingDiscountBanner" value="${siteSettings.discountBanner}"></div>
+          <button class="submit-btn" onclick="saveSiteSettings()">Kaydet</button>
+        `;
+      } else if (tab === 'users') {
+        content.innerHTML = `
+          <h3>Kullanıcılar</h3>
+          <div id="usersList">
+            ${users.map((u, i) => `
+              <div class="category-item">
+                <div><strong>${u.username}</strong> (${u.email}) - ${u.role}</div>
+                <div class="category-actions">
+                  <select onchange="changeUserRole(${i}, this.value)">
+                    <option value="user" ${u.role === 'user' ? 'selected' : ''}>User</option>
+                    <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+                  </select>
+                  <button class="delete-btn-sm" onclick="deleteUser(${i})"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    function renderAdminPackages() {
+      const cat = document.getElementById('adminPackageCategory')?.value || 'minecraft';
+      const cycle = document.getElementById('adminPackageCycle')?.value || 'sonsuz';
+      const pkgs = packages[cat]?.[cycle] || [];
+      const list = document.getElementById('packagesList');
+      if (!list) return;
+      list.innerHTML = pkgs.map((p, i) => `
+        <div class="package-item">
+          <div>${p.name} - ${p.price} TL</div>
+          <div class="package-actions">
+            <button class="edit-btn" onclick="openPackageForm('${cat}', '${cycle}', ${i})">Düzenle</button>
+            <button class="delete-btn-sm" onclick="deletePackage('${cat}', '${cycle}', ${i})">Sil</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCategoryForm(catId = null) {
+      if (catId) {
+        const cat = categories.find(c => c.id === catId);
+        document.getElementById('categoryFormTitle').textContent = 'Kategori Düzenle';
+        document.getElementById('categoryEditId').value = catId;
+        document.getElementById('categoryName').value = cat.name;
+        document.getElementById('categoryIcon').value = cat.icon;
+        document.getElementById('categoryActive').checked = cat.active;
+        document.getElementById('categoryDeleteBtn').style.display = 'block';
+      } else {
+        document.getElementById('categoryFormTitle').textContent = 'Kategori Ekle';
+        document.getElementById('categoryEditId').value = '';
+        document.getElementById('categoryName').value = '';
+        document.getElementById('categoryIcon').value = 'fa-cube';
+        document.getElementById('categoryActive').checked = true;
+        document.getElementById('categoryDeleteBtn').style.display = 'none';
+      }
+      document.getElementById('categoryFormModal').classList.add('active');
+    }
+
+    function closeCategoryFormModal() { document.getElementById('categoryFormModal').classList.remove('active'); }
+
+    function saveCategory(e) {
+      e.preventDefault();
+      const id = document.getElementById('categoryEditId').value || 'cat_' + Date.now();
+      const name = document.getElementById('categoryName').value;
+      const icon = document.getElementById('categoryIcon').value;
+      const active = document.getElementById('categoryActive').checked;
+      
+      const existingIndex = categories.findIndex(c => c.id === id);
+      if (existingIndex >= 0) {
+        categories[existingIndex] = { ...categories[existingIndex], name, icon, active };
+      } else {
+        categories.push({ id, name, icon, active });
+        if (!packages[id]) packages[id] = { aylik: [], yillik: [], sonsuz: [] };
+      }
+      
+      localStorage.setItem('vexarCategories', JSON.stringify(categories));
+      localStorage.setItem('vexarPackages', JSON.stringify(packages));
+      closeCategoryFormModal();
+      switchAdminTab('categories');
+      renderCategories();
+    }
+
+    function deleteCategory(catId) {
+      if (confirm('Bu kategoriyi silmek istediğinize emin misiniz?')) {
+        categories = categories.filter(c => c.id !== catId);
+        delete packages[catId];
+        localStorage.setItem('vexarCategories', JSON.stringify(categories));
+        localStorage.setItem('vexarPackages', JSON.stringify(packages));
+        switchAdminTab('categories');
+        renderCategories();
+      }
+    }
+
+    function deleteCategoryConfirm() {
+      const id = document.getElementById('categoryEditId').value;
+      deleteCategory(id);
+      closeCategoryFormModal();
+    }
+
+    function openPackageForm(cat = '', cycle = '', index = -1) {
+      const categorySelect = document.getElementById('packageCategory');
+      categorySelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      
+      if (index >= 0) {
+        const pkg = packages[cat][cycle][index];
+        document.getElementById('packageFormTitle').textContent = 'Paket Düzenle';
+        document.getElementById('packageEditIndex').value = index;
+        document.getElementById('packageEditCategory').value = cat;
+        document.getElementById('packageEditCycle').value = cycle;
+        document.getElementById('packageName').value = pkg.name;
+        document.getElementById('packageDesc').value = pkg.desc;
+        document.getElementById('packageCpu').value = pkg.cpu || '';
+        document.getElementById('packageRam').value = pkg.ram || '';
+        document.getElementById('packageDisk').value = pkg.disk || '';
+        document.getElementById('packageSubdomain').value = pkg.subdomain || '';
+        document.getElementById('packagePrice').value = pkg.price;
+        document.getElementById('packageCategory').value = cat;
+        document.getElementById('packageCycle').value = cycle;
+        document.getElementById('packageDeleteBtn').style.display = 'block';
+      } else {
+        document.getElementById('packageFormTitle').textContent = 'Paket Ekle';
+        document.getElementById('packageEditIndex').value = '';
+        document.getElementById('packageEditCategory').value = '';
+        document.getElementById('packageEditCycle').value = '';
+        document.getElementById('packageName').value = '';
+        document.getElementById('packageDesc').value = '';
+        document.getElementById('packageCpu').value = '';
+        document.getElementById('packageRam').value = '';
+        document.getElementById('packageDisk').value = '';
+        document.getElementById('packageSubdomain').value = '';
+        document.getElementById('packagePrice').value = '';
+        document.getElementById('packageCategory').value = cat || 'minecraft';
+        document.getElementById('packageCycle').value = cycle || 'sonsuz';
+        document.getElementById('packageDeleteBtn').style.display = 'none';
+      }
+      document.getElementById('packageFormModal').classList.add('active');
+    }
+
+    function closePackageFormModal() { document.getElementById('packageFormModal').classList.remove('active'); }
+
+    function savePackage(e) {
+      e.preventDefault();
+      const editIndex = document.getElementById('packageEditIndex').value;
+      const editCat = document.getElementById('packageEditCategory').value;
+      const editCycle = document.getElementById('packageEditCycle').value;
+      
+      const cat = document.getElementById('packageCategory').value;
+      const cycle = document.getElementById('packageCycle').value;
+      
+      const pkg = {
+        name: document.getElementById('packageName').value,
+        desc: document.getElementById('packageDesc').value,
+        cpu: document.getElementById('packageCpu').value,
+        ram: document.getElementById('packageRam').value,
+        disk: document.getElementById('packageDisk').value,
+        subdomain: document.getElementById('packageSubdomain').value,
+        price: parseFloat(document.getElementById('packagePrice').value)
+      };
+      
+      if (!packages[cat]) packages[cat] = { aylik: [], yillik: [], sonsuz: [] };
+      if (!packages[cat][cycle]) packages[cat][cycle] = [];
+      
+      if (editIndex !== '' && editCat === cat && editCycle === cycle) {
+        packages[cat][cycle][editIndex] = pkg;
+      } else {
+        if (editIndex !== '') packages[editCat][editCycle].splice(editIndex, 1);
+        packages[cat][cycle].push(pkg);
+      }
+      
+      localStorage.setItem('vexarPackages', JSON.stringify(packages));
+      closePackageFormModal();
+      switchAdminTab('packages');
+      if (currentCategory === cat) selectCategory(cat);
+    }
+
+    function deletePackage(cat, cycle, index) {
+      if (confirm('Bu paketi silmek istediğinize emin misiniz?')) {
+        packages[cat][cycle].splice(index, 1);
+        localStorage.setItem('vexarPackages', JSON.stringify(packages));
+        renderAdminPackages();
+        if (currentCategory === cat) selectCategory(cat);
+      }
+    }
+
+    function deletePackageConfirm() {
+      const cat = document.getElementById('packageEditCategory').value;
+      const cycle = document.getElementById('packageEditCycle').value;
+      const index = document.getElementById('packageEditIndex').value;
+      deletePackage(cat, cycle, index);
+      closePackageFormModal();
+    }
+
+    function generateCode() {
+      const pkgName = prompt('Paket adı girin (örn: STARTER):');
+      if (!pkgName) return;
+      const code = 'VEX-' + Math.random().toString(36).substring(2,8).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
+      purchaseCodes.push({ code, packageName: pkgName, createdAt: new Date().toLocaleDateString('tr-TR') });
+      localStorage.setItem('vexarCodes', JSON.stringify(purchaseCodes));
+      renderCodesList();
+    }
+
+    function renderCodesList() {
+      const list = document.getElementById('codesList');
+      if (!purchaseCodes.length) { list.innerHTML = '<p style="color:#a1a1aa">Kod yok</p>'; return; }
+      list.innerHTML = purchaseCodes.map((c, i) => `
+        <div class="code-item">
+          <div><strong>${c.code}</strong><br><span style="color:#a1a1aa;font-size:13px">${c.packageName} - ${c.createdAt}</span></div>
+          <button class="delete-btn-sm" onclick="deleteCode(${i})"><i class="fas fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function deleteCode(i) { purchaseCodes.splice(i, 1); localStorage.setItem('vexarCodes', JSON.stringify(purchaseCodes)); renderCodesList(); }
+
+    function toggleTestimonials() {
+      siteSettings.testimonialsEnabled = !siteSettings.testimonialsEnabled;
+      localStorage.setItem('vexarSiteSettings', JSON.stringify(siteSettings));
+      applySiteSettings();
+      switchAdminTab('testimonials');
+    }
+
+    function addTestimonial() {
+      const name = prompt('İsim:');
+      const title = prompt('Başlık:');
+      const comment = prompt('Yorum:');
+      const rating = parseInt(prompt('Puan (1-5):'));
+      if (name && comment && rating) {
+        testimonials.push({ name, title, comment, rating, color: '#' + Math.floor(Math.random()*16777215).toString(16) });
+        localStorage.setItem('vexarTestimonials', JSON.stringify(testimonials));
+        renderTestimonialsList();
+        applySiteSettings();
+      }
+    }
+
+    function renderTestimonialsList() {
+      const list = document.getElementById('testimonialsList');
+      list.innerHTML = testimonials.map((t, i) => `
+        <div class="testimonial-item">
+          <div><strong>${t.name}</strong> - ${'★'.repeat(t.rating)}<br><span style="color:#a1a1aa">${t.comment.substring(0,50)}...</span></div>
+          <button class="delete-btn-sm" onclick="deleteTestimonial(${i})"><i class="fas fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function deleteTestimonial(i) { testimonials.splice(i, 1); localStorage.setItem('vexarTestimonials', JSON.stringify(testimonials)); renderTestimonialsList(); applySiteSettings(); }
+
+    function saveSiteSettings() {
+      siteSettings.activeServers = parseInt(document.getElementById('settingActiveServers').value) || 0;
+      siteSettings.systemStatus = document.getElementById('settingSystemStatus').value;
+      siteSettings.discountBanner = document.getElementById('settingDiscountBanner').value;
+      localStorage.setItem('vexarSiteSettings', JSON.stringify(siteSettings));
+      applySiteSettings();
+      closeAdminPanelModal();
+    }
+
+    function changeUserRole(index, role) {
+      users[index].role = role;
+      localStorage.setItem('vexarUsers', JSON.stringify(users));
+      if (currentUser && currentUser.username === users[index].username) {
+        currentUser.role = role;
+        localStorage.setItem('vexarCurrentUser', JSON.stringify(currentUser));
+        document.getElementById('adminBtn').style.display = isAdmin() ? 'flex' : 'none';
+      }
+    }
+
+    function deleteUser(index) {
+      if (confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
+        users.splice(index, 1);
+        localStorage.setItem('vexarUsers', JSON.stringify(users));
+        switchAdminTab('users');
+      }
+    }
+
+    function showHome() { selectCategory('minecraft'); }
+    function showPackages() { selectCategory('minecraft'); }
+
+    // Init
     window.onclick = e => { 
       if (e.target.classList.contains('modal')) e.target.classList.remove('active');
       if (!e.target.closest('.package-menu')) document.querySelectorAll('.package-menu-dropdown').forEach(m => m.classList.remove('active'));
+      if (!e.target.closest('.user-menu')) document.getElementById('userDropdown')?.classList.remove('active');
     };
+
+    init();
   </script>
 </body>
 </html>
