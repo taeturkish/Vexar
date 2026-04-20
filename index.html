@@ -17,7 +17,7 @@
       min-height: 100vh;
     }
     .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
-
+    
     /* Header */
     .navbar {
       display: flex;
@@ -585,9 +585,36 @@
       transition: transform 0.2s;
     }
     .toggle-switch.active::after { transform: translateX(24px); }
+    
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+    }
+    .loading-overlay.active { display: flex; }
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(168, 85, 247, 0.3);
+      border-top-color: #a855f7;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+
   <div class="discord-widget">
     <button class="discord-button" onclick="window.open('https://discord.gg/JzynaecG', '_blank')">
       <i class="fab fa-discord"></i> Discord
@@ -685,7 +712,7 @@
     </div>
   </div>
 
-  <!-- Login Modal -->
+  <!-- Modals (Login, Register, Admin Panel, Package Form, Category Form, Purchase) -->
   <div id="loginModal" class="modal">
     <div class="modal-content">
       <div class="modal-header"><h2><i class="fas fa-sign-in-alt"></i> Giriş Yap</h2><button class="close-modal" onclick="closeLoginModal()">&times;</button></div>
@@ -699,7 +726,6 @@
     </div>
   </div>
 
-  <!-- Register Modal -->
   <div id="registerModal" class="modal">
     <div class="modal-content">
       <div class="modal-header"><h2><i class="fas fa-user-plus"></i> Kayıt Ol</h2><button class="close-modal" onclick="closeRegisterModal()">&times;</button></div>
@@ -715,7 +741,6 @@
     </div>
   </div>
 
-  <!-- Admin Panel Modal -->
   <div id="adminPanelModal" class="modal">
     <div class="modal-content large">
       <div class="modal-header"><h2><i class="fas fa-crown"></i> Admin Paneli</h2><button class="close-modal" onclick="closeAdminPanelModal()">&times;</button></div>
@@ -733,7 +758,6 @@
     </div>
   </div>
 
-  <!-- Package Form Modal -->
   <div id="packageFormModal" class="modal">
     <div class="modal-content">
       <div class="modal-header"><h2 id="packageFormTitle">Paket Ekle</h2><button class="close-modal" onclick="closePackageFormModal()">&times;</button></div>
@@ -760,7 +784,6 @@
     </div>
   </div>
 
-  <!-- Category Form Modal -->
   <div id="categoryFormModal" class="modal">
     <div class="modal-content">
       <div class="modal-header"><h2 id="categoryFormTitle">Kategori Ekle</h2><button class="close-modal" onclick="closeCategoryFormModal()">&times;</button></div>
@@ -775,7 +798,6 @@
     </div>
   </div>
 
-  <!-- Purchase Modal -->
   <div id="purchaseModal" class="modal">
     <div class="modal-content">
       <div class="modal-header"><h2 id="purchaseModalTitle">Satın Al</h2><button class="close-modal" onclick="closePurchaseModal()">&times;</button></div>
@@ -789,74 +811,22 @@
   </div>
 
   <script>
-    // ==================== VERİTABANI (localStorage) ====================
-    let users = JSON.parse(localStorage.getItem('vexarUsers')) || [];
-    let currentUser = JSON.parse(localStorage.getItem('vexarCurrentUser')) || null;
-    
-    let siteSettings = JSON.parse(localStorage.getItem('vexarSiteSettings')) || {
-      activeServers: 0,
-      systemStatus: 'Tüm Sistemler Çalışıyor',
-      discountBanner: '🎉 AÇILIŞA ÖZEL FIRSATLAR! 🎉',
-      testimonialsEnabled: false
-    };
-    
-    let testimonials = JSON.parse(localStorage.getItem('vexarTestimonials')) || [];
-    let purchaseCodes = JSON.parse(localStorage.getItem('vexarCodes')) || [];
-    
-    let categories = JSON.parse(localStorage.getItem('vexarCategories')) || [
-      { id: 'minecraft', name: 'Minecraft Sunucu', icon: 'fa-cube', active: true },
-      { id: 'ddos', name: 'DDoS Koruması', icon: 'fa-shield-alt', active: true },
-      { id: 'anticheat', name: 'Hile Koruması', icon: 'fa-ban', active: true },
-      { id: 'domain', name: 'Domain', icon: 'fa-globe', active: true }
-    ];
-    
-    let packages = JSON.parse(localStorage.getItem('vexarPackages')) || {
-      minecraft: {
-        aylik: [
-          { name: 'STARTER', desc: 'Çok Küçük Sunucular', cpu: '2 vCPU', ram: '4 GB', disk: '20 GB', price: 110 },
-          { name: 'TEMEL', desc: 'Küçük Sunucular', cpu: '4 vCPU', ram: '8 GB', disk: '40 GB', price: 220 },
-          { name: 'ELITE', desc: 'Ortalama Sunucular', cpu: '6 vCPU', ram: '12 GB', disk: '60 GB', price: 350 },
-          { name: 'ULTRA', desc: 'Büyük Sunucular', cpu: '8 vCPU', ram: '16 GB', disk: '80 GB', price: 480 },
-          { name: 'TİTAN', desc: 'Çok Büyük Sunucular', cpu: '10 vCPU', ram: '24 GB', disk: '100 GB', price: 690 },
-          { name: 'MYTHIC', desc: '100 Oyuncu', cpu: '12 vCPU', ram: '32 GB', disk: '150 GB', price: 950 },
-          { name: 'LEGENDARY', desc: '300 Oyuncu', cpu: '24 vCPU', ram: '64 GB', disk: '300 GB', price: 1800 },
-          { name: 'GALAXY', desc: '500 Oyuncu', cpu: '32 vCPU', ram: '128 GB', disk: '500 GB', price: 3400 },
-          { name: 'UNIVERSE', desc: '600 Oyuncu', cpu: '48 vCPU', ram: '192 GB', disk: '750 GB', price: 4900 },
-          { name: 'ETERNITY', desc: '800 Oyuncu', cpu: '64 vCPU', ram: '256 GB', disk: '1 TB', price: 6500 },
-          { name: 'GOD', desc: '1000 Oyuncu', cpu: '128 vCPU', ram: '512 GB', disk: '2 TB', price: 12000 }
-        ],
-        yillik: [
-          { name: 'STARTER', desc: 'Çok Küçük Sunucular', cpu: '2 vCPU', ram: '4 GB', disk: '20 GB', price: 790 },
-          { name: 'TEMEL', desc: 'Küçük Sunucular', cpu: '4 vCPU', ram: '8 GB', disk: '40 GB', price: 1550 },
-          { name: 'ELITE', desc: 'Ortalama Sunucular', cpu: '6 vCPU', ram: '12 GB', disk: '60 GB', price: 2450 },
-          { name: 'ULTRA', desc: 'Büyük Sunucular', cpu: '8 vCPU', ram: '16 GB', disk: '80 GB', price: 3350 },
-          { name: 'TİTAN', desc: 'Çok Büyük Sunucular', cpu: '10 vCPU', ram: '24 GB', disk: '100 GB', price: 4750 },
-          { name: 'MYTHIC', desc: '100 Oyuncu', cpu: '12 vCPU', ram: '32 GB', disk: '150 GB', price: 6200 },
-          { name: 'LEGENDARY', desc: '300 Oyuncu', cpu: '24 vCPU', ram: '64 GB', disk: '300 GB', price: 10500 },
-          { name: 'GALAXY', desc: '500 Oyuncu', cpu: '32 vCPU', ram: '128 GB', disk: '500 GB', price: 17500 },
-          { name: 'UNIVERSE', desc: '600 Oyuncu', cpu: '48 vCPU', ram: '192 GB', disk: '750 GB', price: 25900 },
-          { name: 'ETERNITY', desc: '800 Oyuncu', cpu: '64 vCPU', ram: '256 GB', disk: '1 TB', price: 31500 },
-          { name: 'GOD', desc: '1000 Oyuncu', cpu: '128 vCPU', ram: '512 GB', disk: '2 TB', price: 49900 }
-        ],
-        sonsuz: [
-          { name: 'STARTER', desc: 'Çok Küçük Sunucular', cpu: '2 vCPU', ram: '4 GB', disk: '20 GB', price: 960 },
-          { name: 'TEMEL', desc: 'Küçük Sunucular', cpu: '4 vCPU', ram: '8 GB', disk: '40 GB', price: 1990 },
-          { name: 'ELITE', desc: 'Ortalama Sunucular', cpu: '6 vCPU', ram: '12 GB', disk: '60 GB', price: 2990 },
-          { name: 'ULTRA', desc: 'Büyük Sunucular', cpu: '8 vCPU', ram: '16 GB', disk: '80 GB', price: 3990 },
-          { name: 'TİTAN', desc: 'Çok Büyük Sunucular', cpu: '10 vCPU', ram: '24 GB', disk: '100 GB', price: 5500 },
-          { name: 'MYTHIC', desc: '100 Oyuncu', cpu: '12 vCPU', ram: '32 GB', disk: '150 GB', price: 7200 },
-          { name: 'LEGENDARY', desc: '300 Oyuncu', cpu: '24 vCPU', ram: '64 GB', disk: '300 GB', price: 11900 },
-          { name: 'GALAXY', desc: '500 Oyuncu', cpu: '32 vCPU', ram: '128 GB', disk: '500 GB', price: 19900 },
-          { name: 'UNIVERSE', desc: '600 Oyuncu', cpu: '48 vCPU', ram: '192 GB', disk: '750 GB', price: 29900 },
-          { name: 'ETERNITY', desc: '800 Oyuncu', cpu: '64 vCPU', ram: '256 GB', disk: '1 TB', price: 35900 },
-          { name: 'GOD', desc: '1000 Oyuncu', cpu: '128 vCPU', ram: '512 GB', disk: '2 TB', price: 59900 }
-        ]
-      },
-      ddos: { aylik: [], yillik: [], sonsuz: [] },
-      anticheat: { aylik: [], yillik: [], sonsuz: [] },
-      domain: { sonsuz: [] }
-    };
+    // ==================== GITHUB AYARLARI ====================
+    const GITHUB_TOKEN = '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'; // 👈 YENİ TOKEN'INI BURAYA YAZ
+    const GITHUB_USERNAME = 'taeturkish'; // 👈 GITHUB KULLANICI ADIN
+    const GITHUB_REPO = 'Vexar'; // 👈 REPO İSMİN
+    const DATA_FILE = 'vexar-data.json';
+    const BRANCH = 'main';
 
+    // ==================== VERİ DEĞİŞKENLERİ ====================
+    let users = [];
+    let currentUser = JSON.parse(localStorage.getItem('vexarCurrentUser')) || null;
+    let siteSettings = { activeServers: 0, systemStatus: 'Tüm Sistemler Çalışıyor', discountBanner: '🎉 AÇILIŞA ÖZEL FIRSATLAR! 🎉', testimonialsEnabled: false };
+    let testimonials = [];
+    let purchaseCodes = [];
+    let categories = [];
+    let packages = {};
+    
     let currentCategory = 'minecraft';
     let selectedBillingCycle = 'sonsuz';
     let pendingPurchasePackage = null;
@@ -865,11 +835,142 @@
     let panelData = { players: [], plugins: [], files: [] };
     let serverSettings = { serverName: 'VEXAR Sunucu', version: 'Paper 1.20.4', gamemode: 'Survival', difficulty: 'Normal', maxPlayers: '20', motd: 'Vexar Hosting Sunucusu' };
 
-    // Admin kontrolü
-    function isAdmin() { return currentUser && currentUser.role === 'admin'; }
+    // ==================== GITHUB API FONKSİYONLARI ====================
+    async function loadFromGitHub() {
+      showLoading();
+      try {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
+          headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          const content = JSON.parse(atob(data.content));
+          
+          users = content.users || [];
+          siteSettings = content.siteSettings || siteSettings;
+          testimonials = content.testimonials || [];
+          purchaseCodes = content.purchaseCodes || [];
+          categories = content.categories || getDefaultCategories();
+          packages = content.packages || getDefaultPackages();
+        } else if (response.status === 404) {
+          // Dosya yoksa varsayılanları kullan ve oluştur
+          categories = getDefaultCategories();
+          packages = getDefaultPackages();
+          await saveToGitHub();
+        } else {
+          console.error('GitHub yükleme hatası:', response.status);
+          loadFromLocalFallback();
+        }
+      } catch (e) {
+        console.error('Bağlantı hatası:', e);
+        loadFromLocalFallback();
+      }
+      hideLoading();
+    }
+
+    function loadFromLocalFallback() {
+      categories = JSON.parse(localStorage.getItem('vexarCategories')) || getDefaultCategories();
+      packages = JSON.parse(localStorage.getItem('vexarPackages')) || getDefaultPackages();
+      siteSettings = JSON.parse(localStorage.getItem('vexarSiteSettings')) || siteSettings;
+      testimonials = JSON.parse(localStorage.getItem('vexarTestimonials')) || [];
+      purchaseCodes = JSON.parse(localStorage.getItem('vexarCodes')) || [];
+      users = JSON.parse(localStorage.getItem('vexarUsers')) || [];
+    }
+
+    async function saveToGitHub() {
+      showLoading();
+      try {
+        const content = {
+          users, siteSettings, testimonials, purchaseCodes, categories, packages
+        };
+        
+        // Önce mevcut dosyanın SHA'sını al
+        let sha = null;
+        try {
+          const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
+            headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            sha = data.sha;
+          }
+        } catch (e) {}
+        
+        const body = {
+          message: 'Update Vexar data',
+          content: btoa(JSON.stringify(content, null, 2)),
+          branch: BRANCH
+        };
+        if (sha) body.sha = sha;
+        
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+        
+        if (!response.ok) {
+          console.error('Kaydetme hatası:', response.status);
+          saveToLocalFallback();
+        }
+      } catch (e) {
+        console.error('Kaydetme hatası:', e);
+        saveToLocalFallback();
+      }
+      hideLoading();
+    }
+
+    function saveToLocalFallback() {
+      localStorage.setItem('vexarCategories', JSON.stringify(categories));
+      localStorage.setItem('vexarPackages', JSON.stringify(packages));
+      localStorage.setItem('vexarSiteSettings', JSON.stringify(siteSettings));
+      localStorage.setItem('vexarTestimonials', JSON.stringify(testimonials));
+      localStorage.setItem('vexarCodes', JSON.stringify(purchaseCodes));
+      localStorage.setItem('vexarUsers', JSON.stringify(users));
+    }
+
+    function getDefaultCategories() {
+      return [
+        { id: 'minecraft', name: 'Minecraft Sunucu', icon: 'fa-cube', active: true },
+        { id: 'ddos', name: 'DDoS Koruması', icon: 'fa-shield-alt', active: true },
+        { id: 'anticheat', name: 'Hile Koruması', icon: 'fa-ban', active: true },
+        { id: 'domain', name: 'Domain', icon: 'fa-globe', active: true }
+      ];
+    }
+
+    function getDefaultPackages() {
+      return {
+        minecraft: {
+          sonsuz: [
+            { name: 'STARTER', desc: 'Çok Küçük Sunucular', cpu: '2 vCPU', ram: '4 GB', disk: '20 GB', price: 960 },
+            { name: 'TEMEL', desc: 'Küçük Sunucular', cpu: '4 vCPU', ram: '8 GB', disk: '40 GB', price: 1990 },
+            { name: 'ELITE', desc: 'Ortalama Sunucular', cpu: '6 vCPU', ram: '12 GB', disk: '60 GB', price: 2990 },
+            { name: 'ULTRA', desc: 'Büyük Sunucular', cpu: '8 vCPU', ram: '16 GB', disk: '80 GB', price: 3990 },
+            { name: 'TİTAN', desc: 'Çok Büyük Sunucular', cpu: '10 vCPU', ram: '24 GB', disk: '100 GB', price: 5500 },
+            { name: 'MYTHIC', desc: '100 Oyuncu', cpu: '12 vCPU', ram: '32 GB', disk: '150 GB', price: 7200 },
+            { name: 'LEGENDARY', desc: '300 Oyuncu', cpu: '24 vCPU', ram: '64 GB', disk: '300 GB', price: 11900 },
+            { name: 'GALAXY', desc: '500 Oyuncu', cpu: '32 vCPU', ram: '128 GB', disk: '500 GB', price: 19900 },
+            { name: 'UNIVERSE', desc: '600 Oyuncu', cpu: '48 vCPU', ram: '192 GB', disk: '750 GB', price: 29900 },
+            { name: 'ETERNITY', desc: '800 Oyuncu', cpu: '64 vCPU', ram: '256 GB', disk: '1 TB', price: 35900 },
+            { name: 'GOD', desc: '1000 Oyuncu', cpu: '128 vCPU', ram: '512 GB', disk: '2 TB', price: 59900 }
+          ]
+        },
+        ddos: { aylik: [], yillik: [], sonsuz: [] },
+        anticheat: { aylik: [], yillik: [], sonsuz: [] },
+        domain: { sonsuz: [] }
+      };
+    }
+
+    function showLoading() { document.getElementById('loadingOverlay').classList.add('active'); }
+    function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
 
     // ==================== SAYFA YÜKLEME ====================
-    function init() {
+    async function init() {
+      await loadFromGitHub();
       applySiteSettings();
       renderUserAuth();
       renderCategories();
@@ -878,6 +979,8 @@
         document.getElementById('adminBtn').style.display = isAdmin() ? 'flex' : 'none';
       }
     }
+
+    function isAdmin() { return currentUser && currentUser.role === 'admin'; }
 
     function applySiteSettings() {
       document.getElementById('activeServers').textContent = siteSettings.activeServers;
@@ -893,10 +996,10 @@
         section.innerHTML = `
           <div class="user-menu">
             <button class="user-btn" onclick="toggleUserMenu()"><i class="fas fa-user"></i> ${currentUser.username}</button>
-            <div class="user-dropdown" id="userDropdown">
-              <div onclick="openPanel()"><i class="fas fa-server"></i> Sunucu Panelim</div>
-              <div onclick="openPurchaseCodeModal()"><i class="fas fa-key"></i> Kod ile Giriş</div>
-              <div onclick="logout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</div>
+            <div class="user-dropdown" id="userDropdown" style="position:absolute;top:40px;right:0;background:#1e1e2e;border-radius:12px;padding:8px;display:none;z-index:1000">
+              <div onclick="openPanel()" style="padding:10px 14px;cursor:pointer"><i class="fas fa-server"></i> Sunucu Panelim</div>
+              <div onclick="openCodeModal()" style="padding:10px 14px;cursor:pointer"><i class="fas fa-key"></i> Kod ile Giriş</div>
+              <div onclick="logout()" style="padding:10px 14px;cursor:pointer"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</div>
             </div>
           </div>
         `;
@@ -909,7 +1012,8 @@
     }
 
     function toggleUserMenu() {
-      document.getElementById('userDropdown').classList.toggle('active');
+      const dd = document.getElementById('userDropdown');
+      dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
     }
 
     // ==================== AUTH İŞLEMLERİ ====================
@@ -917,11 +1021,10 @@
     function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); }
     function openRegisterModal() { document.getElementById('registerModal').classList.add('active'); }
     function closeRegisterModal() { document.getElementById('registerModal').classList.remove('active'); }
-    
     function switchToRegister() { closeLoginModal(); openRegisterModal(); }
     function switchToLogin() { closeRegisterModal(); openLoginModal(); }
 
-    function register() {
+    async function register() {
       const username = document.getElementById('registerUsername').value.trim();
       const email = document.getElementById('registerEmail').value.trim();
       const password = document.getElementById('registerPassword').value;
@@ -932,19 +1035,25 @@
       if (password !== confirm) { error.textContent = 'Şifreler eşleşmiyor!'; return; }
       if (users.find(u => u.username === username)) { error.textContent = 'Bu kullanıcı adı zaten kullanılıyor!'; return; }
       
-      const newUser = { username, email, password, role: 'user', createdAt: new Date().toISOString() };
+      const adminCode = prompt('Admin olmak için kodunuz var mı? (Varsa girin, yoksa boş bırakın)');
+      const role = (adminCode === 'VEXAR2024') ? 'admin' : 'user';
+      
+      const newUser = { username, email, password, role, createdAt: new Date().toISOString() };
       users.push(newUser);
-      localStorage.setItem('vexarUsers', JSON.stringify(users));
       
       currentUser = newUser;
       localStorage.setItem('vexarCurrentUser', JSON.stringify(currentUser));
       
+      await saveToGitHub();
+      
       closeRegisterModal();
       renderUserAuth();
-      document.getElementById('adminBtn').style.display = 'none';
+      document.getElementById('adminBtn').style.display = role === 'admin' ? 'flex' : 'none';
+      
+      if (role === 'admin') alert('✅ Admin olarak kaydedildiniz!');
     }
 
-    function login() {
+    async function login() {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value;
       const error = document.getElementById('loginError');
@@ -960,12 +1069,12 @@
       document.getElementById('adminBtn').style.display = isAdmin() ? 'flex' : 'none';
     }
 
-    function logout() {
+    async function logout() {
       currentUser = null;
       localStorage.removeItem('vexarCurrentUser');
       renderUserAuth();
       document.getElementById('adminBtn').style.display = 'none';
-      document.getElementById('userDropdown')?.classList.remove('active');
+      document.getElementById('userDropdown').style.display = 'none';
     }
 
     // ==================== KATEGORİ İŞLEMLERİ ====================
@@ -1056,9 +1165,10 @@
       pendingPurchasePackage = null;
     }
 
-    function openPurchaseCodeModal() {
+    function openCodeModal() {
       if (!currentUser) { openLoginModal(); return; }
-      document.getElementById('codeModal').classList.add('active');
+      document.getElementById('purchaseModal').classList.add('active');
+      document.getElementById('purchaseModalTitle').textContent = 'Kod ile Giriş';
     }
 
     function checkPurchaseCode() {
@@ -1311,7 +1421,7 @@
 
     function closeCategoryFormModal() { document.getElementById('categoryFormModal').classList.remove('active'); }
 
-    function saveCategory(e) {
+    async function saveCategory(e) {
       e.preventDefault();
       const id = document.getElementById('categoryEditId').value || 'cat_' + Date.now();
       const name = document.getElementById('categoryName').value;
@@ -1326,19 +1436,17 @@
         if (!packages[id]) packages[id] = { aylik: [], yillik: [], sonsuz: [] };
       }
       
-      localStorage.setItem('vexarCategories', JSON.stringify(categories));
-      localStorage.setItem('vexarPackages', JSON.stringify(packages));
+      await saveToGitHub();
       closeCategoryFormModal();
       switchAdminTab('categories');
       renderCategories();
     }
 
-    function deleteCategory(catId) {
+    async function deleteCategory(catId) {
       if (confirm('Bu kategoriyi silmek istediğinize emin misiniz?')) {
         categories = categories.filter(c => c.id !== catId);
         delete packages[catId];
-        localStorage.setItem('vexarCategories', JSON.stringify(categories));
-        localStorage.setItem('vexarPackages', JSON.stringify(packages));
+        await saveToGitHub();
         switchAdminTab('categories');
         renderCategories();
       }
@@ -1391,7 +1499,7 @@
 
     function closePackageFormModal() { document.getElementById('packageFormModal').classList.remove('active'); }
 
-    function savePackage(e) {
+    async function savePackage(e) {
       e.preventDefault();
       const editIndex = document.getElementById('packageEditIndex').value;
       const editCat = document.getElementById('packageEditCategory').value;
@@ -1420,16 +1528,16 @@
         packages[cat][cycle].push(pkg);
       }
       
-      localStorage.setItem('vexarPackages', JSON.stringify(packages));
+      await saveToGitHub();
       closePackageFormModal();
       switchAdminTab('packages');
       if (currentCategory === cat) selectCategory(cat);
     }
 
-    function deletePackage(cat, cycle, index) {
+    async function deletePackage(cat, cycle, index) {
       if (confirm('Bu paketi silmek istediğinize emin misiniz?')) {
         packages[cat][cycle].splice(index, 1);
-        localStorage.setItem('vexarPackages', JSON.stringify(packages));
+        await saveToGitHub();
         renderAdminPackages();
         if (currentCategory === cat) selectCategory(cat);
       }
@@ -1443,12 +1551,12 @@
       closePackageFormModal();
     }
 
-    function generateCode() {
+    async function generateCode() {
       const pkgName = prompt('Paket adı girin (örn: STARTER):');
       if (!pkgName) return;
       const code = 'VEX-' + Math.random().toString(36).substring(2,8).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
       purchaseCodes.push({ code, packageName: pkgName, createdAt: new Date().toLocaleDateString('tr-TR') });
-      localStorage.setItem('vexarCodes', JSON.stringify(purchaseCodes));
+      await saveToGitHub();
       renderCodesList();
     }
 
@@ -1463,23 +1571,27 @@
       `).join('');
     }
 
-    function deleteCode(i) { purchaseCodes.splice(i, 1); localStorage.setItem('vexarCodes', JSON.stringify(purchaseCodes)); renderCodesList(); }
+    async function deleteCode(i) { 
+      purchaseCodes.splice(i, 1); 
+      await saveToGitHub(); 
+      renderCodesList(); 
+    }
 
-    function toggleTestimonials() {
+    async function toggleTestimonials() {
       siteSettings.testimonialsEnabled = !siteSettings.testimonialsEnabled;
-      localStorage.setItem('vexarSiteSettings', JSON.stringify(siteSettings));
+      await saveToGitHub();
       applySiteSettings();
       switchAdminTab('testimonials');
     }
 
-    function addTestimonial() {
+    async function addTestimonial() {
       const name = prompt('İsim:');
       const title = prompt('Başlık:');
       const comment = prompt('Yorum:');
       const rating = parseInt(prompt('Puan (1-5):'));
       if (name && comment && rating) {
         testimonials.push({ name, title, comment, rating, color: '#' + Math.floor(Math.random()*16777215).toString(16) });
-        localStorage.setItem('vexarTestimonials', JSON.stringify(testimonials));
+        await saveToGitHub();
         renderTestimonialsList();
         applySiteSettings();
       }
@@ -1495,20 +1607,25 @@
       `).join('');
     }
 
-    function deleteTestimonial(i) { testimonials.splice(i, 1); localStorage.setItem('vexarTestimonials', JSON.stringify(testimonials)); renderTestimonialsList(); applySiteSettings(); }
+    async function deleteTestimonial(i) { 
+      testimonials.splice(i, 1); 
+      await saveToGitHub(); 
+      renderTestimonialsList(); 
+      applySiteSettings(); 
+    }
 
-    function saveSiteSettings() {
+    async function saveSiteSettings() {
       siteSettings.activeServers = parseInt(document.getElementById('settingActiveServers').value) || 0;
       siteSettings.systemStatus = document.getElementById('settingSystemStatus').value;
       siteSettings.discountBanner = document.getElementById('settingDiscountBanner').value;
-      localStorage.setItem('vexarSiteSettings', JSON.stringify(siteSettings));
+      await saveToGitHub();
       applySiteSettings();
       closeAdminPanelModal();
     }
 
-    function changeUserRole(index, role) {
+    async function changeUserRole(index, role) {
       users[index].role = role;
-      localStorage.setItem('vexarUsers', JSON.stringify(users));
+      await saveToGitHub();
       if (currentUser && currentUser.username === users[index].username) {
         currentUser.role = role;
         localStorage.setItem('vexarCurrentUser', JSON.stringify(currentUser));
@@ -1516,10 +1633,10 @@
       }
     }
 
-    function deleteUser(index) {
+    async function deleteUser(index) {
       if (confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
         users.splice(index, 1);
-        localStorage.setItem('vexarUsers', JSON.stringify(users));
+        await saveToGitHub();
         switchAdminTab('users');
       }
     }
@@ -1531,7 +1648,7 @@
     window.onclick = e => { 
       if (e.target.classList.contains('modal')) e.target.classList.remove('active');
       if (!e.target.closest('.package-menu')) document.querySelectorAll('.package-menu-dropdown').forEach(m => m.classList.remove('active'));
-      if (!e.target.closest('.user-menu')) document.getElementById('userDropdown')?.classList.remove('active');
+      if (!e.target.closest('.user-menu')) document.getElementById('userDropdown').style.display = 'none';
     };
 
     init();
