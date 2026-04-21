@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     body {
       font-family: 'Montserrat', sans-serif;
       background: #0b0b0f;
@@ -22,7 +21,6 @@
       position: relative;
       overflow-x: hidden;
     }
-    
     .glow {
       position: fixed;
       width: 800px;
@@ -52,17 +50,14 @@
       height: 1000px;
       animation: pulse 6s ease-in-out infinite;
     }
-    
     @keyframes float {
       0%, 100% { transform: translateY(0) scale(1); }
       50% { transform: translateY(-30px) scale(1.05); }
     }
-    
     @keyframes pulse {
       0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
       50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
     }
-    
     .login-container {
       position: relative;
       z-index: 10;
@@ -71,12 +66,10 @@
       padding: 24px;
       animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(40px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
     .login-card {
       background: rgba(18, 18, 24, 0.85);
       backdrop-filter: blur(30px);
@@ -86,12 +79,10 @@
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(168, 85, 247, 0.1) inset;
       transition: all 0.4s;
     }
-    
     .login-card:hover {
       box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(168, 85, 247, 0.2) inset;
       border-color: rgba(168, 85, 247, 0.2);
     }
-    
     .logo {
       display: flex;
       align-items: center;
@@ -99,7 +90,6 @@
       gap: 12px;
       margin-bottom: 44px;
     }
-    
     .logo-icon {
       width: 56px;
       height: 56px;
@@ -113,12 +103,10 @@
       box-shadow: 0 15px 35px rgba(168, 85, 247, 0.4);
       animation: iconPulse 3s ease-in-out infinite;
     }
-    
     @keyframes iconPulse {
       0%, 100% { box-shadow: 0 15px 35px rgba(168, 85, 247, 0.4); }
       50% { box-shadow: 0 20px 45px rgba(168, 85, 247, 0.7); }
     }
-    
     .logo-text {
       font-size: 38px;
       font-weight: 900;
@@ -128,7 +116,6 @@
       background-clip: text;
       color: transparent;
     }
-    
     .login-title {
       font-size: 36px;
       font-weight: 800;
@@ -136,7 +123,6 @@
       margin-bottom: 10px;
       letter-spacing: -0.5px;
     }
-    
     .login-subtitle {
       color: #8b8b9a;
       text-align: center;
@@ -144,16 +130,13 @@
       margin-bottom: 40px;
       font-weight: 400;
     }
-    
     .form-group {
       margin-bottom: 24px;
       opacity: 0;
       animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    
     .form-group:nth-child(1) { animation-delay: 0.1s; }
     .form-group:nth-child(2) { animation-delay: 0.2s; }
-    
     .form-group label {
       display: block;
       margin-bottom: 10px;
@@ -162,11 +145,9 @@
       font-size: 14px;
       letter-spacing: 0.3px;
     }
-    
     .input-wrapper {
       position: relative;
     }
-    
     .input-wrapper i {
       position: absolute;
       left: 18px;
@@ -176,7 +157,6 @@
       font-size: 18px;
       transition: color 0.3s;
     }
-    
     .input-wrapper input {
       width: 100%;
       padding: 18px 18px 18px 52px;
@@ -189,30 +169,25 @@
       font-weight: 500;
       transition: all 0.3s;
     }
-    
     .input-wrapper input:focus {
       outline: none;
       border-color: #a855f7;
       background: rgba(168, 85, 247, 0.05);
       box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1);
     }
-    
     .input-wrapper input:focus + i,
     .input-wrapper input:valid + i {
       color: #a855f7;
     }
-    
     .input-wrapper input::placeholder {
       color: #4a4a5e;
       font-weight: 400;
     }
-    
     .forgot-link {
       text-align: right;
       margin-top: -8px;
       margin-bottom: 8px;
     }
-    
     .forgot-link a {
       color: #8b8b9a;
       font-size: 14px;
@@ -220,11 +195,9 @@
       transition: color 0.3s;
       font-weight: 500;
     }
-    
     .forgot-link a:hover {
       color: #a855f7;
     }
-    
     .btn {
       width: 100%;
       padding: 18px;
@@ -244,7 +217,6 @@
       opacity: 0;
       animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
     }
-    
     .btn::before {
       content: '';
       position: absolute;
@@ -257,23 +229,19 @@
       transform: translate(-50%, -50%);
       transition: width 0.6s, height 0.6s;
     }
-    
     .btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 20px 45px rgba(168, 85, 247, 0.5);
     }
-    
     .btn:hover::before {
       width: 400px;
       height: 400px;
     }
-    
     .btn:disabled {
       opacity: 0.7;
       cursor: not-allowed;
       transform: none;
     }
-    
     .btn-content {
       display: flex;
       align-items: center;
@@ -282,7 +250,6 @@
       position: relative;
       z-index: 2;
     }
-    
     .spinner {
       width: 22px;
       height: 22px;
@@ -291,11 +258,7 @@
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
+    @keyframes spin { to { transform: rotate(360deg); } }
     .message {
       padding: 14px 18px;
       border-radius: 14px;
@@ -305,18 +268,15 @@
       display: none;
       animation: slideIn 0.3s ease;
     }
-    
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
     .error-message {
       background: rgba(239, 68, 68, 0.08);
       border-left: 4px solid #ef4444;
       color: #fca5a5;
     }
-    
     .register-link {
       text-align: center;
       margin-top: 32px;
@@ -325,7 +285,6 @@
       opacity: 0;
       animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
     }
-    
     .register-link a {
       color: #a855f7;
       text-decoration: none;
@@ -334,7 +293,6 @@
       margin-left: 6px;
       position: relative;
     }
-    
     .register-link a::after {
       content: '';
       position: absolute;
@@ -345,15 +303,12 @@
       background: linear-gradient(90deg, #a855f7, #3b82f6);
       transition: width 0.3s;
     }
-    
     .register-link a:hover {
       color: #c084fc;
     }
-    
     .register-link a:hover::after {
       width: 100%;
     }
-    
     .back-home {
       position: fixed;
       top: 32px;
@@ -373,7 +328,146 @@
       border-radius: 40px;
       backdrop-filter: blur(10px);
     }
-    
     .back-home:hover {
       color: white;
       background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(168, 85, 247, 0.3);
+      transform: translateX(-5px);
+    }
+    .back-home i {
+      font-size: 16px;
+      transition: transform 0.3s;
+    }
+    .back-home:hover i {
+      transform: translateX(-3px);
+    }
+    @media (max-width: 600px) {
+      .login-container { padding: 16px; }
+      .login-card { padding: 36px 28px; border-radius: 32px; }
+      .back-home { top: 20px; left: 20px; padding: 10px 16px; font-size: 14px; }
+      .logo-text { font-size: 32px; }
+      .login-title { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="glow glow-3"></div>
+  
+  <a href="/" class="back-home">
+    <i class="fas fa-arrow-left"></i>
+    <span>Ana Sayfa</span>
+  </a>
+  
+  <div class="login-container">
+    <div class="login-card">
+      <div class="logo">
+        <div class="logo-icon">V</div>
+        <span class="logo-text">VEXAR</span>
+      </div>
+      
+      <h1 class="login-title">Giriş Yap</h1>
+      <p class="login-subtitle">Hesabına giriş yap ve devam et</p>
+      
+      <div id="errorMessage" class="message error-message"></div>
+      
+      <form id="loginForm" onsubmit="window.handleLogin(event)">
+        <div class="form-group">
+          <label>E-posta Adresi</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" placeholder="ornek@email.com" required autocomplete="email">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Şifre</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="••••••••" required>
+          </div>
+        </div>
+        
+        <div class="forgot-link">
+          <a href="#"><i class="fas fa-question-circle"></i> Şifremi Unuttum</a>
+        </div>
+        
+        <button type="submit" class="btn" id="loginBtn">
+          <div class="btn-content" id="btnContent">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Giriş Yap</span>
+          </div>
+        </button>
+      </form>
+      
+      <p class="register-link">
+        Hesabın yok mu?
+        <a href="/kayit">Kayıt Ol <i class="fas fa-arrow-right" style="margin-left: 6px; font-size: 12px;"></i></a>
+      </p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (function() {
+      const SUPABASE_URL = 'https://mwqfxhoakrjyuhyarhlw.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13cWZ4aG9ha3JmeXVoeWFyaGx3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTYxNjIsImV4cCI6MjA5MjM3MjE2Mn0.qwX8s3AaIViMzef3suuil6KKJPkPz35HYIeZBrYyAkI';
+      
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      async function handleLogin(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        
+        const errorDiv = document.getElementById('errorMessage');
+        const btn = document.getElementById('loginBtn');
+        const btnContent = document.getElementById('btnContent');
+        
+        errorDiv.style.display = 'none';
+        
+        btnContent.innerHTML = '<span class="spinner"></span><span>Giriş yapılıyor...</span>';
+        btn.disabled = true;
+        
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
+          
+          if (error) {
+            if (error.message.includes('Invalid login credentials')) {
+              throw new Error('E-posta veya şifre hatalı!');
+            }
+            throw error;
+          }
+          
+          btnContent.innerHTML = '<i class="fas fa-check"></i><span>Başarılı!</span>';
+          
+          setTimeout(() => {
+            window.location.href = '/panel';
+          }, 500);
+          
+        } catch (error) {
+          errorDiv.textContent = error.message;
+          errorDiv.style.display = 'block';
+          btnContent.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Giriş Yap</span>';
+          btn.disabled = false;
+        }
+      }
+      
+      async function checkAuth() {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          window.location.href = '/panel';
+        }
+      }
+      
+      window.handleLogin = handleLogin;
+      checkAuth();
+    })();
+  </script>
+</body>
+</html>
