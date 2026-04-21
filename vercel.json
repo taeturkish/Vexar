@@ -1,9 +1,11 @@
 {
-  "redirects": [
-    {
-      "source": "/eski-sayfa",
-      "destination": "/yeni-sayfa",
-      "permanent": true
-    }
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/kayit", "destination": "/kayit.html" },
+    { "source": "/giris", "destination": "/giris.html" },
+    { "source": "/panel", "destination": "/panel.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/paketler", "destination": "/paketler.html" }
   ]
 }
