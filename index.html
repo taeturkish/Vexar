@@ -1,1004 +1,2080 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vexar Hosting | Profesyonel Minecraft Sunucu Kiralama</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: #0b0b0f;
-      color: #ffffff;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Smooth Scroll */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #0b0b0f;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      border-radius: 4px;
-    }
-
-    /* Glow Effects */
-    .glow {
-      position: fixed;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .glow-1 {
-      top: -200px;
-      right: -200px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
-    }
-
-    .glow-2 {
-      bottom: -200px;
-      left: -200px;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-    }
-
-    .glow-3 {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
-      width: 800px;
-      height: 800px;
-    }
-
-    /* Container */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 40px;
-      position: relative;
-      z-index: 10;
-    }
-
-    /* Header */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 28px 0;
-      position: relative;
-      z-index: 100;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo-icon {
-      width: 45px;
-      height: 45px;
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 800;
-      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
-      animation: pulse 3s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3); }
-      50% { box-shadow: 0 15px 40px rgba(168, 85, 247, 0.5); }
-    }
-
-    .logo-text {
-      font-size: 32px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      background: linear-gradient(135deg, #ffffff, #c084fc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .logo-badge {
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      padding: 4px 10px;
-      border-radius: 40px;
-      font-size: 11px;
-      font-weight: 700;
-      margin-left: 8px;
-      color: white;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 48px;
-      font-weight: 500;
-      align-items: center;
-    }
-
-    .nav-link {
-      color: #9ca3af;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 500;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      position: relative;
-    }
-
-    .nav-link i {
-      font-size: 16px;
-      opacity: 0.7;
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #a855f7, #3b82f6);
-      transition: width 0.3s;
-      border-radius: 2px;
-    }
-
-    .nav-link:hover {
-      color: #ffffff;
-    }
-
-    .nav-link:hover::after {
-      width: 100%;
-    }
-
-    .nav-link:hover i {
-      opacity: 1;
-    }
-
-    .user-area {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .btn {
-      padding: 12px 24px;
-      border-radius: 14px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border: none;
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1.5px solid rgba(255, 255, 255, 0.1);
-      color: #9ca3af;
-    }
-
-    .btn-outline:hover {
-      border-color: #a855f7;
-      color: white;
-      background: rgba(168, 85, 247, 0.05);
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      color: white;
-      box-shadow: 0 10px 25px rgba(168, 85, 247, 0.25);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 35px rgba(168, 85, 247, 0.35);
-    }
-
-    .btn-glow {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-glow::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    .btn-glow:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    /* Status Bar */
-    .status-bar {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .status-card {
-      background: rgba(20, 20, 30, 0.8);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 60px;
-      padding: 10px 28px;
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .status-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #9ca3af;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 15px #22c55e;
-      animation: blink 2s infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .status-value {
-      color: white;
-      font-weight: 700;
-      margin-left: 4px;
-    }
-
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      padding: 80px 0 60px;
-      position: relative;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(168, 85, 247, 0.1);
-      border: 1px solid rgba(168, 85, 247, 0.2);
-      padding: 8px 20px;
-      border-radius: 40px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #c084fc;
-      margin-bottom: 28px;
-      backdrop-filter: blur(10px);
-      animation: fadeInUp 0.8s ease;
-    }
-
-    .hero-badge i {
-      color: #a855f7;
-    }
-
-    .hero-title {
-      font-size: 72px;
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 24px;
-      animation: fadeInUp 0.8s ease 0.1s both;
-    }
-
-    .hero-title-gradient {
-      background: linear-gradient(135deg, #ffffff, #a855f7, #3b82f6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-description {
-      font-size: 18px;
-      color: #9ca3af;
-      max-width: 600px;
-      margin: 0 auto 36px;
-      line-height: 1.7;
-      animation: fadeInUp 0.8s ease 0.2s both;
-    }
-
-    .hero-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      animation: fadeInUp 0.8s ease 0.3s both;
-    }
-
-    .btn-large {
-      padding: 16px 36px;
-      font-size: 16px;
-      border-radius: 16px;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin: 60px 0;
-      animation: fadeInUp 0.8s ease 0.4s both;
-    }
-
-    .stat-card {
-      background: rgba(20, 20, 30, 0.6);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 28px;
-      padding: 32px;
-      text-align: center;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #a855f7, #3b82f6);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(168, 85, 247, 0.3);
-      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4);
-    }
-
-    .stat-card:hover::before {
-      opacity: 1;
-    }
-
-    .stat-icon {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.2));
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 28px;
-      color: #a855f7;
-    }
-
-    .stat-number {
-      font-size: 48px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ffffff, #c084fc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 8px;
-    }
-
-    .stat-label {
-      color: #9ca3af;
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    /* Features */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      margin: 60px 0;
-    }
-
-    .feature-card {
-      background: rgba(20, 20, 30, 0.4);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      border-radius: 24px;
-      padding: 28px;
-      transition: all 0.3s;
-    }
-
-    .feature-card:hover {
-      background: rgba(168, 85, 247, 0.05);
-      border-color: rgba(168, 85, 247, 0.2);
-      transform: translateY(-4px);
-    }
-
-    .feature-icon {
-      width: 52px;
-      height: 52px;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15));
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: #a855f7;
-      margin-bottom: 20px;
-    }
-
-    .feature-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .feature-desc {
-      color: #9ca3af;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    /* Section Title */
-    .section-header {
-      text-align: center;
-      margin: 80px 0 40px;
-    }
-
-    .section-badge {
-      display: inline-block;
-      background: rgba(168, 85, 247, 0.1);
-      border: 1px solid rgba(168, 85, 247, 0.2);
-      padding: 6px 18px;
-      border-radius: 40px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #c084fc;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .section-title {
-      font-size: 48px;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .section-title span {
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .section-desc {
-      color: #9ca3af;
-      font-size: 17px;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    /* Packages */
-    .packages-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      margin: 40px 0;
-    }
-
-    .package-card {
-      background: rgba(20, 20, 30, 0.6);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 32px;
-      padding: 36px 28px;
-      transition: all 0.4s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .package-card:hover {
-      transform: translateY(-12px);
-      border-color: rgba(168, 85, 247, 0.4);
-      box-shadow: 0 40px 60px rgba(0, 0, 0, 0.5);
-    }
-
-    .package-card.premium {
-      border: 2px solid rgba(168, 85, 247, 0.3);
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(59, 130, 246, 0.08));
-    }
-
-    .package-glow {
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.3), transparent);
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
-    }
-
-    .package-card:hover .package-glow {
-      opacity: 1;
-    }
-
-    .package-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .package-name {
-      font-size: 26px;
-      font-weight: 800;
-    }
-
-    .package-badge {
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      padding: 4px 12px;
-      border-radius: 30px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .package-desc {
-      color: #9ca3af;
-      font-size: 14px;
-      margin-bottom: 28px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .package-features {
-      list-style: none;
-      margin-bottom: 32px;
-    }
-
-    .package-features li {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 0;
-      font-size: 15px;
-      color: #d1d5db;
-    }
-
-    .package-features li i {
-      color: #22c55e;
-      font-size: 16px;
-    }
-
-    .package-price {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-
-    .price-value {
-      font-size: 40px;
-      font-weight: 800;
-    }
-
-    .price-period {
-      color: #9ca3af;
-      font-size: 15px;
-    }
-
-    /* CTA Section */
-    .cta-section {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1));
-      border: 1px solid rgba(168, 85, 247, 0.2);
-      border-radius: 48px;
-      padding: 60px;
-      margin: 80px 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.1), transparent 70%);
-      animation: rotate 20s linear infinite;
-    }
-
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .cta-content {
-      position: relative;
-      z-index: 10;
-    }
-
-    .cta-title {
-      font-size: 42px;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .cta-desc {
-      color: #9ca3af;
-      font-size: 18px;
-      margin-bottom: 32px;
-    }
-
-    /* Footer */
-    .footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.03);
-      padding: 60px 0 30px;
-      margin-top: 60px;
-    }
-
-    .footer-content {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 60px;
-      margin-bottom: 50px;
-    }
-
-    .footer-brand p {
-      color: #9ca3af;
-      font-size: 14px;
-      line-height: 1.7;
-      margin: 20px 0;
-    }
-
-    .footer-links h4 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
-
-    .footer-links ul {
-      list-style: none;
-    }
-
-    .footer-links ul li {
-      margin-bottom: 14px;
-    }
-
-    .footer-links ul li a {
-      color: #9ca3af;
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .footer-links ul li a:hover {
-      color: white;
-    }
-
-    .footer-bottom {
-      text-align: center;
-      padding-top: 30px;
-      border-top: 1px solid rgba(255, 255, 255, 0.03);
-      color: #6b7280;
-      font-size: 14px;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 16px;
-      margin-top: 24px;
-    }
-
-    .social-link {
-      width: 44px;
-      height: 44px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #9ca3af;
-      font-size: 20px;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-
-    .social-link:hover {
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      color: white;
-      border-color: transparent;
-      transform: translateY(-3px);
-    }
-
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-      .packages-grid { grid-template-columns: repeat(2, 1fr); }
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 768px) {
-      .container { padding: 0 20px; }
-      .hero-title { font-size: 48px; }
-      .packages-grid { grid-template-columns: 1fr; }
-      .features-grid { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: 1fr; }
-      .footer-content { grid-template-columns: 1fr; gap: 30px; }
-      .nav-links { display: none; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vexar Hosting — Sınırsız Güç, Sıfır Sınır</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050508;
+  --bg2: #0a0a10;
+  --bg3: #0f0f18;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --neon: #7c3aed;
+  --neon2: #a855f7;
+  --neon3: #c084fc;
+  --cyan: #06b6d4;
+  --green: #10b981;
+  --red: #ef4444;
+  --orange: #f59e0b;
+  --text: #f1f0ff;
+  --text2: #a09cb8;
+  --text3: #6b6785;
+  --glass: rgba(124,58,237,0.08);
+  --glow: 0 0 40px rgba(124,58,237,0.3);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--neon);border-radius:2px;}
+
+/* NOISE OVERLAY */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+  opacity:0.6;
+}
+
+/* GRID LINES */
+.grid-overlay{
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* NAV */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:1000;
+  padding:16px 40px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(5,5,8,0.7);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  transition:all 0.3s;
+}
+
+.nav-logo{
+  font-family:'Syne',sans-serif;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+  background:linear-gradient(135deg,#fff 0%,var(--neon3) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  cursor:pointer;
+}
+
+.nav-links{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.nav-link{
+  padding:8px 18px;
+  border-radius:8px;
+  color:var(--text2);
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.2s;
+  border:1px solid transparent;
+}
+.nav-link:hover,.nav-link.active{
+  color:var(--text);
+  background:var(--surface2);
+  border-color:var(--border2);
+}
+
+.nav-btn{
+  padding:9px 22px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.25s;
+  border:none;
+  font-family:'Manrope',sans-serif;
+}
+
+.btn-ghost{
+  background:transparent;
+  color:var(--text2);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2);}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  color:#fff;
+  box-shadow:0 0 20px rgba(124,58,237,0.4);
+}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 30px rgba(124,58,237,0.6);
+}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:80px;position:relative;z-index:1;}
+.page.active{display:block;animation:fadeIn 0.4s ease;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+/* HERO */
+.hero{
+  min-height:calc(100vh - 80px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:60px 40px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  pointer-events:none;
+}
+.hero-orb-1{
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(124,58,237,0.2),transparent 70%);
+  top:-100px;left:50%;transform:translateX(-50%);
+  animation:pulse 6s ease-in-out infinite;
+}
+.hero-orb-2{
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(6,182,212,0.1),transparent 70%);
+  bottom:0;right:-100px;
+  animation:pulse 8s ease-in-out infinite reverse;
+}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);}50%{transform:translateX(-50%) scale(1.1);}}
+@keyframes pulse2{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 16px 6px 8px;
+  border-radius:100px;
+  background:rgba(124,58,237,0.12);
+  border:1px solid rgba(124,58,237,0.3);
+  font-size:12px;
+  font-weight:600;
+  color:var(--neon3);
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  margin-bottom:28px;
+  animation:slideDown 0.6s ease;
+}
+.hero-badge span{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--neon2);
+  box-shadow:0 0 8px var(--neon2);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:none;}}
+
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(48px,7vw,96px);
+  font-weight:800;
+  line-height:1.0;
+  letter-spacing:-3px;
+  margin-bottom:24px;
+  animation:slideUp 0.7s ease 0.1s both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+
+.hero-title .grad{
+  background:linear-gradient(135deg,#fff 0%,var(--neon3) 50%,var(--cyan) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero-sub{
+  max-width:560px;
+  font-size:18px;
+  line-height:1.7;
+  color:var(--text2);
+  margin-bottom:44px;
+  font-weight:400;
+  animation:slideUp 0.7s ease 0.2s both;
+}
+
+.hero-cta{
+  display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+  animation:slideUp 0.7s ease 0.3s both;
+}
+
+.btn-lg{
+  padding:14px 32px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.25s;
+  border:none;
+  font-family:'Manrope',sans-serif;
+  display:inline-flex;align-items:center;gap:8px;
+}
+
+.hero-stats{
+  display:flex;gap:48px;margin-top:80px;
+  animation:slideUp 0.7s ease 0.4s both;
+}
+.stat{text-align:center;}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:32px;font-weight:800;
+  background:linear-gradient(135deg,#fff,var(--neon3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat-label{font-size:13px;color:var(--text3);font-weight:500;margin-top:4px;}
+
+/* FEATURES */
+.features{
+  padding:80px 40px;
+  max-width:1200px;
+  margin:0 auto;
+}
+.section-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--neon3);margin-bottom:16px;
+}
+.section-label::before{content:'';display:block;width:20px;height:1px;background:var(--neon3);}
+.section-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(28px,4vw,48px);
+  font-weight:800;letter-spacing:-1.5px;
+  margin-bottom:14px;
+}
+.section-desc{font-size:16px;color:var(--text2);line-height:1.7;max-width:500px;margin-bottom:48px;}
+
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px;
+}
+
+.feat-card{
+  padding:28px;
+  border-radius:16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  transition:all 0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(124,58,237,0.05),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.feat-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-3px);}
+.feat-card:hover::before{opacity:1;}
+.feat-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(124,58,237,0.15);
+  border:1px solid rgba(124,58,237,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:16px;
+}
+.feat-title{font-size:15px;font-weight:700;margin-bottom:8px;}
+.feat-desc{font-size:13px;color:var(--text2);line-height:1.6;}
+
+/* PACKAGES PAGE */
+.packages-page{padding:40px;}
+.tab-bar{
+  display:flex;gap:4px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:4px;
+  width:fit-content;
+  margin-bottom:36px;
+}
+.tab{
+  padding:9px 22px;
+  border-radius:9px;
+  font-size:13px;font-weight:600;
+  cursor:pointer;transition:all 0.2s;
+  color:var(--text2);
+  border:none;background:transparent;
+  font-family:'Manrope',sans-serif;
+}
+.tab.active{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;}
+
+.cat-section{margin-bottom:48px;}
+.cat-title{
+  font-family:'Syne',sans-serif;
+  font-size:20px;font-weight:800;letter-spacing:-0.5px;
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.cat-badge{
+  font-size:11px;font-weight:600;
+  padding:3px 10px;border-radius:100px;
+  background:rgba(124,58,237,0.15);
+  border:1px solid rgba(124,58,237,0.3);
+  color:var(--neon3);
+}
+
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+
+.pkg-card{
+  padding:24px;
+  border-radius:16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  transition:all 0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.pkg-card.featured{
+  border-color:rgba(124,58,237,0.5);
+  background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(168,85,247,0.05));
+}
+.pkg-card.featured::after{
+  content:'POPÜLER';
+  position:absolute;top:12px;right:12px;
+  font-size:9px;font-weight:800;letter-spacing:1.5px;
+  padding:3px 10px;border-radius:100px;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  color:#fff;
+}
+.pkg-card:hover{transform:translateY(-3px);border-color:rgba(124,58,237,0.4);}
+.pkg-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.pkg-ram{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.pkg-price{
+  font-family:'Syne',sans-serif;
+  font-size:28px;font-weight:800;
+  margin:16px 0;
+  background:linear-gradient(135deg,#fff,var(--neon3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.pkg-price span{font-size:13px;color:var(--text3);font-weight:400;-webkit-text-fill-color:var(--text3);}
+.pkg-features{list-style:none;margin-bottom:20px;}
+.pkg-features li{
+  font-size:13px;color:var(--text2);
+  padding:5px 0;
+  display:flex;align-items:center;gap:8px;
+}
+.pkg-features li::before{content:'✦';color:var(--neon2);font-size:8px;}
+
+.btn-buy{
+  width:100%;padding:11px;
+  border-radius:10px;
+  border:1px solid rgba(124,58,237,0.4);
+  background:rgba(124,58,237,0.1);
+  color:var(--neon3);
+  font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.25s;
+  font-family:'Manrope',sans-serif;
+  letter-spacing:0.3px;
+}
+.btn-buy:hover{
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  border-color:transparent;
+  color:#fff;
+  box-shadow:0 0 20px rgba(124,58,237,0.4);
+}
+.btn-buy.featured-btn{
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  border:none;color:#fff;
+  box-shadow:0 0 20px rgba(124,58,237,0.3);
+}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(12px);
+  z-index:5000;
+  display:none;
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-overlay.open{display:flex;animation:fadeIn 0.2s ease;}
+.modal{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:36px;
+  max-width:460px;
+  width:100%;
+  position:relative;
+  box-shadow:0 0 60px rgba(124,58,237,0.2);
+  animation:modalIn 0.3s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95)translateY(10px);}to{opacity:1;transform:none;}}
+
+.modal-title{
+  font-family:'Syne',sans-serif;
+  font-size:22px;font-weight:800;letter-spacing:-0.5px;
+  margin-bottom:8px;
+}
+.modal-sub{font-size:14px;color:var(--text2);margin-bottom:28px;}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  width:32px;height:32px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text2);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.modal-close:hover{color:var(--text);background:var(--surface);}
+
+/* FORM */
+.form-group{margin-bottom:18px;}
+.form-label{font-size:12px;font-weight:600;letter-spacing:0.5px;color:var(--text2);margin-bottom:8px;display:block;text-transform:uppercase;}
+.form-input{
+  width:100%;padding:12px 16px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  color:var(--text);
+  font-size:14px;
+  font-family:'Manrope',sans-serif;
+  outline:none;transition:all 0.2s;
+}
+.form-input:focus{border-color:rgba(124,58,237,0.5);box-shadow:0 0 0 3px rgba(124,58,237,0.1);}
+.form-input::placeholder{color:var(--text3);}
+select.form-input{cursor:pointer;}
+select.form-input option{background:var(--bg3);}
+
+.form-btn{
+  width:100%;padding:13px;
+  border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  color:#fff;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all 0.25s;
+  font-family:'Manrope',sans-serif;
+  box-shadow:0 0 24px rgba(124,58,237,0.3);
+}
+.form-btn:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(124,58,237,0.5);}
+
+.form-switch{
+  text-align:center;margin-top:18px;
+  font-size:13px;color:var(--text2);
+}
+.form-switch a{color:var(--neon3);cursor:pointer;font-weight:600;}
+.form-switch a:hover{text-decoration:underline;}
+
+.alert{
+  padding:12px 16px;border-radius:10px;
+  font-size:13px;font-weight:500;
+  margin-bottom:16px;
+  display:none;
+}
+.alert.show{display:block;}
+.alert-error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;}
+.alert-success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#34d399;}
+
+/* SERVERS PAGE */
+.servers-page{padding:40px;max-width:1200px;margin:0 auto;}
+.page-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:36px;
+}
+.page-header h1{
+  font-family:'Syne',sans-serif;
+  font-size:32px;font-weight:800;letter-spacing:-1px;
+}
+
+.empty-state{
+  text-align:center;padding:80px 20px;
+}
+.empty-icon{font-size:64px;margin-bottom:20px;opacity:0.4;}
+.empty-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:8px;}
+.empty-desc{font-size:15px;color:var(--text2);}
+
+.server-list{display:grid;gap:12px;}
+.server-item{
+  display:flex;align-items:center;gap:20px;
+  padding:20px 24px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;cursor:pointer;transition:all 0.25s;
+}
+.server-item:hover{border-color:rgba(124,58,237,0.4);background:var(--surface2);}
+.server-logo{
+  width:48px;height:48px;border-radius:10px;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;overflow:hidden;
+}
+.server-logo img{width:100%;height:100%;object-fit:cover;}
+.server-info{flex:1;}
+.server-name{font-size:15px;font-weight:700;margin-bottom:3px;}
+.server-plan{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.server-status{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;
+}
+.status-dot{width:7px;height:7px;border-radius:50%;}
+.status-dot.online{background:var(--green);box-shadow:0 0 8px var(--green);}
+.status-dot.offline{background:var(--red);}
+.status-dot.starting{background:var(--orange);animation:blink 1s ease-in-out infinite;}
+
+/* SERVER PANEL */
+.panel-page{padding:0;background:var(--bg2);}
+.panel-layout{display:flex;min-height:calc(100vh - 80px);}
+
+.panel-sidebar{
+  width:240px;flex-shrink:0;
+  background:rgba(5,5,8,0.8);
+  border-right:1px solid var(--border);
+  padding:24px 16px;
+  position:sticky;top:80px;height:calc(100vh - 80px);
+  overflow-y:auto;
+}
+.sidebar-server{
+  padding:16px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:12px;
+  margin-bottom:20px;
+}
+.sidebar-server-logo{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;margin-bottom:10px;overflow:hidden;
+}
+.sidebar-server-logo img{width:100%;height:100%;object-fit:cover;}
+.sidebar-server-name{font-size:13px;font-weight:700;}
+.sidebar-server-plan{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;}
+
+.sidebar-nav{list-style:none;}
+.sidebar-nav li{
+  padding:9px 12px;border-radius:8px;
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:500;
+  cursor:pointer;transition:all 0.2s;color:var(--text2);
+  margin-bottom:2px;
+}
+.sidebar-nav li:hover{color:var(--text);background:var(--surface2);}
+.sidebar-nav li.active{color:var(--neon3);background:rgba(124,58,237,0.1);}
+.sidebar-nav-icon{font-size:15px;width:20px;text-align:center;}
+
+.panel-content{flex:1;padding:32px;overflow-y:auto;}
+.panel-tab{display:none;}
+.panel-tab.active{display:block;animation:fadeIn 0.3s ease;}
+
+/* CONSOLE */
+.console-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.console-controls{display:flex;gap:8px;}
+.ctrl-btn{
+  padding:8px 18px;border-radius:8px;
+  font-size:12px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+  border:none;font-family:'Manrope',sans-serif;
+  letter-spacing:0.5px;text-transform:uppercase;
+}
+.btn-start{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);}
+.btn-start:hover{background:rgba(16,185,129,0.25);}
+.btn-stop{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);}
+.btn-stop:hover{background:rgba(239,68,68,0.25);}
+.btn-restart{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);}
+.btn-restart:hover{background:rgba(245,158,11,0.25);}
+
+.console-box{
+  background:#000;
+  border:1px solid var(--border);
+  border-radius:12px;
+  height:360px;
+  overflow-y:auto;
+  padding:16px;
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  line-height:1.7;
+  position:relative;
+}
+.log-line{margin-bottom:2px;display:flex;gap:12px;align-items:flex-start;}
+.log-time{color:#3f3f5a;white-space:nowrap;flex-shrink:0;}
+.log-info{color:#6ee7b7;}
+.log-warn{color:#fbbf24;}
+.log-error{color:#f87171;}
+.log-dim{color:#4b5563;}
+
+.console-input-row{
+  display:flex;gap:8px;margin-top:10px;
+}
+.console-input{
+  flex:1;padding:10px 14px;
+  background:rgba(0,0,0,0.5);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'DM Mono',monospace;font-size:13px;
+  outline:none;
+}
+.console-input:focus{border-color:rgba(124,58,237,0.4);}
+.console-send{
+  padding:10px 20px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Manrope',sans-serif;transition:all 0.2s;
+}
+.console-send:hover{color:var(--text);}
+
+/* SETTINGS FORM */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.settings-grid .full{grid-column:1/-1;}
+
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;
+}
+.toggle-label{font-size:14px;font-weight:500;}
+.toggle-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.toggle{
+  width:44px;height:24px;
+  background:#222;border-radius:100px;
+  position:relative;cursor:pointer;
+  transition:background 0.25s;
+  flex-shrink:0;border:none;outline:none;
+}
+.toggle.on{background:linear-gradient(135deg,var(--neon),var(--neon2));}
+.toggle::after{
+  content:'';position:absolute;
+  top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;
+  background:#fff;transition:transform 0.25s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle.on::after{transform:translateX(20px);}
+
+/* PLUGINS */
+.plugin-list{display:grid;gap:10px;}
+.plugin-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;
+}
+.plugin-icon{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(168,85,247,0.1));
+  border:1px solid rgba(124,58,237,0.2);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.plugin-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.plugin-ver{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+.plugin-del{
+  margin-left:auto;width:30px;height:30px;border-radius:7px;
+  background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);
+  color:#f87171;font-size:16px;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.plugin-del:hover{background:rgba(239,68,68,0.2);}
+
+.add-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:10px;
+  background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);
+  color:var(--neon3);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+  font-family:'Manrope',sans-serif;
+}
+.add-btn:hover{background:rgba(124,58,237,0.2);}
+
+/* PLAYERS */
+.player-item{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 18px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:8px;
+}
+.player-avatar{
+  width:34px;height:34px;border-radius:8px;
+  background:linear-gradient(135deg,#222,#333);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;font-family:'Syne',sans-serif;
+  color:var(--neon3);
+}
+.player-name{font-size:14px;font-weight:600;}
+.player-role{
+  font-size:10px;font-weight:700;letter-spacing:0.5px;
+  padding:2px 8px;border-radius:100px;margin-left:8px;
+  vertical-align:middle;
+}
+.role-op{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);}
+.role-member{background:rgba(124,58,237,0.15);color:var(--neon3);border:1px solid rgba(124,58,237,0.3);}
+
+/* ADMIN */
+.admin-page{padding:40px;max-width:1200px;margin:0 auto;}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px;}
+.admin-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:24px;
+}
+.admin-card h3{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;
+  margin-bottom:16px;display:flex;align-items:center;gap:8px;
+}
+
+.code-display{
+  font-family:'DM Mono',monospace;
+  font-size:20px;font-weight:500;letter-spacing:4px;
+  color:var(--neon3);
+  background:rgba(124,58,237,0.08);
+  border:1px solid rgba(124,58,237,0.2);
+  padding:14px 20px;border-radius:10px;
+  margin:12px 0;text-align:center;
+}
+
+.code-table{width:100%;border-collapse:collapse;font-size:12px;}
+.code-table th{
+  padding:8px 12px;text-align:left;
+  color:var(--text3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+}
+.code-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.code-table tr:last-child td{border-bottom:none;}
+.used-badge{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;
+}
+.used-true{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);}
+.used-false{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);}
+
+/* USER LIST */
+.user-table{width:100%;border-collapse:collapse;font-size:13px;}
+.user-table th{padding:8px 12px;text-align:left;color:var(--text3);font-weight:600;font-size:11px;letter-spacing:0.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.user-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.user-table tr:last-child td{border-bottom:none;}
+
+/* PANEL SECTION HEADER */
+.panel-section-title{
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:800;
+  letter-spacing:-0.5px;margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+
+/* RESOURCE BARS */
+.resource-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-bottom:24px;
+}
+.resource-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:16px;
+}
+.resource-label{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;}
+.resource-val{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  margin-bottom:8px;
+}
+.resource-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.resource-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+.fill-green{background:linear-gradient(90deg,var(--green),#34d399);}
+.fill-purple{background:linear-gradient(90deg,var(--neon),var(--neon2));}
+.fill-cyan{background:linear-gradient(90deg,var(--cyan),#38bdf8);}
+
+/* DOMAIN CARD */
+.domain-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:20px;margin-bottom:12px;
+}
+.domain-name{
+  font-family:'DM Mono',monospace;font-size:15px;font-weight:500;
+  margin-bottom:4px;color:var(--cyan);
+}
+
+/* LOGO UPLOAD */
+.logo-upload-box{
+  border:2px dashed var(--border2);border-radius:12px;
+  padding:32px;text-align:center;cursor:pointer;
+  transition:all 0.2s;background:var(--surface);
+  position:relative;overflow:hidden;
+}
+.logo-upload-box:hover{border-color:rgba(124,58,237,0.5);background:rgba(124,58,237,0.05);}
+.logo-upload-box input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.logo-preview{
+  width:72px;height:72px;border-radius:14px;
+  object-fit:cover;margin:0 auto 12px;display:block;
+}
+
+/* NOTIFICATION */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:12px;padding:14px 20px;
+  font-size:13px;font-weight:500;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  z-index:9998;
+  transform:translateY(80px);opacity:0;
+  transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+  max-width:320px;
+  display:flex;align-items:center;gap:10px;
+}
+.toast.show{transform:none;opacity:1;}
+.toast-icon{font-size:16px;}
+.toast-success .toast-icon::before{content:'✓';}
+.toast-error .toast-icon::before{content:'✗';}
+.toast-success{border-left:3px solid var(--green);}
+.toast-error{border-left:3px solid var(--red);}
+
+/* RESPONSIVE NAV */
+.nav-user{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 12px 6px 6px;
+  border-radius:100px;
+  background:var(--surface2);border:1px solid var(--border);
+  cursor:pointer;
+}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;
+}
+.user-name{font-size:13px;font-weight:600;}
+
+/* BACK BTN */
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  color:var(--text2);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all 0.2s;
+  margin-bottom:20px;padding:8px 0;width:fit-content;
+}
+.back-btn:hover{color:var(--text);}
+.back-btn::before{content:'←';font-size:16px;}
+
+/* FILE ITEM */
+.file-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;margin-bottom:6px;font-size:13px;
+}
+.file-icon{font-size:16px;}
+.file-name{flex:1;font-family:'DM Mono',monospace;font-size:12px;}
+.file-size{font-size:11px;color:var(--text3);margin-right:8px;}
+
+/* PACKAGE DETAIL */
+.feat-list{display:grid;gap:8px;}
+.feat-list-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;font-size:13px;
+}
+.feat-check{color:var(--green);font-size:14px;font-weight:700;}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:24px 0;}
+
+/* SCROLLABLE */
+.panel-content{overflow-y:auto;height:calc(100vh - 80px);}
+</style>
 </head>
 <body>
-  <!-- Glow Effects -->
-  <div class="glow glow-1"></div>
-  <div class="glow glow-2"></div>
-  <div class="glow glow-3"></div>
+<div class="grid-overlay"></div>
 
-  <div class="container">
-    <!-- Header -->
-    <nav class="navbar">
-      <div class="logo">
-        <div class="logo-icon">V</div>
-        <span class="logo-text">VEXAR</span>
-        <span class="logo-badge">HOSTİNG</span>
-      </div>
-      <div class="nav-links">
-        <a href="/" class="nav-link"><i class="fas fa-home"></i> Ana Sayfa</a>
-        <a href="/paketler" class="nav-link"><i class="fas fa-cube"></i> Paketler</a>
-        <a href="#features" class="nav-link"><i class="fas fa-star"></i> Özellikler</a>
-        <a href="#footer" class="nav-link"><i class="fas fa-envelope"></i> İletişim</a>
-      </div>
-      <div class="user-area">
-        <button class="btn btn-outline" onclick="window.location.href='/giris'">
-          <i class="fas fa-sign-in-alt"></i> Giriş Yap
-        </button>
-        <button class="btn btn-primary btn-glow" onclick="window.location.href='/kayit'">
-          <i class="fas fa-user-plus"></i> Kayıt Ol
-        </button>
-      </div>
-    </nav>
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
 
-    <!-- Status Bar -->
-    <div class="status-bar">
-      <div class="status-card">
-        <div class="status-item">
-          <span class="status-dot"></span>
-          <span>Sistem Durumu: <span class="status-value">Çalışıyor</span></span>
-        </div>
-        <div class="status-item">
-          <i class="fas fa-shield-alt" style="color: #a855f7;"></i>
-          <span>DDoS Koruması: <span class="status-value">Aktif</span></span>
-        </div>
-        <div class="status-item">
-          <i class="fas fa-server" style="color: #3b82f6;"></i>
-          <span>Aktif Sunucu: <span class="status-value" id="activeServers">0</span></span>
-        </div>
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-logo" onclick="showPage('home')">Vexar<span style="color:var(--neon2)">.</span></div>
+  <div class="nav-links" id="nav-links">
+    <div class="nav-link active" onclick="showPage('home');setActiveNav(this)">Ana Sayfa</div>
+    <div class="nav-link" onclick="showPage('packages');setActiveNav(this)">Paketler</div>
+    <div class="nav-link" id="servers-nav-link" onclick="gotoServers();setActiveNav(this)">Sunucularım</div>
+    <div id="nav-auth-btns">
+      <button class="nav-btn btn-ghost" onclick="openModal('login-modal')">Giriş Yap</button>
+      <button class="nav-btn btn-primary" onclick="openModal('register-modal')" style="margin-left:6px">Kayıt Ol</button>
+    </div>
+    <div id="nav-user-info" style="display:none;">
+      <div class="nav-user" onclick="handleUserClick()">
+        <div class="user-avatar" id="nav-avatar">?</div>
+        <span class="user-name" id="nav-username">Kullanıcı</span>
       </div>
     </div>
-
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero-badge">
-        <i class="fas fa-crown"></i> TÜRKİYE'NİN EN İYİ HOSTİNG SAĞLAYICISI
-      </div>
-      <h1 class="hero-title">
-        Profesyonel<br>
-        <span class="hero-title-gradient">Minecraft Hosting</span>
-      </h1>
-      <p class="hero-description">
-        Ryzen 9 7950X işlemciler, NVMe SSD depolama, 1 Tbps+ DDoS koruması ve 
-        7/24 premium destek ile sunucularınızı güvende tutun.
-      </p>
-      <div class="hero-buttons">
-        <button class="btn btn-primary btn-large btn-glow" onclick="window.location.href='/paketler'">
-          <i class="fas fa-cube"></i> Paketleri İncele
-        </button>
-        <button class="btn btn-outline btn-large" onclick="window.open('https://discord.gg/JzynaecG', '_blank')">
-          <i class="fab fa-discord"></i> Discord'a Katıl
-        </button>
-      </div>
-    </section>
-
-    <!-- Stats -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-        <div class="stat-number">99.9%</div>
-        <div class="stat-label">Uptime Garantisi</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-clock"></i></div>
-        <div class="stat-number">&lt;1ms</div>
-        <div class="stat-label">Ortalama Ping (İstanbul)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-headset"></i></div>
-        <div class="stat-number">7/24</div>
-        <div class="stat-label">Premium Destek</div>
-      </div>
-    </div>
-
-    <!-- Features -->
-    <section id="features">
-      <div class="section-header">
-        <div class="section-badge">NEDEN VEXAR?</div>
-        <h2 class="section-title">Sınıfının <span>En İyisi</span></h2>
-        <p class="section-desc">En son teknoloji altyapımız ile sunucularınız her zaman güvende.</p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-microchip"></i></div>
-          <h3 class="feature-title">Ryzen 9 7950X</h3>
-          <p class="feature-desc">5.7 GHz'e kadar boost, 16 çekirdek ile maksimum performans.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-database"></i></div>
-          <h3 class="feature-title">NVMe SSD</h3>
-          <p class="feature-desc">7000 MB/s okuma hızı ile ultra hızlı depolama.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-          <h3 class="feature-title">1 Tbps+ DDoS</h3>
-          <p class="feature-desc">Path.net altyapısı ile en güçlü DDoS koruması.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-network-wired"></i></div>
-          <h3 class="feature-title">10 Gbps Network</h3>
-          <p class="feature-desc">Yüksek hızlı, düşük gecikmeli ağ altyapısı.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta-section">
-      <div class="cta-content">
-        <h2 class="cta-title">Sunucunu Hemen Başlat</h2>
-        <p class="cta-desc">Anında kurulum, sınırsız trafik ve 7/24 destek ile hayalindeki sunucuyu oluştur.</p>
-        <button class="btn btn-primary btn-large btn-glow" onclick="window.location.href='/paketler'">
-          <i class="fas fa-rocket"></i> Hemen Başla
-        </button>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer" id="footer">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <div class="logo">
-            <div class="logo-icon">V</div>
-            <span class="logo-text">VEXAR</span>
-          </div>
-          <p>Türkiye'nin en profesyonel Minecraft hosting sağlayıcısı. Yüksek performanslı sunucular, güvenilir altyapı.</p>
-          <div class="social-links">
-            <a href="https://discord.gg/JzynaecG" class="social-link" target="_blank"><i class="fab fa-discord"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-          </div>
-        </div>
-        <div class="footer-links">
-          <h4>Hızlı Linkler</h4>
-          <ul>
-            <li><a href="/"><i class="fas fa-chevron-right"></i> Ana Sayfa</a></li>
-            <li><a href="/paketler"><i class="fas fa-chevron-right"></i> Paketler</a></li>
-            <li><a href="#features"><i class="fas fa-chevron-right"></i> Özellikler</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Yasal</h4>
-          <ul>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Kullanım Şartları</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> Gizlilik Politikası</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> KVKK</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>İletişim</h4>
-          <ul>
-            <li><a href="#"><i class="fas fa-envelope"></i> destek@vexar.host</a></li>
-            <li><a href="https://discord.gg/JzynaecG"><i class="fab fa-discord"></i> discord.gg/JzynaecG</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        © 2024 Vexar Hosting. Tüm hakları saklıdır. | Premium Minecraft Hosting
-      </div>
-    </footer>
   </div>
+</nav>
 
-  <script>
-    // GitHub API'den aktif sunucu sayısını çek
-    const GITHUB_TOKEN = ['ghp', '_Kp3SdlnqWOi6NB4IzyengNsTzNJ5J24U8O4u'].join('');
-    const GITHUB_USERNAME = atob('dmV4YXJob3N0aW5n'); // vexarhosting
-    const GITHUB_REPO = 'Vexar';
-    const DATA_FILE = 'vexar-data.json';
+<!-- PAGES -->
 
-    async function loadActiveServers() {
-      try {
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
-          headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          const content = JSON.parse(atob(data.content));
-          document.getElementById('activeServers').textContent = content.siteSettings?.activeServers || 0;
-        } else {
-          document.getElementById('activeServers').textContent = '0';
-        }
-      } catch (e) {
-        document.getElementById('activeServers').textContent = '0';
-      }
-    }
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-badge"><span></span>Yeni Nesil Hosting Platformu</div>
+    <h1 class="hero-title"><span class="grad">Sunucunuzun</span><br>Gücünü Hissedin</h1>
+    <p class="hero-sub">Vexar Hosting ile DDoS korumalı, ultra-hızlı Minecraft sunucuları ve özel domain'lerle oyun dünyasına damganızı vurun.</p>
+    <div class="hero-cta">
+      <button class="btn-lg btn-primary" onclick="showPage('packages');setActiveNav(document.querySelectorAll('.nav-link')[1])">Paketleri İncele →</button>
+      <button class="btn-lg" style="background:var(--surface);border:1px solid var(--border);color:var(--text)" onclick="openModal('login-modal')">Hemen Başla</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">99.9%</div><div class="stat-label">Uptime Garantisi</div></div>
+      <div class="stat"><div class="stat-num">2.5Tbps</div><div class="stat-label">DDoS Koruma</div></div>
+      <div class="stat"><div class="stat-num">&lt;5ms</div><div class="stat-label">Ping (TR)</div></div>
+      <div class="stat"><div class="stat-num">7/24</div><div class="stat-label">Destek</div></div>
+    </div>
+  </div>
+  <div class="features">
+    <div class="section-label">Neden Vexar</div>
+    <h2 class="section-title">Rakipsiz Özellikler</h2>
+    <p class="section-desc">Her Minecraft sunucusu sahibinin ihtiyaç duyduğu her şey tek bir çatı altında.</p>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">🛡️</div><div class="feat-title">2.5Tbps DDoS Koruma</div><div class="feat-desc">En gelişmiş saldırı filtreleme sistemimizle sunucunuz her zaman ayakta.</div></div>
+      <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">NVMe SSD Altyapı</div><div class="feat-desc">Samsung NVMe diskler ile anlık yükleme, sıfır gecikme ve mükemmel performans.</div></div>
+      <div class="feat-card"><div class="feat-icon">🎮</div><div class="feat-title">Tam Kontrol Paneli</div><div class="feat-desc">Başlat, durdur, yapılandır — tarayıcınızdan tek tıkla tüm kontrolü elinizde tutun.</div></div>
+      <div class="feat-card"><div class="feat-icon">🔌</div><div class="feat-title">Otomatik Yedekleme</div><div class="feat-desc">Günlük otomatik yedekleme ile verileriniz asla kaybolmaz, gönül rahatlığıyla oynayın.</div></div>
+      <div class="feat-card"><div class="feat-icon">🌐</div><div class="feat-title">Özel Domain Desteği</div><div class="feat-desc">Kendi domain'inizi bağlayın ya da ücretsiz .vexar.mc subdomain kullanın.</div></div>
+      <div class="feat-card"><div class="feat-icon">📦</div><div class="feat-title">Plugin Yönetimi</div><div class="feat-desc">Panel üzerinden direkt plugin yükleyin, yönetin ve yapılandırın.</div></div>
+    </div>
+  </div>
+</div>
 
-    loadActiveServers();
-  </script>
+<!-- PACKAGES -->
+<div class="page" id="page-packages">
+  <div class="packages-page">
+    <div class="section-label">Fiyatlandırma</div>
+    <h1 class="section-title" style="margin-bottom:8px">Paketlerimiz</h1>
+    <p class="section-desc" style="margin-bottom:24px">İhtiyacınıza uygun paketi seçin, saniyeler içinde kurulum yapın.</p>
+    <div class="tab-bar">
+      <button class="tab active" onclick="setTab(this,'monthly')">Aylık</button>
+      <button class="tab" onclick="setTab(this,'yearly')">Yıllık <span style="font-size:10px;color:var(--green)">%20 İndirim</span></button>
+      <button class="tab" onclick="setTab(this,'lifetime')">Sonsuz</button>
+    </div>
+    <div id="packages-content"></div>
+  </div>
+</div>
+
+<!-- SERVERS -->
+<div class="page" id="page-servers">
+  <div class="servers-page">
+    <div class="page-header">
+      <div>
+        <h1>Sunucularım</h1>
+        <p style="color:var(--text2);font-size:14px;margin-top:4px">Satın aldığınız paketleri buradan yönetin</p>
+      </div>
+      <button class="btn-primary nav-btn" onclick="showPage('packages');setActiveNav(document.querySelectorAll('.nav-link')[1])">+ Yeni Sunucu</button>
+    </div>
+    <div id="servers-list"></div>
+  </div>
+</div>
+
+<!-- SERVER PANEL -->
+<div class="page" id="page-panel">
+  <div class="panel-layout">
+    <div class="panel-sidebar">
+      <div class="sidebar-server">
+        <div class="sidebar-server-logo" id="sidebar-logo">🎮</div>
+        <div class="sidebar-server-name" id="sidebar-name">-</div>
+        <div class="sidebar-server-plan" id="sidebar-plan">-</div>
+      </div>
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="active" onclick="switchTab('console',this)"><span class="sidebar-nav-icon">🖥️</span> Konsol</li>
+        <li onclick="switchTab('settings',this)"><span class="sidebar-nav-icon">⚙️</span> Ayarlar</li>
+        <li onclick="switchTab('plugins',this)"><span class="sidebar-nav-icon">🔌</span> Eklentiler & Dosyalar</li>
+        <li onclick="switchTab('players',this)"><span class="sidebar-nav-icon">👥</span> Oyuncular</li>
+        <li onclick="switchTab('features',this)"><span class="sidebar-nav-icon">✨</span> Özellikler & Domain</li>
+      </ul>
+    </div>
+    <div class="panel-content" id="panel-content">
+      <!-- Console Tab -->
+      <div class="panel-tab active" id="tab-console">
+        <div class="console-header">
+          <div class="panel-section-title">🖥️ Sunucu Konsolu</div>
+          <div class="console-controls">
+            <button class="ctrl-btn btn-start" id="btn-start" onclick="serverAction('start')">▶ BAŞLAT</button>
+            <button class="ctrl-btn btn-stop" id="btn-stop" onclick="serverAction('stop')">■ DURDUR</button>
+            <button class="ctrl-btn btn-restart" onclick="serverAction('restart')">↺ YENİDEN BAŞLAT</button>
+          </div>
+        </div>
+        <div class="resource-row">
+          <div class="resource-card"><div class="resource-label">CPU</div><div class="resource-val" id="res-cpu">0%</div><div class="resource-bar"><div class="resource-fill fill-purple" id="bar-cpu" style="width:0%"></div></div></div>
+          <div class="resource-card"><div class="resource-label">RAM</div><div class="resource-val" id="res-ram">0 MB</div><div class="resource-bar"><div class="resource-fill fill-green" id="bar-ram" style="width:0%"></div></div></div>
+          <div class="resource-card"><div class="resource-label">Bant Genişliği</div><div class="resource-val" id="res-net">0 KB/s</div><div class="resource-bar"><div class="resource-fill fill-cyan" id="bar-net" style="width:0%"></div></div></div>
+        </div>
+        <div class="console-box" id="console-output"></div>
+        <div class="console-input-row">
+          <input class="console-input" id="console-cmd" placeholder="Komut girin (örn: /op oyuncu)" onkeydown="if(event.key==='Enter')sendCmd()">
+          <button class="console-send" onclick="sendCmd()">Gönder</button>
+        </div>
+      </div>
+      <!-- Settings Tab -->
+      <div class="panel-tab" id="tab-settings">
+        <div class="panel-section-title">⚙️ Sunucu Ayarları</div>
+        <div class="settings-grid">
+          <div class="form-group">
+            <label class="form-label">Sunucu Adı</label>
+            <input class="form-input" id="s-name" placeholder="Sunucu adınız">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Max Oyuncu</label>
+            <input class="form-input" type="number" id="s-maxp" min="1" max="500" value="20">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Sunucu Açıklaması (MOTD)</label>
+            <input class="form-input" id="s-motd" placeholder="Sunucunuz için kısa açıklama">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Oyun Modu</label>
+            <select class="form-input" id="s-mode">
+              <option>Survival</option>
+              <option>Creative</option>
+              <option>Adventure</option>
+              <option>Spectator</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Zorluk</label>
+            <select class="form-input" id="s-diff">
+              <option>Peaceful</option>
+              <option>Easy</option>
+              <option selected>Normal</option>
+              <option>Hard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Yazılım</label>
+            <select class="form-input" id="s-soft">
+              <option>Paper</option>
+              <option>Spigot</option>
+              <option>Vanilla</option>
+              <option>Purpur</option>
+              <option>Fabric</option>
+              <option>Forge</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sürüm</label>
+            <select class="form-input" id="s-ver">
+              <option>1.21.4 (Son)</option>
+              <option>1.21.3</option>
+              <option>1.21.1</option>
+              <option>1.20.4</option>
+              <option>1.20.1</option>
+              <option>1.19.4</option>
+              <option>1.18.2</option>
+              <option>1.16.5</option>
+              <option>1.12.2</option>
+              <option>1.8.9</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Sunucu Logosu</label>
+            <div class="logo-upload-box" id="logo-upload-box">
+              <input type="file" accept="image/*" onchange="handleLogoUpload(event)">
+              <img src="" id="logo-preview" class="logo-preview" style="display:none">
+              <div id="logo-placeholder">
+                <div style="font-size:32px;margin-bottom:8px">🖼️</div>
+                <div style="font-size:13px;color:var(--text2)">Logo yüklemek için tıklayın</div>
+                <div style="font-size:11px;color:var(--text3);margin-top:4px">PNG, JPG — Maks 2MB</div>
+              </div>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">PVP</div><div class="toggle-sub">Oyuncular arası savaş</div></div>
+            <button class="toggle" id="toggle-pvp" onclick="toggleBtn(this)"></button>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">Crack (Offline Mode)</div><div class="toggle-sub">Lisanssız giriş izni</div></div>
+            <button class="toggle" id="toggle-crack" onclick="toggleBtn(this)"></button>
+          </div>
+          <div class="form-group full" style="margin-top:8px">
+            <button class="form-btn" onclick="saveSettings()">Değişiklikleri Kaydet</button>
+          </div>
+        </div>
+      </div>
+      <!-- Plugins Tab -->
+      <div class="panel-tab" id="tab-plugins">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div class="panel-section-title" style="margin:0">🔌 Eklentiler & Dosyalar</div>
+          <button class="add-btn" onclick="openAddPlugin()">+ Eklenti Ekle</button>
+        </div>
+        <div class="plugin-list" id="plugin-list"></div>
+        <div class="divider"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div class="panel-section-title" style="margin:0;font-size:16px">📁 Dosyalar</div>
+          <button class="add-btn" onclick="openAddFile()">+ Dosya Yükle</button>
+        </div>
+        <div id="file-list"></div>
+      </div>
+      <!-- Players Tab -->
+      <div class="panel-tab" id="tab-players">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div class="panel-section-title" style="margin:0">👥 Oyuncular</div>
+          <button class="add-btn" onclick="openAddPlayer()">+ Oyuncu Ekle</button>
+        </div>
+        <div id="player-list"></div>
+      </div>
+      <!-- Features Tab -->
+      <div class="panel-tab" id="tab-features">
+        <div class="panel-section-title">✨ Özellikler & Domain</div>
+        <div id="features-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="page-admin">
+  <div class="admin-page">
+    <div class="section-label">Yönetim</div>
+    <h1 class="section-title" style="margin-bottom:4px">Admin Paneli</h1>
+    <p style="color:var(--text2);font-size:14px;margin-bottom:0">Sistem yönetim merkezi</p>
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h3>🎟️ Satın Alım Kodu Üret</h3>
+        <div class="form-group">
+          <label class="form-label">Paket Seç</label>
+          <select class="form-input" id="admin-pkg-select" onchange="updateAdminPkg()"></select>
+        </div>
+        <button class="form-btn" onclick="generateCode()">Kod Üret</button>
+        <div class="code-display" id="gen-code" style="display:none"></div>
+        <button class="add-btn" id="copy-code-btn" style="display:none;width:100%;justify-content:center;margin-top:8px" onclick="copyCode()">📋 Kodu Kopyala</button>
+      </div>
+      <div class="admin-card">
+        <h3>📋 Üretilen Kodlar</h3>
+        <div style="overflow-x:auto">
+          <table class="code-table" id="code-table">
+            <thead><tr><th>Kod</th><th>Paket</th><th>Durum</th></tr></thead>
+            <tbody id="code-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>👤 Kullanıcılar</h3>
+        <div style="overflow-x:auto">
+          <table class="user-table" id="user-table">
+            <thead><tr><th>Kullanıcı Adı</th><th>E-posta</th><th>Sunucu</th></tr></thead>
+            <tbody id="user-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>📊 İstatistikler</h3>
+        <div style="display:grid;gap:12px">
+          <div class="resource-card"><div class="resource-label">Kayıtlı Kullanıcı</div><div class="resource-val" id="stat-users" style="font-size:28px">0</div></div>
+          <div class="resource-card"><div class="resource-label">Toplam Sunucu</div><div class="resource-val" id="stat-servers" style="font-size:28px">0</div></div>
+          <div class="resource-card"><div class="resource-label">Kullanılan Kod</div><div class="resource-val" id="stat-codes" style="font-size:28px">0</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- LOGIN -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    <div class="modal-title">Tekrar Hoşgeldin</div>
+    <div class="modal-sub">Hesabına giriş yap ve sunucularına ulaş</div>
+    <div class="alert alert-error" id="login-error"></div>
+    <div class="form-group"><label class="form-label">Kullanıcı Adı</label><input class="form-input" id="login-user" placeholder="kullaniciadi"></div>
+    <div class="form-group"><label class="form-label">Şifre</label><input class="form-input" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="form-btn" onclick="doLogin()">Giriş Yap</button>
+    <div class="form-switch">Hesabın yok mu? <a onclick="switchModal('login-modal','register-modal')">Kayıt Ol</a></div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="modal-overlay" id="register-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
+    <div class="modal-title">Hesap Oluştur</div>
+    <div class="modal-sub">Ücretsiz hesabınla hemen başla</div>
+    <div class="alert alert-error" id="reg-error"></div>
+    <div class="alert alert-success" id="reg-success"></div>
+    <div class="form-group"><label class="form-label">Kullanıcı Adı</label><input class="form-input" id="reg-user" placeholder="kullaniciadi"></div>
+    <div class="form-group"><label class="form-label">E-posta</label><input class="form-input" type="email" id="reg-email" placeholder="ornek@email.com"></div>
+    <div class="form-group"><label class="form-label">Şifre</label><input class="form-input" type="password" id="reg-pass" placeholder="••••••••"></div>
+    <button class="form-btn" onclick="doRegister()">Kayıt Ol</button>
+    <div class="form-switch">Zaten hesabın var mı? <a onclick="switchModal('register-modal','login-modal')">Giriş Yap</a></div>
+  </div>
+</div>
+
+<!-- BUY MODAL -->
+<div class="modal-overlay" id="buy-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('buy-modal')">✕</button>
+    <div class="modal-title">Paketi Aktifleştir</div>
+    <div class="modal-sub" id="buy-modal-sub">Satın alım kodunuzu girerek paketi aktif edin</div>
+    <div class="alert alert-error" id="buy-error"></div>
+    <div class="form-group">
+      <label class="form-label">Sunucu Adı</label>
+      <input class="form-input" id="buy-srvname" placeholder="Sunucu adınız">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Satın Alım Kodu</label>
+      <input class="form-input" id="buy-code" placeholder="VEXAR-XXXX-XXXX" style="font-family:'DM Mono',monospace;letter-spacing:2px" onkeydown="if(event.key==='Enter')redeemCode()">
+    </div>
+    <button class="form-btn" onclick="redeemCode()">Aktifleştir</button>
+  </div>
+</div>
+
+<!-- ADD PLUGIN MODAL -->
+<div class="modal-overlay" id="plugin-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('plugin-modal')">✕</button>
+    <div class="modal-title">Eklenti Ekle</div>
+    <div class="modal-sub">Sunucunuza yeni bir eklenti ekleyin</div>
+    <div class="form-group"><label class="form-label">Eklenti Adı</label><input class="form-input" id="plugin-name" placeholder="örn: EssentialsX"></div>
+    <div class="form-group"><label class="form-label">Sürüm</label><input class="form-input" id="plugin-ver" placeholder="örn: 2.20.1"></div>
+    <button class="form-btn" onclick="addPlugin()">Eklentiyi Ekle</button>
+  </div>
+</div>
+
+<!-- ADD PLAYER MODAL -->
+<div class="modal-overlay" id="player-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('player-modal')">✕</button>
+    <div class="modal-title">Oyuncu Ekle</div>
+    <div class="modal-sub">Whitelist veya OP listesine oyuncu ekleyin</div>
+    <div class="form-group"><label class="form-label">Oyuncu Adı</label><input class="form-input" id="player-name" placeholder="Minecraft kullanıcı adı"></div>
+    <div class="form-group"><label class="form-label">Rol</label>
+      <select class="form-input" id="player-role"><option value="member">Üye</option><option value="op">OP (Operatör)</option></select>
+    </div>
+    <button class="form-btn" onclick="addPlayer()">Ekle</button>
+  </div>
+</div>
+
+<!-- ADD FILE MODAL -->
+<div class="modal-overlay" id="file-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('file-modal')">✕</button>
+    <div class="modal-title">Dosya Yükle</div>
+    <div class="modal-sub">Sunucuya yeni bir dosya yükleyin</div>
+    <div class="form-group"><label class="form-label">Dosya Adı</label><input class="form-input" id="file-name" placeholder="örn: config.yml"></div>
+    <div class="form-group"><label class="form-label">Tür</label>
+      <select class="form-input" id="file-type">
+        <option>config.yml</option><option>plugins/</option><option>world/</option>
+        <option>server.properties</option><option>ops.json</option>
+      </select>
+    </div>
+    <button class="form-btn" onclick="addFile()">Yükle</button>
+  </div>
+</div>
+
+<script>
+// ==================== CONFIG ====================
+const ADMIN_CONFIG = {u:'admin', p:atob('a3VydWN1emVybGF4')};
+// (Şifre base64 olarak saklanmaktadır, düz metin olarak kodda yer almamaktadır)
+
+const PACKAGES = {
+  minecraft:[
+    {id:'mc-starter',name:'STARTER',ram:'1GB RAM',cpu:'1 vCore',disk:'10GB',monthly:110,yearly:790,lifetime:960,
+     features:['1GB DDR4 RAM','1 vCore CPU','10GB NVMe Disk','20 Slot Oyuncu','Temel DDoS Koruma','Paper/Spigot/Vanilla'],icon:'⚪'},
+    {id:'mc-temel',name:'TEMEL',ram:'2GB RAM',cpu:'2 vCore',disk:'20GB',monthly:220,yearly:1550,lifetime:1990,
+     features:['2GB DDR4 RAM','2 vCore CPU','20GB NVMe Disk','50 Slot Oyuncu','DDoS Koruma','Tüm Yazılımlar'],icon:'🔵'},
+    {id:'mc-elite',name:'ELİTE',ram:'4GB RAM',cpu:'2 vCore',disk:'30GB',monthly:350,yearly:2450,lifetime:2990,
+     features:['4GB DDR4 RAM','2 vCore CPU','30GB NVMe Disk','80 Slot Oyuncu','Gelişmiş DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme'],icon:'🟣'},
+    {id:'mc-ultra',name:'ULTRA',ram:'6GB RAM',cpu:'3 vCore',disk:'50GB',monthly:480,yearly:3350,lifetime:3990,
+     features:['6GB DDR4 RAM','3 vCore CPU','50GB NVMe Disk','150 Slot Oyuncu','Premium DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme','Özel Domain'],icon:'🔷',featured:true},
+    {id:'mc-titan',name:'TİTAN',ram:'8GB RAM',cpu:'4 vCore',disk:'80GB',monthly:690,yearly:4750,lifetime:5500,
+     features:['8GB DDR4 RAM','4 vCore CPU','80GB NVMe Disk','250 Slot Oyuncu','Premium DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme','Özel Domain','Öncelikli Destek'],icon:'🟡'},
+    {id:'mc-mythic',name:'MYTHIC',ram:'12GB RAM',cpu:'6 vCore',disk:'120GB',monthly:950,yearly:6200,lifetime:7200,
+     features:['12GB DDR4 RAM','6 vCore CPU','120GB NVMe Disk','500 Slot Oyuncu','2.5Tbps DDoS Koruma','Tüm Yazılımlar','Günlük Yedekleme','Özel Domain','Öncelikli Destek'],icon:'🟠'},
+    {id:'mc-legendary',name:'LEGENDARY',ram:'16GB RAM',cpu:'8 vCore',disk:'200GB',monthly:1800,yearly:10500,lifetime:11900,
+     features:['16GB DDR4 RAM','8 vCore CPU','200GB NVMe Disk','1000 Slot Oyuncu','2.5Tbps DDoS Koruma','Tüm Yazılımlar','Saatlik Yedekleme','Özel Domain','7/24 Destek'],icon:'🔴'},
+    {id:'mc-galaxy',name:'GALAXY',ram:'24GB RAM',cpu:'12 vCore',disk:'350GB',monthly:3400,yearly:17500,lifetime:19900,
+     features:['24GB DDR4 RAM','12 vCore CPU','350GB NVMe Disk','2000 Slot Oyuncu','3Tbps DDoS Koruma','Dedicated Resources','Saatlik Yedekleme','3x Özel Domain','7/24 VIP Destek'],icon:'🌌'},
+    {id:'mc-universe',name:'UNIVERSE',ram:'32GB RAM',cpu:'16 vCore',disk:'500GB',monthly:4900,yearly:25900,lifetime:29900,
+     features:['32GB DDR4 RAM','16 vCore CPU','500GB NVMe Disk','5000 Slot Oyuncu','5Tbps DDoS Koruma','Dedicated Resources','Gerçek Zamanlı Yedek','5x Özel Domain','VIP Destek Hattı'],icon:'🌠'},
+    {id:'mc-eternity',name:'ETERNITY',ram:'64GB RAM',cpu:'24 vCore',disk:'1TB',monthly:6500,yearly:31500,lifetime:35900,
+     features:['64GB DDR4 RAM','24 vCore CPU','1TB NVMe Disk','10000 Slot Oyuncu','10Tbps DDoS Koruma','Dedicated Server','Gerçek Zamanlı Yedek','10x Özel Domain','Özel Destek Mühendisi'],icon:'♾️'},
+    {id:'mc-god',name:'GOD',ram:'128GB RAM',cpu:'32 vCore',disk:'2TB',monthly:12000,yearly:49900,lifetime:59900,
+     features:['128GB DDR4 RAM','32 vCore CPU','2TB NVMe RAID Disk','Sınırsız Slot','25Tbps DDoS Koruma','Bare Metal Dedicated','Anlık Yedekleme','Sınırsız Domain','SLA %99.99','Özel Veri Merkezi Rafı'],icon:'👑'},
+  ],
+  ddos:[
+    {id:'ddos-lite',name:'LITE',ram:'',cpu:'',disk:'',monthly:45,yearly:350,lifetime:490,
+     features:['100Gbps Koruma','Layer 3/4 Filtreleme','Otomatik Mitigation','Gerçek Zamanlı İzleme'],icon:'🛡️'},
+    {id:'ddos-pro',name:'PRO',ram:'',cpu:'',disk:'',monthly:90,yearly:750,lifetime:990,
+     features:['500Gbps Koruma','Layer 3/4/7 Filtreleme','Otomatik Mitigation','Gerçek Zamanlı İzleme','Özel Kurallar'],icon:'🔰',featured:true},
+    {id:'ddos-elite',name:'ELİTE',ram:'',cpu:'',disk:'',monthly:190,yearly:1600,lifetime:2100,
+     features:['1Tbps Koruma','Tam Katman Filtreleme','Akıllı Mitigation','Gerçek Zamanlı Dashboard','Özel Kurallar','Anlık Uyarı'],icon:'⚔️'},
+    {id:'ddos-titan',name:'TİTAN',ram:'',cpu:'',disk:'',monthly:350,yearly:3000,lifetime:3900,
+     features:['2.5Tbps Koruma','Tam Katman Filtreleme','AI Destekli Mitigation','7/24 İzleme','Özel Kurallar','SLA %99.9'],icon:'🏰'},
+    {id:'ddos-godshield',name:'GOD SHIELD',ram:'',cpu:'',disk:'',monthly:650,yearly:5500,lifetime:7500,
+     features:['5Tbps+ Koruma','Sıfır Gecikme Filtreleme','Makine Öğrenmeli Mitigation','7/24 Mühendis','Tam Özelleştirme','SLA %99.99','Öncelikli Bant Genişliği'],icon:'⚡'},
+  ],
+  vac:[
+    {id:'vac-lite',name:'VAC LITE',ram:'',cpu:'',disk:'',monthly:40,yearly:320,lifetime:450,
+     features:['Temel Anti-Cheat','Gerçek Zamanlı Tarama','Otomatik Ban','Raporlama Paneli'],icon:'🔍'},
+    {id:'vac-plus',name:'VAC PLUS',ram:'',cpu:'',disk:'',monthly:85,yearly:700,lifetime:890,
+     features:['Gelişmiş Tarama','Hareket Analizi','Otomatik Ban','Temyiz Sistemi','Detaylı Loglama'],icon:'🔎'},
+    {id:'vac-pro',name:'VAC PRO',ram:'',cpu:'',disk:'',monthly:150,yearly:1250,lifetime:1700,
+     features:['Makro/Bot Tespiti','Hareket Analizi','Otomatik Ban','Temyiz Sistemi','Özel Kurallar'],icon:'👁️',featured:true},
+    {id:'vac-elite',name:'VAC ELİTE',ram:'',cpu:'',disk:'',monthly:280,yearly:2400,lifetime:3200,
+     features:['AI Tabanlı Tespit','Makro/Bot/Exploit','Gerçek Zamanlı Analiz','Otomatik Ban','Temyiz Sistemi','7/24 İzleme'],icon:'🤖'},
+    {id:'vac-ultimate',name:'VAC ULTIMATE',ram:'',cpu:'',disk:'',monthly:500,yearly:4200,lifetime:5500,
+     features:['Tam AI Motoru','Her Türlü Hile Tespiti','Sıfır Gecikme Analiz','Otomatik + Manuel Ban','Temyiz Paneli','7/24 İnsan İncelemesi','Özel Filtre Desteği'],icon:'🛡️'},
+  ],
+  domain:[
+    {id:'dom-xyz',name:'sunucu.xyz',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:100,
+     features:['.xyz uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik'],icon:'🌐',domainOnly:true},
+    {id:'dom-online',name:'sunucu.online',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:120,
+     features:['.online uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik'],icon:'🌍',domainOnly:true},
+    {id:'dom-comtr',name:'sunucu.com.tr',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:150,
+     features:['.com.tr uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik','Yerli Alan Adı'],icon:'🇹🇷',domainOnly:true},
+    {id:'dom-network',name:'sunucu.network',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:160,
+     features:['.network uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik'],icon:'🔗',domainOnly:true,featured:true},
+    {id:'dom-com',name:'sunucu.com',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:180,
+     features:['.com uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik','En Prestijli Uzantı'],icon:'✨',domainOnly:true},
+  ]
+};
+
+const FAKE_LOGS = [
+  ['info','Sunucu başlatılıyor...'],
+  ['info','Java sürümü kontrol ediliyor...'],
+  ['info','Eklentiler yükleniyor...'],
+  ['info','Dünya oluşturuluyor...'],
+  ['info','Spawn noktası ayarlanıyor...'],
+  ['info','Oyuncu bağlantıları kabul ediliyor'],
+  ['info','Sunucu başarıyla açıldı! Bağlantı noktası: 25565'],
+  ['warn','Uyarı: Spawn koruma alanı etkin'],
+  ['info','[EssentialsX] Eklenti yüklendi'],
+  ['info','[WorldEdit] Eklenti yüklendi'],
+  ['info','Yedekleme sistemi hazır'],
+  ['dim','[10:23:41] Heartbeat OK'],
+];
+
+// ==================== STATE ====================
+let currentUser = null;
+let currentServer = null;
+let currentTab = 'monthly';
+let resInterval = null;
+let logInterval = null;
+let serverRunning = false;
+
+// ==================== STORAGE HELPERS ====================
+const DB = {
+  users: () => JSON.parse(localStorage.getItem('vxUsers')||'[]'),
+  saveUsers: (d) => localStorage.setItem('vxUsers',JSON.stringify(d)),
+  codes: () => JSON.parse(localStorage.getItem('vxCodes')||'[]'),
+  saveCodes: (d) => localStorage.setItem('vxCodes',JSON.stringify(d)),
+  servers: () => JSON.parse(localStorage.getItem('vxServers')||'[]'),
+  saveServers: (d) => localStorage.setItem('vxServers',JSON.stringify(d)),
+};
+
+// ==================== TOAST ====================
+function toast(msg, type='success'){
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  t.className = 'toast show toast-'+type;
+  m.textContent = msg;
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ==================== PAGE NAVIGATION ====================
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(id==='packages') renderPackages();
+  if(id==='servers') renderServers();
+  if(id==='admin') renderAdmin();
+}
+
+function setActiveNav(el){
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function gotoServers(){
+  if(!currentUser){openModal('login-modal');return;}
+  showPage('servers');
+}
+
+// ==================== AUTH ====================
+function doLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  err.classList.remove('show');
+
+  if(u===ADMIN_CONFIG.u && p===ADMIN_CONFIG.p){
+    currentUser={username:'admin',email:'admin@vexar.gg',isAdmin:true};
+    afterLogin();
+    return;
+  }
+
+  const users = DB.users();
+  const user = users.find(x=>x.username===u && x.password===btoa(p));
+  if(!user){err.textContent='Kullanıcı adı veya şifre hatalı.';err.classList.add('show');return;}
+  currentUser = user;
+  afterLogin();
+}
+
+function afterLogin(){
+  closeModal('login-modal');
+  updateNavAuth();
+  toast('Hoşgeldin, '+currentUser.username+'!','success');
+  if(currentUser.isAdmin){
+    showPage('admin');
+  } else {
+    showPage('servers');
+    setActiveNav(document.querySelectorAll('.nav-link')[2]);
+  }
+}
+
+function doRegister(){
+  const u = document.getElementById('reg-user').value.trim();
+  const e = document.getElementById('reg-email').value.trim();
+  const p = document.getElementById('reg-pass').value;
+  const err = document.getElementById('reg-error');
+  const suc = document.getElementById('reg-success');
+  err.classList.remove('show'); suc.classList.remove('show');
+
+  if(!u||!e||!p){err.textContent='Tüm alanları doldurun.';err.classList.add('show');return;}
+  if(p.length<6){err.textContent='Şifre en az 6 karakter olmalı.';err.classList.add('show');return;}
+  if(u===ADMIN_CONFIG.u){err.textContent='Bu kullanıcı adı kullanılamaz.';err.classList.add('show');return;}
+
+  const users = DB.users();
+  if(users.find(x=>x.username===u)){err.textContent='Bu kullanıcı adı zaten alınmış.';err.classList.add('show');return;}
+
+  users.push({username:u,email:e,password:btoa(p),servers:[]});
+  DB.saveUsers(users);
+  suc.textContent='Kayıt başarılı! Giriş yapabilirsiniz.';
+  suc.classList.add('show');
+  setTimeout(()=>switchModal('register-modal','login-modal'),1500);
+}
+
+function doLogout(){
+  currentUser=null;
+  updateNavAuth();
+  showPage('home');
+  setActiveNav(document.querySelectorAll('.nav-link')[0]);
+  toast('Çıkış yapıldı.','success');
+}
+
+function handleUserClick(){
+  if(currentUser&&currentUser.isAdmin){showPage('admin');return;}
+  if(confirm('Çıkış yapmak istiyor musunuz?')) doLogout();
+}
+
+function updateNavAuth(){
+  const btns = document.getElementById('nav-auth-btns');
+  const info = document.getElementById('nav-user-info');
+  if(currentUser){
+    btns.style.display='none';
+    info.style.display='block';
+    document.getElementById('nav-username').textContent=currentUser.username;
+    document.getElementById('nav-avatar').textContent=currentUser.username[0].toUpperCase();
+  } else {
+    btns.style.display='block';
+    info.style.display='none';
+  }
+}
+
+// ==================== MODALS ====================
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function switchModal(close,open){closeModal(close);openModal(open);}
+
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
+});
+
+// ==================== PACKAGES ====================
+function setTab(el, tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentTab=tab;
+  renderPackages();
+}
+
+function getPrice(pkg){
+  if(pkg.domainOnly) return pkg.lifetime+'₺ <span>sonsuz</span>';
+  if(currentTab==='yearly') return pkg.yearly+'₺ <span>/yıl</span>';
+  if(currentTab==='lifetime') return pkg.lifetime+'₺ <span>sonsuz</span>';
+  return pkg.monthly+'₺ <span>/ay</span>';
+}
+
+function renderPackages(){
+  const cats=[
+    {key:'minecraft',label:'🎮 Minecraft Sunucusu',desc:'Oyun sunucuları'},
+    {key:'ddos',label:'🛡️ DDoS Koruması',desc:'Güvenlik çözümleri'},
+    {key:'vac',label:'🚫 Hile Koruması (VAC)',desc:'Anti-cheat'},
+    {key:'domain',label:'🌐 Domain Paketleri',desc:'Sonsuz · Tek Seferlik'},
+  ];
+  const c = document.getElementById('packages-content');
+  c.innerHTML = cats.map(cat=>{
+    const isDomain = cat.key==='domain';
+    const pkgs = PACKAGES[cat.key].filter(pkg=>{
+      if(pkg.domainOnly) return true;
+      if(currentTab==='monthly') return pkg.monthly>0;
+      if(currentTab==='yearly') return pkg.yearly>0;
+      if(currentTab==='lifetime') return pkg.lifetime>0;
+      return true;
+    });
+    return '<div class="cat-section">' +
+      '<div class="cat-title">' + cat.label + ' <span class="cat-badge">' + (isDomain?'Sonsuz &middot; Tek Seferlik':cat.desc) + '</span></div>' +
+      '<div class="pkg-grid">' +
+      pkgs.map(pkg=>
+        '<div class="pkg-card ' + (pkg.featured?'featured':'') + '">' +
+        '<div style="font-size:28px;margin-bottom:8px">' + pkg.icon + '</div>' +
+        '<div class="pkg-name">' + pkg.name + '</div>' +
+        '<div class="pkg-ram">' + pkg.ram + (pkg.cpu?' &middot; '+pkg.cpu:'') + '</div>' +
+        '<div class="pkg-price">' + getPrice(pkg) + '</div>' +
+        '<ul class="pkg-features">' + pkg.features.map(f=>'<li>'+f+'</li>').join('') + '</ul>' +
+        '<button class="btn-buy ' + (pkg.featured?'featured-btn':'') + '" onclick="openBuy(\'' + pkg.id + '\',\'' + pkg.name + '\')">Satın Al</button>' +
+        '</div>'
+      ).join('') +
+      '</div></div>';
+  }).join('');
+}
+
+let buyPkgId = null;
+function openBuy(pkgId, pkgName){
+  if(!currentUser){openModal('login-modal');return;}
+  buyPkgId = pkgId;
+  document.getElementById('buy-modal-sub').textContent = `"${pkgName}" paketini aktifleştirmek için kod girin`;
+  document.getElementById('buy-error').classList.remove('show');
+  document.getElementById('buy-code').value='';
+  document.getElementById('buy-srvname').value='';
+  openModal('buy-modal');
+}
+
+function redeemCode(){
+  const code = document.getElementById('buy-code').value.trim().toUpperCase();
+  const sname = document.getElementById('buy-srvname').value.trim();
+  const err = document.getElementById('buy-error');
+  err.classList.remove('show');
+  if(!sname){err.textContent='Sunucu adı boş olamaz.';err.classList.add('show');return;}
+  if(!code){err.textContent='Lütfen bir kod girin.';err.classList.add('show');return;}
+
+  const codes = DB.codes();
+  const codeObj = codes.find(c=>c.code===code&&!c.used);
+  if(!codeObj){err.textContent='Geçersiz veya kullanılmış kod.';err.classList.add('show');return;}
+  if(codeObj.pkgId!==buyPkgId){
+    err.textContent='Bu kod farklı bir paket için üretilmiş.';
+    err.classList.add('show');return;
+  }
+
+  // Mark code used
+  codeObj.used=true;
+  codeObj.usedBy=currentUser.username;
+  DB.saveCodes(codes);
+
+  // Create server
+  const pkg = Object.values(PACKAGES).flat().find(p=>p.id===buyPkgId);
+  const server = {
+    id:'srv-'+Date.now(),
+    name:sname,
+    pkgId:buyPkgId,
+    pkgName:pkg.name,
+    pkgFeatures:pkg.features,
+    ram:pkg.ram,
+    icon:'🎮',
+    status:'offline',
+    owner:currentUser.username,
+    motd:'Vexar Hosting tarafından desteklenmektedir',
+    maxPlayers:20,
+    mode:'Survival',
+    difficulty:'Normal',
+    software:'Paper',
+    version:'1.21.4 (Son)',
+    pvp:true,
+    crack:false,
+    logo:'',
+    plugins:[
+      {name:'EssentialsX',ver:'2.21.0',icon:'⚙️'},
+      {name:'LuckPerms',ver:'5.4.131',icon:'🔑'},
+    ],
+    files:['server.properties','ops.json','whitelist.json','eula.txt'],
+    players:[],
+    domain:sname.toLowerCase().replace(/\s+/g,'-')+'.vexar.mc',
+    customDomain:'',
+    createdAt: new Date().toLocaleDateString('tr-TR'),
+  };
+
+  const servers = DB.servers();
+  servers.push(server);
+  DB.saveServers(servers);
+
+  // Update user
+  const users = DB.users();
+  const ui = users.findIndex(u=>u.username===currentUser.username);
+  if(ui>-1){if(!users[ui].servers)users[ui].servers=[];users[ui].servers.push(server.id);DB.saveUsers(users);}
+  currentUser.servers = (currentUser.servers||[]).concat(server.id);
+
+  closeModal('buy-modal');
+  toast('🎉 Sunucu başarıyla oluşturuldu!','success');
+  showPage('servers');
+  setActiveNav(document.querySelectorAll('.nav-link')[2]);
+}
+
+// ==================== SERVERS ====================
+function renderServers(){
+  if(!currentUser){return;}
+  const servers = DB.servers().filter(s=>s.owner===currentUser.username||(currentUser.isAdmin));
+  const el = document.getElementById('servers-list');
+  if(!servers.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">🖥️</div><div class="empty-title">Henüz sunucunuz yok</div><div class="empty-desc">Bir paket satın alarak ilk sunucunuzu oluşturun</div></div>`;
+    return;
+  }
+  el.innerHTML=`<div class="server-list">${servers.map(s=>`
+    <div class="server-item" onclick="openPanel('${s.id}')">
+      <div class="server-logo">${s.logo?`<img src="${s.logo}">`:(s.icon||'🎮')}</div>
+      <div class="server-info">
+        <div class="server-name">${s.name}</div>
+        <div class="server-plan">${s.pkgName} · ${s.domain}</div>
+      </div>
+      <div class="server-status">
+        <div class="status-dot ${s.status}"></div>
+        <span>${s.status==='online'?'Çevrimiçi':s.status==='starting'?'Başlatılıyor':'Çevrimdışı'}</span>
+      </div>
+      <span style="color:var(--text3);font-size:18px;margin-left:8px">›</span>
+    </div>
+  `).join('')}</div>`;
+}
+
+// ==================== SERVER PANEL ====================
+function openPanel(id){
+  const servers = DB.servers();
+  currentServer = servers.find(s=>s.id===id);
+  if(!currentServer) return;
+
+  // Update sidebar
+  document.getElementById('sidebar-name').textContent=currentServer.name;
+  document.getElementById('sidebar-plan').textContent=currentServer.pkgName;
+  const sl=document.getElementById('sidebar-logo');
+  sl.innerHTML=currentServer.logo?`<img src="${currentServer.logo}">`:(currentServer.icon||'🎮');
+
+  // Load settings
+  document.getElementById('s-name').value=currentServer.name;
+  document.getElementById('s-maxp').value=currentServer.maxPlayers||20;
+  document.getElementById('s-motd').value=currentServer.motd||'';
+  document.getElementById('s-mode').value=currentServer.mode||'Survival';
+  document.getElementById('s-diff').value=currentServer.difficulty||'Normal';
+  document.getElementById('s-soft').value=currentServer.software||'Paper';
+  document.getElementById('s-ver').value=currentServer.version||'1.21.4 (Son)';
+  const tpvp=document.getElementById('toggle-pvp');
+  const tcrack=document.getElementById('toggle-crack');
+  currentServer.pvp?tpvp.classList.add('on'):tpvp.classList.remove('on');
+  currentServer.crack?tcrack.classList.add('on'):tcrack.classList.remove('on');
+
+  if(currentServer.logo){
+    document.getElementById('logo-preview').src=currentServer.logo;
+    document.getElementById('logo-preview').style.display='block';
+    document.getElementById('logo-placeholder').style.display='none';
+  } else {
+    document.getElementById('logo-preview').style.display='none';
+    document.getElementById('logo-placeholder').style.display='block';
+  }
+
+  switchTab('console', document.querySelector('#sidebar-nav li'));
+  renderPlugins(); renderFiles(); renderPlayers(); renderFeatures();
+  initConsole();
+
+  showPage('panel');
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.panel-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#sidebar-nav li').forEach(l=>l.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+// CONSOLE
+function initConsole(){
+  const box = document.getElementById('console-output');
+  box.innerHTML='';
+  clearInterval(resInterval); clearInterval(logInterval);
+  serverRunning = currentServer.status==='online';
+  updateServerBtns();
+  if(serverRunning) startResourceSim();
+}
+
+function addLog(type, msg){
+  const box = document.getElementById('console-output');
+  const now = new Date();
+  const ts = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+  const line = document.createElement('div');
+  line.className='log-line';
+  line.innerHTML=`<span class="log-time">[${ts}]</span><span class="log-${type}">${msg}</span>`;
+  box.appendChild(line);
+  box.scrollTop=box.scrollHeight;
+}
+
+function serverAction(action){
+  if(action==='start'){
+    if(serverRunning) return;
+    addLog('info','Sunucu başlatılıyor...');
+    setTimeout(()=>{
+      let i=0;
+      const run=()=>{
+        if(i<FAKE_LOGS.length){addLog(FAKE_LOGS[i][0],FAKE_LOGS[i][1]);i++;setTimeout(run,350+Math.random()*400);}
+        else{serverRunning=true;updateServerStatus('online');startResourceSim();}
+      };run();
+    },300);
+  } else if(action==='stop'){
+    if(!serverRunning) return;
+    addLog('warn','Sunucu durduruluyor...');
+    setTimeout(()=>{
+      addLog('info','Dünya kaydediliyor...');
+      setTimeout(()=>{
+        addLog('info','Sunucu durduruldu.');
+        serverRunning=false;updateServerStatus('offline');
+        clearInterval(resInterval);clearInterval(logInterval);
+        document.getElementById('res-cpu').textContent='0%';
+        document.getElementById('res-ram').textContent='0 MB';
+        document.getElementById('res-net').textContent='0 KB/s';
+        document.getElementById('bar-cpu').style.width='0%';
+        document.getElementById('bar-ram').style.width='0%';
+        document.getElementById('bar-net').style.width='0%';
+      },800);
+    },400);
+  } else if(action==='restart'){
+    addLog('warn','Yeniden başlatılıyor...');
+    if(serverRunning) serverAction('stop');
+    setTimeout(()=>serverAction('start'),3500);
+  }
+}
+
+function updateServerStatus(status){
+  currentServer.status=status;
+  const servers = DB.servers();
+  const idx = servers.findIndex(s=>s.id===currentServer.id);
+  if(idx>-1){servers[idx].status=status;DB.saveServers(servers);}
+  updateServerBtns();
+}
+
+function updateServerBtns(){
+  document.getElementById('btn-start').style.opacity=serverRunning?'0.4':'1';
+  document.getElementById('btn-stop').style.opacity=serverRunning?'1':'0.4';
+}
+
+function startResourceSim(){
+  const cpuBase=20+Math.random()*30;
+  const ramBase=300+Math.random()*400;
+  let cpuMax = parseInt(currentServer.ram)||2;
+  cpuMax = cpuMax*512;
+
+  resInterval = setInterval(()=>{
+    if(!serverRunning) return;
+    const cpu = Math.max(5,Math.min(95,cpuBase+(Math.random()-0.5)*20));
+    const ram = Math.max(200,Math.min(cpuMax,ramBase+(Math.random()-0.5)*100));
+    const net = Math.round(10+Math.random()*200);
+    document.getElementById('res-cpu').textContent=cpu.toFixed(1)+'%';
+    document.getElementById('res-ram').textContent=ram.toFixed(0)+' MB';
+    document.getElementById('res-net').textContent=net+' KB/s';
+    document.getElementById('bar-cpu').style.width=cpu+'%';
+    document.getElementById('bar-ram').style.width=(ram/cpuMax*100)+'%';
+    document.getElementById('bar-net').style.width=Math.min(100,net/500*100)+'%';
+  },2000);
+
+  const runLogs = [
+    ['dim','[Heartbeat] OK — TPS: 20.0'],
+    ['info','Otomatik yedekleme tamamlandı'],
+    ['warn','Yüksek bellek kullanımı uyarısı'],
+    ['dim','[Heartbeat] OK — TPS: 19.8'],
+    ['info','Yeni bağlantı isteği alındı'],
+    ['dim','[AntiCheat] Scan tamamlandı — temiz'],
+  ];
+  let li=0;
+  logInterval = setInterval(()=>{
+    if(!serverRunning) return;
+    const l=runLogs[li%runLogs.length];
+    addLog(l[0],l[1]);li++;
+  },8000+Math.random()*4000);
+}
+
+function sendCmd(){
+  const input = document.getElementById('console-cmd');
+  const cmd = input.value.trim();
+  if(!cmd) return;
+  addLog('warn','> '+cmd);
+  input.value='';
+  setTimeout(()=>{
+    if(cmd.startsWith('/op ')) addLog('info',`Made ${cmd.split(' ')[1]} a server operator`);
+    else if(cmd.startsWith('/deop ')) addLog('info',`Removed operator status from ${cmd.split(' ')[1]}`);
+    else if(cmd.startsWith('/say ')) addLog('info',`[Server] ${cmd.substring(5)}`);
+    else if(cmd==='/stop') serverAction('stop');
+    else if(cmd==='/list') addLog('info',`There are ${currentServer.players?.length||0} players online`);
+    else addLog('info','Komut çalıştırıldı.');
+  },300);
+}
+
+// SETTINGS
+function toggleBtn(el){el.classList.toggle('on');}
+
+function saveSettings(){
+  const servers = DB.servers();
+  const idx = servers.findIndex(s=>s.id===currentServer.id);
+  const upd = {
+    name: document.getElementById('s-name').value||currentServer.name,
+    maxPlayers: parseInt(document.getElementById('s-maxp').value)||20,
+    motd: document.getElementById('s-motd').value,
+    mode: document.getElementById('s-mode').value,
+    difficulty: document.getElementById('s-diff').value,
+    software: document.getElementById('s-soft').value,
+    version: document.getElementById('s-ver').value,
+    pvp: document.getElementById('toggle-pvp').classList.contains('on'),
+    crack: document.getElementById('toggle-crack').classList.contains('on'),
+  };
+  Object.assign(currentServer, upd);
+  if(idx>-1){Object.assign(servers[idx],upd);DB.saveServers(servers);}
+  document.getElementById('sidebar-name').textContent=currentServer.name;
+  toast('Ayarlar kaydedildi ✓','success');
+}
+
+function handleLogoUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload=(ev)=>{
+    const src=ev.target.result;
+    document.getElementById('logo-preview').src=src;
+    document.getElementById('logo-preview').style.display='block';
+    document.getElementById('logo-placeholder').style.display='none';
+    currentServer.logo=src;
+    const servers=DB.servers();
+    const idx=servers.findIndex(s=>s.id===currentServer.id);
+    if(idx>-1){servers[idx].logo=src;DB.saveServers(servers);}
+    const sl=document.getElementById('sidebar-logo');
+    sl.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`;
+    toast('Logo yüklendi ✓','success');
+  };
+  reader.readAsDataURL(file);
+}
+
+// PLUGINS
+function renderPlugins(){
+  const el = document.getElementById('plugin-list');
+  const plugins = currentServer.plugins||[];
+  const icons=['⚙️','🔑','🗡️','🏠','💬','🗺️','💰','🎯','🛡️','⚡'];
+  el.innerHTML = plugins.map((p,i)=>`
+    <div class="plugin-item">
+      <div class="plugin-icon">${p.icon||icons[i%icons.length]}</div>
+      <div><div class="plugin-name">${p.name}</div><div class="plugin-ver">v${p.ver}</div></div>
+      <button class="plugin-del" onclick="removePlugin(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function openAddPlugin(){openModal('plugin-modal');document.getElementById('plugin-name').value='';document.getElementById('plugin-ver').value='';}
+
+function addPlugin(){
+  const name=document.getElementById('plugin-name').value.trim();
+  const ver=document.getElementById('plugin-ver').value.trim()||'1.0.0';
+  if(!name) return;
+  currentServer.plugins=(currentServer.plugins||[]);
+  currentServer.plugins.push({name,ver,icon:'🔌'});
+  saveCurrentServer();
+  renderPlugins();
+  closeModal('plugin-modal');
+  toast('Eklenti eklendi: '+name,'success');
+  if(serverRunning) addLog('info',`[PluginManager] ${name} v${ver} yüklendi`);
+}
+
+function removePlugin(i){
+  currentServer.plugins.splice(i,1);
+  saveCurrentServer();renderPlugins();toast('Eklenti kaldırıldı.','success');
+}
+
+// FILES
+function renderFiles(){
+  const el=document.getElementById('file-list');
+  const files=currentServer.files||[];
+  const exts={'properties':'📄','json':'📋','yml':'⚙️','yaml':'⚙️','txt':'📝','jar':'☕','zip':'🗜️','png':'🖼️','log':'📃'};
+  el.innerHTML=files.map((f,i)=>{
+    const ext=f.split('.').pop();
+    const icon=exts[ext]||'📁';
+    const sizes=['4.2 KB','12.8 KB','256 B','1.1 MB','8.7 KB'];
+    return `<div class="file-item"><span class="file-icon">${icon}</span><span class="file-name">${f}</span><span class="file-size">${sizes[i%sizes.length]}</span><button class="plugin-del" onclick="removeFile(${i})">✕</button></div>`;
+  }).join('');
+}
+
+function openAddFile(){openModal('file-modal');document.getElementById('file-name').value='';}
+
+function addFile(){
+  const name=document.getElementById('file-name').value.trim()||document.getElementById('file-type').value;
+  currentServer.files=(currentServer.files||[]);
+  currentServer.files.push(name);
+  saveCurrentServer();renderFiles();closeModal('file-modal');toast('Dosya yüklendi.','success');
+}
+
+function removeFile(i){currentServer.files.splice(i,1);saveCurrentServer();renderFiles();}
+
+// PLAYERS
+function renderPlayers(){
+  const el=document.getElementById('player-list');
+  const players=currentServer.players||[];
+  if(!players.length){el.innerHTML=`<div style="color:var(--text3);font-size:14px;padding:20px 0">Henüz oyuncu eklenmemiş.</div>`;return;}
+  el.innerHTML=players.map((p,i)=>`
+    <div class="player-item">
+      <div class="player-avatar">${p.name[0].toUpperCase()}</div>
+      <div>
+        <span class="player-name">${p.name}</span>
+        <span class="player-role ${p.role==='op'?'role-op':'role-member'}">${p.role==='op'?'OP':'Üye'}</span>
+      </div>
+      <button class="plugin-del" style="margin-left:auto" onclick="removePlayer(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function openAddPlayer(){openModal('player-modal');document.getElementById('player-name').value='';}
+
+function addPlayer(){
+  const name=document.getElementById('player-name').value.trim();
+  const role=document.getElementById('player-role').value;
+  if(!name) return;
+  currentServer.players=(currentServer.players||[]);
+  currentServer.players.push({name,role});
+  saveCurrentServer();renderPlayers();closeModal('player-modal');
+  toast(`${name} eklendi (${role==='op'?'OP':'Üye'}).`,'success');
+  if(serverRunning) addLog('info',`${name} sunucuya eklendi`);
+}
+
+function removePlayer(i){
+  const p=currentServer.players[i];
+  currentServer.players.splice(i,1);
+  saveCurrentServer();renderPlayers();
+  toast(p.name+' kaldırıldı.','success');
+}
+
+// FEATURES
+function renderFeatures(){
+  const el=document.getElementById('features-content');
+  const features=currentServer.pkgFeatures||[];
+  el.innerHTML=`
+    <div class="domain-card" style="margin-bottom:20px">
+      <div class="form-label" style="margin-bottom:8px">Otomatik Domain</div>
+      <div class="domain-name">${currentServer.domain}</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">Bu domain otomatik olarak atanmıştır</div>
+    </div>
+    <div class="domain-card" style="margin-bottom:24px">
+      <div class="form-label" style="margin-bottom:8px">Özel Domain</div>
+      ${currentServer.customDomain
+        ?`<div class="domain-name">${currentServer.customDomain}</div>`
+        :`<div style="display:flex;gap:8px">
+          <input class="form-input" id="custom-domain-inp" placeholder="sunucum.com" style="flex:1">
+          <button class="add-btn" onclick="setCustomDomain()">Bağla</button>
+        </div>`}
+    </div>
+    <div class="panel-section-title" style="font-size:16px;margin-bottom:16px">📦 Paket Özellikleri</div>
+    <div class="feat-list">
+      ${features.map(f=>`<div class="feat-list-item"><span class="feat-check">✓</span><span>${f}</span></div>`).join('')}
+    </div>
+  `;
+}
+
+function setCustomDomain(){
+  const val=document.getElementById('custom-domain-inp')?.value.trim();
+  if(!val) return;
+  currentServer.customDomain=val;
+  saveCurrentServer();renderFeatures();
+  toast('Özel domain bağlandı: '+val,'success');
+}
+
+function saveCurrentServer(){
+  const servers=DB.servers();
+  const idx=servers.findIndex(s=>s.id===currentServer.id);
+  if(idx>-1){servers[idx]=currentServer;DB.saveServers(servers);}
+}
+
+// ==================== ADMIN ====================
+function renderAdmin(){
+  // Populate package select
+  const sel=document.getElementById('admin-pkg-select');
+  const allPkgs=Object.values(PACKAGES).flat().filter(p=>p.monthly>0);
+  sel.innerHTML=allPkgs.map(p=>`<option value="${p.id}">${p.name} — ${p.monthly}₺/ay</option>`).join('');
+
+  renderCodeTable();
+
+  // Users
+  const users=DB.users();
+  const servers=DB.servers();
+  const utb=document.getElementById('user-table-body');
+  utb.innerHTML=users.map(u=>`<tr><td>${u.username}</td><td>${u.email}</td><td>${servers.filter(s=>s.owner===u.username).length}</td></tr>`).join('');
+
+  // Stats
+  document.getElementById('stat-users').textContent=users.length;
+  document.getElementById('stat-servers').textContent=servers.length;
+  document.getElementById('stat-codes').textContent=DB.codes().filter(c=>c.used).length;
+}
+
+function renderCodeTable(){
+  const codes=DB.codes();
+  const tbody=document.getElementById('code-table-body');
+  tbody.innerHTML=codes.map(c=>`
+    <tr>
+      <td style="font-family:'DM Mono',monospace;letter-spacing:2px;font-size:11px">${c.code}</td>
+      <td>${c.pkgName}</td>
+      <td><span class="used-badge ${c.used?'used-true':'used-false'}">${c.used?'Kullanıldı':'Aktif'}</span></td>
+    </tr>
+  `).join('')||'<tr><td colspan="3" style="color:var(--text3);padding:16px;text-align:center">Henüz kod üretilmedi</td></tr>';
+}
+
+let lastGenCode='';
+function generateCode(){
+  const sel=document.getElementById('admin-pkg-select');
+  const pkgId=sel.value;
+  const pkgName=sel.options[sel.selectedIndex].text;
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const seg=()=>Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  const code=`VEXAR-${seg()}-${seg()}`;
+  lastGenCode=code;
+
+  const codes=DB.codes();
+  codes.push({code,pkgId,pkgName,used:false,createdAt:new Date().toLocaleDateString('tr-TR')});
+  DB.saveCodes(codes);
+
+  document.getElementById('gen-code').textContent=code;
+  document.getElementById('gen-code').style.display='block';
+  document.getElementById('copy-code-btn').style.display='flex';
+  renderCodeTable();
+  renderAdmin();
+  toast('Kod üretildi!','success');
+}
+
+function copyCode(){
+  navigator.clipboard.writeText(lastGenCode).then(()=>toast('Kod kopyalandı!','success'));
+}
+
+function updateAdminPkg(){}
+
+// ==================== INIT ====================
+renderPackages();
+updateNavAuth();
+</script>
 </body>
 </html>
