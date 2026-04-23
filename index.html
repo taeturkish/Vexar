@@ -1082,7 +1082,10 @@ select.form-input option{background:var(--bg3);}
           <div class="form-group">
             <label class="form-label">Sürüm</label>
             <select class="form-input" id="s-ver">
-              <option>1.21.4 (Son)</option>
+              <option>26.1.2 </option>
+              <option>26.1.1 </option>
+              <option>26.1 </option>
+              <option>1.21.4 </option>
               <option>1.21.3</option>
               <option>1.21.1</option>
               <option>1.20.4</option>
@@ -1298,51 +1301,51 @@ const ADMIN_CONFIG = {u:'admin', p:atob('a3VydWN1emVybGF4')};
 
 const PACKAGES = {
   minecraft:[
-    {id:'mc-starter',name:'STARTER',ram:'1GB RAM',cpu:'1 vCore',disk:'10GB',monthly:110,yearly:790,lifetime:960,
+    {id:'mc-starter',name:'STARTER',ram:'1GB RAM',cpu:'1 vCore',disk:'10GB',monthly:45,yearly:350,lifetime:550,
      features:['1GB DDR4 RAM','1 vCore CPU','10GB NVMe Disk','20 Slot Oyuncu','Temel DDoS Koruma','Paper/Spigot/Vanilla'],icon:'⚪'},
-    {id:'mc-temel',name:'TEMEL',ram:'2GB RAM',cpu:'2 vCore',disk:'20GB',monthly:220,yearly:1550,lifetime:1990,
+    {id:'mc-temel',name:'TEMEL',ram:'2GB RAM',cpu:'2 vCore',disk:'20GB',monthly:90,yearly:850,lifetime:1200,
      features:['2GB DDR4 RAM','2 vCore CPU','20GB NVMe Disk','50 Slot Oyuncu','DDoS Koruma','Tüm Yazılımlar'],icon:'🔵'},
-    {id:'mc-elite',name:'ELİTE',ram:'4GB RAM',cpu:'2 vCore',disk:'30GB',monthly:350,yearly:2450,lifetime:2990,
+    {id:'mc-elite',name:'ELİTE',ram:'4GB RAM',cpu:'2 vCore',disk:'30GB',monthly:160,yearly:1450,lifetime:1900,
      features:['4GB DDR4 RAM','2 vCore CPU','30GB NVMe Disk','80 Slot Oyuncu','Gelişmiş DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme'],icon:'🟣'},
-    {id:'mc-ultra',name:'ULTRA',ram:'6GB RAM',cpu:'3 vCore',disk:'50GB',monthly:480,yearly:3350,lifetime:3990,
+    {id:'mc-ultra',name:'ULTRA',ram:'6GB RAM',cpu:'3 vCore',disk:'50GB',monthly:230,yearly:2100,lifetime:2650,
      features:['6GB DDR4 RAM','3 vCore CPU','50GB NVMe Disk','150 Slot Oyuncu','Premium DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme','Özel Domain'],icon:'🔷',featured:true},
-    {id:'mc-titan',name:'TİTAN',ram:'8GB RAM',cpu:'4 vCore',disk:'80GB',monthly:690,yearly:4750,lifetime:5500,
+    {id:'mc-titan',name:'TİTAN',ram:'8GB RAM',cpu:'4 vCore',disk:'80GB',monthly:290,yearly:2750,lifetime:3400,
      features:['8GB DDR4 RAM','4 vCore CPU','80GB NVMe Disk','250 Slot Oyuncu','Premium DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme','Özel Domain','Öncelikli Destek'],icon:'🟡'},
-    {id:'mc-mythic',name:'MYTHIC',ram:'12GB RAM',cpu:'6 vCore',disk:'120GB',monthly:950,yearly:6200,lifetime:7200,
+    {id:'mc-mythic',name:'MYTHIC',ram:'12GB RAM',cpu:'6 vCore',disk:'120GB',monthly:420,yearly:4000,lifetime:4900,
      features:['12GB DDR4 RAM','6 vCore CPU','120GB NVMe Disk','500 Slot Oyuncu','2.5Tbps DDoS Koruma','Tüm Yazılımlar','Günlük Yedekleme','Özel Domain','Öncelikli Destek'],icon:'🟠'},
-    {id:'mc-legendary',name:'LEGENDARY',ram:'16GB RAM',cpu:'8 vCore',disk:'200GB',monthly:1800,yearly:10500,lifetime:11900,
+    {id:'mc-legendary',name:'LEGENDARY',ram:'16GB RAM',cpu:'8 vCore',disk:'200GB',monthly:550,yearly:5200,lifetime:6500,
      features:['16GB DDR4 RAM','8 vCore CPU','200GB NVMe Disk','1000 Slot Oyuncu','2.5Tbps DDoS Koruma','Tüm Yazılımlar','Saatlik Yedekleme','Özel Domain','7/24 Destek'],icon:'🔴'},
-    {id:'mc-galaxy',name:'GALAXY',ram:'24GB RAM',cpu:'12 vCore',disk:'350GB',monthly:3400,yearly:17500,lifetime:19900,
+    {id:'mc-galaxy',name:'GALAXY',ram:'24GB RAM',cpu:'12 vCore',disk:'350GB',monthly:950,yearly:9000,lifetime:11500,
      features:['24GB DDR4 RAM','12 vCore CPU','350GB NVMe Disk','2000 Slot Oyuncu','3Tbps DDoS Koruma','Dedicated Resources','Saatlik Yedekleme','3x Özel Domain','7/24 VIP Destek'],icon:'🌌'},
-    {id:'mc-universe',name:'UNIVERSE',ram:'32GB RAM',cpu:'16 vCore',disk:'500GB',monthly:4900,yearly:25900,lifetime:29900,
+    {id:'mc-universe',name:'UNIVERSE',ram:'32GB RAM',cpu:'16 vCore',disk:'500GB',monthly:2200,yearly:19500,lifetime:24000,
      features:['32GB DDR4 RAM','16 vCore CPU','500GB NVMe Disk','5000 Slot Oyuncu','5Tbps DDoS Koruma','Dedicated Resources','Gerçek Zamanlı Yedek','5x Özel Domain','VIP Destek Hattı'],icon:'🌠'},
-    {id:'mc-eternity',name:'ETERNITY',ram:'64GB RAM',cpu:'24 vCore',disk:'1TB',monthly:6500,yearly:31500,lifetime:35900,
+    {id:'mc-eternity',name:'ETERNITY',ram:'64GB RAM',cpu:'24 vCore',disk:'1TB',monthly:2200,yearly:18500,lifetime:22500,
      features:['64GB DDR4 RAM','24 vCore CPU','1TB NVMe Disk','10000 Slot Oyuncu','10Tbps DDoS Koruma','Dedicated Server','Gerçek Zamanlı Yedek','10x Özel Domain','Özel Destek Mühendisi'],icon:'♾️'},
-    {id:'mc-god',name:'GOD',ram:'128GB RAM',cpu:'32 vCore',disk:'2TB',monthly:12000,yearly:49900,lifetime:59900,
+    {id:'mc-god',name:'GOD',ram:'128GB RAM',cpu:'32 vCore',disk:'2TB',monthly:3800,yearly:36500,lifetime:45000,
      features:['128GB DDR4 RAM','32 vCore CPU','2TB NVMe RAID Disk','Sınırsız Slot','25Tbps DDoS Koruma','Bare Metal Dedicated','Anlık Yedekleme','Sınırsız Domain','SLA %99.99','Özel Veri Merkezi Rafı'],icon:'👑'},
   ],
   ddos:[
-    {id:'ddos-lite',name:'LITE',ram:'',cpu:'',disk:'',monthly:45,yearly:350,lifetime:490,
+    {id:'ddos-lite',name:'LITE',ram:'',cpu:'',disk:'',monthly:25,yearly:220,lifetime:350,
      features:['100Gbps Koruma','Layer 3/4 Filtreleme','Otomatik Mitigation','Gerçek Zamanlı İzleme'],icon:'🛡️'},
-    {id:'ddos-pro',name:'PRO',ram:'',cpu:'',disk:'',monthly:90,yearly:750,lifetime:990,
+    {id:'ddos-pro',name:'PRO',ram:'',cpu:'',disk:'',monthly:50,yearly:450,lifetime:700,
      features:['500Gbps Koruma','Layer 3/4/7 Filtreleme','Otomatik Mitigation','Gerçek Zamanlı İzleme','Özel Kurallar'],icon:'🔰',featured:true},
-    {id:'ddos-elite',name:'ELİTE',ram:'',cpu:'',disk:'',monthly:190,yearly:1600,lifetime:2100,
+    {id:'ddos-elite',name:'ELİTE',ram:'',cpu:'',disk:'',monthly:110,yearly:1000,lifetime:1500,
      features:['1Tbps Koruma','Tam Katman Filtreleme','Akıllı Mitigation','Gerçek Zamanlı Dashboard','Özel Kurallar','Anlık Uyarı'],icon:'⚔️'},
-    {id:'ddos-titan',name:'TİTAN',ram:'',cpu:'',disk:'',monthly:350,yearly:3000,lifetime:3900,
+    {id:'ddos-titan',name:'TİTAN',ram:'',cpu:'',disk:'',monthly:220,yearly:1950,lifetime:2800,
      features:['2.5Tbps Koruma','Tam Katman Filtreleme','AI Destekli Mitigation','7/24 İzleme','Özel Kurallar','SLA %99.9'],icon:'🏰'},
-    {id:'ddos-godshield',name:'GOD SHIELD',ram:'',cpu:'',disk:'',monthly:650,yearly:5500,lifetime:7500,
+    {id:'ddos-godshield',name:'GOD SHIELD',ram:'',cpu:'',disk:'',monthly:450,yearly:3800,lifetime:5500,
      features:['5Tbps+ Koruma','Sıfır Gecikme Filtreleme','Makine Öğrenmeli Mitigation','7/24 Mühendis','Tam Özelleştirme','SLA %99.99','Öncelikli Bant Genişliği'],icon:'⚡'},
   ],
   vac:[
-    {id:'vac-lite',name:'VAC LITE',ram:'',cpu:'',disk:'',monthly:40,yearly:320,lifetime:450,
+    {id:'vac-lite',name:'VAC LITE',ram:'',cpu:'',disk:'',monthly:15,yearly:180,lifetime:250,
      features:['Temel Anti-Cheat','Gerçek Zamanlı Tarama','Otomatik Ban','Raporlama Paneli'],icon:'🔍'},
-    {id:'vac-plus',name:'VAC PLUS',ram:'',cpu:'',disk:'',monthly:85,yearly:700,lifetime:890,
+    {id:'vac-plus',name:'VAC PLUS',ram:'',cpu:'',disk:'',monthly:35,yearly:350,lifetime:450,
      features:['Gelişmiş Tarama','Hareket Analizi','Otomatik Ban','Temyiz Sistemi','Detaylı Loglama'],icon:'🔎'},
-    {id:'vac-pro',name:'VAC PRO',ram:'',cpu:'',disk:'',monthly:150,yearly:1250,lifetime:1700,
+    {id:'vac-pro',name:'VAC PRO',ram:'',cpu:'',disk:'',monthly:70,yearly:750,lifetime:850,
      features:['Makro/Bot Tespiti','Hareket Analizi','Otomatik Ban','Temyiz Sistemi','Özel Kurallar'],icon:'👁️',featured:true},
-    {id:'vac-elite',name:'VAC ELİTE',ram:'',cpu:'',disk:'',monthly:280,yearly:2400,lifetime:3200,
+    {id:'vac-elite',name:'VAC ELİTE',ram:'',cpu:'',disk:'',monthly:130,yearly:1400,lifetime:1600,
      features:['AI Tabanlı Tespit','Makro/Bot/Exploit','Gerçek Zamanlı Analiz','Otomatik Ban','Temyiz Sistemi','7/24 İzleme'],icon:'🤖'},
-    {id:'vac-ultimate',name:'VAC ULTIMATE',ram:'',cpu:'',disk:'',monthly:500,yearly:4200,lifetime:5500,
+    {id:'vac-ultimate',name:'VAC ULTIMATE',ram:'',cpu:'',disk:'',monthly:250,yearly:2800,lifetime:2900,
      features:['Tam AI Motoru','Her Türlü Hile Tespiti','Sıfır Gecikme Analiz','Otomatik + Manuel Ban','Temyiz Paneli','7/24 İnsan İncelemesi','Özel Filtre Desteği'],icon:'🛡️'},
   ],
   domain:[
