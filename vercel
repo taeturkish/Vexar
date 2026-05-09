@@ -1,1657 +1,2256 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vexar Hosting | Profesyonel Minecraft Sunucu Kiralama</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: linear-gradient(135deg, #0a0a0f 0%, #12121a 100%);
-      color: #ffffff;
-      min-height: 100vh;
-    }
-    .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
-    
-    /* Header */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .logo {
-      font-size: 32px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      position: relative;
-    }
-    .logo::after {
-      content: 'BETA';
-      position: absolute;
-      top: -8px;
-      right: -45px;
-      font-size: 10px;
-      background: #a855f7;
-      color: white;
-      padding: 2px 6px;
-      border-radius: 20px;
-      font-weight: 600;
-    }
-    .nav-links { display: flex; gap: 32px; font-weight: 500; align-items: center; }
-    .nav-links a {
-      color: #a1a1aa;
-      text-decoration: none;
-      transition: color 0.2s;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .nav-links a:hover { color: white; }
-    .user-auth { display: flex; align-items: center; gap: 12px; }
-    .user-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 40px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-    .user-btn:hover { background: rgba(255, 255, 255, 0.1); }
-    .admin-badge {
-      background: rgba(168, 85, 247, 0.15);
-      color: #c084fc;
-      padding: 8px 16px;
-      border-radius: 40px;
-      font-size: 13px;
-      font-weight: 600;
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .admin-badge:hover { background: rgba(168, 85, 247, 0.25); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vexar Hosting — Sınırsız Güç, Sıfır Sınır</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050508;
+  --bg2: #0a0a10;
+  --bg3: #0f0f18;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --neon: #7c3aed;
+  --neon2: #a855f7;
+  --neon3: #c084fc;
+  --cyan: #06b6d4;
+  --green: #10b981;
+  --red: #ef4444;
+  --orange: #f59e0b;
+  --text: #f1f0ff;
+  --text2: #a09cb8;
+  --text3: #6b6785;
+  --glass: rgba(124,58,237,0.08);
+  --glow: 0 0 40px rgba(124,58,237,0.3);
+}
 
-    /* Discord Widget */
-    .discord-widget { position: fixed; bottom: 24px; right: 24px; z-index: 999; }
-    .discord-button {
-      background: #5865F2;
-      color: white;
-      border: none;
-      padding: 14px 24px;
-      border-radius: 60px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 30px rgba(88, 101, 242, 0.3);
-      transition: all 0.2s;
-      font-family: 'Montserrat', sans-serif;
-    }
-    .discord-button:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(88, 101, 242, 0.4); }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-    /* Status Bar */
-    .status-bar {
-      background: rgba(0, 0, 0, 0.3);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 8px 0;
-      font-size: 13px;
-    }
-    .status-content { display: flex; justify-content: space-between; align-items: center; }
-    .status-left { display: flex; gap: 24px; }
-    .status-item { display: flex; align-items: center; gap: 8px; color: #a1a1aa; }
-    .status-item i { color: #22c55e; font-size: 10px; }
-    .status-right { display: flex; align-items: center; gap: 16px; }
-    .server-count { display: flex; align-items: center; gap: 6px; }
+html{scroll-behavior:smooth;}
 
-    /* Discount Banner */
-    .discount-banner {
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      text-align: center;
-      padding: 12px;
-      border-radius: 12px;
-      margin: 24px 0;
-      font-weight: 700;
-      font-size: 16px;
-      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
-    }
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-    /* Hero */
-    .hero { text-align: center; padding: 60px 0 40px; }
-    .hero h1 {
-      font-size: 56px;
-      font-weight: 900;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #ffffff, #a1a1aa);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      line-height: 1.2;
-    }
-    .hero p { font-size: 18px; color: #a1a1aa; max-width: 700px; margin: 0 auto 24px; }
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--neon);border-radius:2px;}
 
-    /* Category Selector */
-    .category-selector {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin: 40px 0 20px;
-      flex-wrap: wrap;
-    }
-    .category-btn {
-      padding: 14px 32px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1.5px solid rgba(255, 255, 255, 0.08);
-      border-radius: 40px;
-      color: #a1a1aa;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .category-btn i { font-size: 18px; }
-    .category-btn:hover, .category-btn.active {
-      background: rgba(168, 85, 247, 0.1);
-      border-color: #a855f7;
-      color: white;
-    }
+/* NOISE OVERLAY */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+  opacity:0.6;
+}
 
-    /* Packages Grid */
-    .section-title {
-      font-size: 32px;
-      font-weight: 800;
-      margin: 50px 0 24px;
-      text-align: center;
-    }
-    .packages-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 24px;
-      margin-bottom: 60px;
-    }
-    .package-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      padding: 28px;
-      transition: all 0.3s;
-      backdrop-filter: blur(10px);
-      position: relative;
-    }
-    .package-card:hover {
-      border-color: rgba(168, 85, 247, 0.5);
-      transform: translateY(-6px);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    }
-    .package-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .package-name { font-size: 24px; font-weight: 800; }
-    .package-menu {
-      position: relative;
-      cursor: pointer;
-      color: #a1a1aa;
-      font-size: 20px;
-      padding: 4px 8px;
-    }
-    .package-menu:hover { color: white; }
-    .package-menu-dropdown {
-      position: absolute;
-      top: 30px;
-      right: 0;
-      background: #1e1e2e;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 8px;
-      min-width: 150px;
-      display: none;
-      z-index: 100;
-    }
-    .package-menu-dropdown.active { display: block; }
-    .package-menu-dropdown div {
-      padding: 10px 14px;
-      cursor: pointer;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: background 0.2s;
-    }
-    .package-menu-dropdown div:hover { background: rgba(255, 255, 255, 0.05); }
-    .package-desc {
-      color: #a1a1aa;
-      font-size: 14px;
-      margin-bottom: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .package-specs { list-style: none; margin-bottom: 24px; }
-    .package-specs li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 0;
-      font-size: 14px;
-      color: #d4d4d8;
-    }
-    .package-specs li i { color: #22c55e; font-size: 14px; width: 18px; }
-    .price-section { display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; }
-    .discounted-price { font-size: 32px; font-weight: 800; color: #ffffff; }
-    .price-period { color: #a1a1aa; font-size: 15px; }
-    .buy-btn {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      border: none;
-      border-radius: 14px;
-      color: white;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'Montserrat', sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .buy-btn:hover { transform: scale(1.02); box-shadow: 0 15px 35px rgba(168, 85, 247, 0.4); }
+/* GRID LINES */
+.grid-overlay{
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+  z-index:0;
+}
 
-    /* Footer */
-    .footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 48px 0 24px;
-      margin-top: 60px;
-    }
-    .footer-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 48px;
-      margin-bottom: 48px;
-    }
-    .footer-section h4 { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
-    .footer-section ul { list-style: none; }
-    .footer-section ul li { margin-bottom: 12px; }
-    .footer-section ul li a {
-      color: #a1a1aa;
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-    }
-    .footer-section ul li a:hover { color: white; }
-    .footer-bottom {
-      text-align: center;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      color: #a1a1aa;
-      font-size: 14px;
-    }
-    .social-links { display: flex; gap: 16px; margin-top: 16px; }
-    .social-links a { color: #a1a1aa; font-size: 20px; transition: color 0.2s; }
-    .social-links a:hover { color: white; }
+/* NAV */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:1000;
+  padding:16px 40px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(5,5,8,0.7);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  transition:all 0.3s;
+}
 
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(10px);
-      z-index: 10000;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal.active { display: flex; }
-    .modal-content {
-      background: #12121a;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 28px;
-      padding: 36px;
-      max-width: 550px;
-      width: 90%;
-      max-height: 85vh;
-      overflow-y: auto;
-    }
-    .modal-content.large { max-width: 800px; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
-    .modal-header h2 { font-size: 28px; font-weight: 800; }
-    .close-modal {
-      background: none;
-      border: none;
-      color: #a1a1aa;
-      font-size: 32px;
-      cursor: pointer;
-    }
-    .close-modal:hover { color: white; }
-    .form-group { margin-bottom: 24px; }
-    .form-group label { display: block; margin-bottom: 10px; font-weight: 600; color: #d4d4d8; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%;
-      padding: 16px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1.5px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      color: white;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 15px;
-    }
-    .form-group textarea { min-height: 100px; resize: vertical; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #a855f7; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .submit-btn {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
-      border: none;
-      border-radius: 14px;
-      color: white;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-      font-family: 'Montserrat', sans-serif;
-    }
-    .delete-btn { background: #ef4444; margin-top: 10px; }
-    .checkbox-group { display: flex; align-items: center; gap: 12px; }
-    .checkbox-group input { width: 20px; height: 20px; cursor: pointer; }
+.nav-logo{
+  font-family:'Syne',sans-serif;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+  background:linear-gradient(135deg,#fff 0%,var(--neon3) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  cursor:pointer;
+}
 
-    /* Panel */
-    .panel-container { display: none; min-height: 100vh; }
-    .panel-container.active { display: block; }
-    .panel-header {
-      background: rgba(255, 255, 255, 0.02);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 24px 0;
-    }
-    .panel-header-content { display: flex; justify-content: space-between; align-items: center; }
-    .server-info h2 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
-    .server-info p { color: #a1a1aa; font-size: 15px; }
-    .server-status { display: flex; align-items: center; gap: 20px; }
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(239, 68, 68, 0.1);
-      color: #ef4444;
-      padding: 8px 16px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .status-badge.online {
-      background: rgba(34, 197, 94, 0.1);
-      color: #22c55e;
-    }
-    .power-buttons { display: flex; gap: 10px; margin-left: 16px; }
-    .power-btn {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      border: none;
-      font-family: 'Montserrat', sans-serif;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .power-btn.start { background: #22c55e; color: white; }
-    .power-btn.stop { background: #ef4444; color: white; }
-    .power-btn.restart { background: #eab308; color: white; }
-    .panel-tabs { display: flex; gap: 10px; margin: 28px 0; flex-wrap: wrap; }
-    .panel-tab {
-      padding: 12px 24px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1.5px solid rgba(255, 255, 255, 0.05);
-      border-radius: 40px;
-      color: #a1a1aa;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .panel-tab:hover, .panel-tab.active {
-      background: rgba(168, 85, 247, 0.1);
-      border-color: #a855f7;
-      color: white;
-    }
-    .panel-content {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-      padding: 28px;
-    }
-    .console-output {
-      background: #0a0a0f;
-      border-radius: 12px;
-      padding: 20px;
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      height: 400px;
-      overflow-y: auto;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .console-line { padding: 3px 0; color: #a1a1aa; }
-    .console-line .timestamp { color: #71717a; margin-right: 10px; }
-    .console-input { display: flex; gap: 12px; margin-top: 20px; }
-    .console-input input {
-      flex: 1;
-      padding: 14px;
-      background: #0a0a0f;
-      border: 1.5px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      color: white;
-      font-family: 'Courier New', monospace;
-    }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
-      margin-bottom: 28px;
-    }
-    .stat-card {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 16px;
-      padding: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .stat-label { color: #a1a1aa; font-size: 14px; margin-bottom: 10px; }
-    .stat-value { font-size: 28px; font-weight: 800; }
-    .back-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1.5px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 12px;
-      cursor: pointer;
-      margin-bottom: 24px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logout-btn {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1.5px solid rgba(239, 68, 68, 0.3);
-      color: #ef4444;
-      padding: 10px 20px;
-      border-radius: 12px;
-      cursor: pointer;
-      margin-left: 12px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
+.nav-links{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
 
-    /* Admin Panel Tabs */
-    .admin-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    .admin-tab {
-      padding: 10px 20px;
-      background: transparent;
-      border: none;
-      color: #a1a1aa;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    .admin-tab:hover, .admin-tab.active {
-      background: rgba(168, 85, 247, 0.1);
-      color: white;
-    }
-    .category-item, .package-item, .testimonial-item, .code-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 12px;
-      margin-bottom: 10px;
-    }
-    .category-actions, .package-actions {
-      display: flex;
-      gap: 8px;
-    }
-    .edit-btn, .delete-btn-sm {
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      border: none;
-    }
-    .edit-btn { background: #3b82f6; color: white; }
-    .delete-btn-sm { background: #ef4444; color: white; }
-    .testimonials-toggle {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    .toggle-switch {
-      width: 50px;
-      height: 26px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 13px;
-      position: relative;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .toggle-switch.active { background: #22c55e; }
-    .toggle-switch::after {
-      content: '';
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      background: white;
-      border-radius: 50%;
-      top: 2px;
-      left: 2px;
-      transition: transform 0.2s;
-    }
-    .toggle-switch.active::after { transform: translateX(24px); }
-    
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-    }
-    .loading-overlay.active { display: flex; }
-    .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 3px solid rgba(168, 85, 247, 0.3);
-      border-top-color: #a855f7;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
+.nav-link{
+  padding:8px 18px;
+  border-radius:8px;
+  color:var(--text2);
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.2s;
+  border:1px solid transparent;
+}
+.nav-link:hover,.nav-link.active{
+  color:var(--text);
+  background:var(--surface2);
+  border-color:var(--border2);
+}
+
+.nav-btn{
+  padding:9px 22px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.25s;
+  border:none;
+  font-family:'Manrope',sans-serif;
+}
+
+.btn-ghost{
+  background:transparent;
+  color:var(--text2);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2);}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  color:#fff;
+  box-shadow:0 0 20px rgba(124,58,237,0.4);
+}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 30px rgba(124,58,237,0.6);
+}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:80px;position:relative;z-index:1;}
+.page.active{display:block;animation:fadeIn 0.4s ease;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+/* HERO */
+.hero{
+  min-height:calc(100vh - 80px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:60px 40px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  pointer-events:none;
+}
+.hero-orb-1{
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(124,58,237,0.2),transparent 70%);
+  top:-100px;left:50%;transform:translateX(-50%);
+  animation:pulse 6s ease-in-out infinite;
+}
+.hero-orb-2{
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(6,182,212,0.1),transparent 70%);
+  bottom:0;right:-100px;
+  animation:pulse 8s ease-in-out infinite reverse;
+}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);}50%{transform:translateX(-50%) scale(1.1);}}
+@keyframes pulse2{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 16px 6px 8px;
+  border-radius:100px;
+  background:rgba(124,58,237,0.12);
+  border:1px solid rgba(124,58,237,0.3);
+  font-size:12px;
+  font-weight:600;
+  color:var(--neon3);
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  margin-bottom:28px;
+  animation:slideDown 0.6s ease;
+}
+.hero-badge span{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--neon2);
+  box-shadow:0 0 8px var(--neon2);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:none;}}
+
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(48px,7vw,96px);
+  font-weight:800;
+  line-height:1.0;
+  letter-spacing:-3px;
+  margin-bottom:24px;
+  animation:slideUp 0.7s ease 0.1s both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+
+.hero-title .grad{
+  background:linear-gradient(135deg,#fff 0%,var(--neon3) 50%,var(--cyan) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero-sub{
+  max-width:560px;
+  font-size:18px;
+  line-height:1.7;
+  color:var(--text2);
+  margin-bottom:44px;
+  font-weight:400;
+  animation:slideUp 0.7s ease 0.2s both;
+}
+
+.hero-cta{
+  display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+  animation:slideUp 0.7s ease 0.3s both;
+}
+
+.btn-lg{
+  padding:14px 32px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.25s;
+  border:none;
+  font-family:'Manrope',sans-serif;
+  display:inline-flex;align-items:center;gap:8px;
+}
+
+.hero-stats{
+  display:flex;gap:48px;margin-top:80px;
+  animation:slideUp 0.7s ease 0.4s both;
+}
+.stat{text-align:center;}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:32px;font-weight:800;
+  background:linear-gradient(135deg,#fff,var(--neon3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat-label{font-size:13px;color:var(--text3);font-weight:500;margin-top:4px;}
+
+/* FEATURES */
+.features{
+  padding:80px 40px;
+  max-width:1200px;
+  margin:0 auto;
+}
+.section-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--neon3);margin-bottom:16px;
+}
+.section-label::before{content:'';display:block;width:20px;height:1px;background:var(--neon3);}
+.section-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(28px,4vw,48px);
+  font-weight:800;letter-spacing:-1.5px;
+  margin-bottom:14px;
+}
+.section-desc{font-size:16px;color:var(--text2);line-height:1.7;max-width:500px;margin-bottom:48px;}
+
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px;
+}
+
+.feat-card{
+  padding:28px;
+  border-radius:16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  transition:all 0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(124,58,237,0.05),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.feat-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-3px);}
+.feat-card:hover::before{opacity:1;}
+.feat-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(124,58,237,0.15);
+  border:1px solid rgba(124,58,237,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:16px;
+}
+.feat-title{font-size:15px;font-weight:700;margin-bottom:8px;}
+.feat-desc{font-size:13px;color:var(--text2);line-height:1.6;}
+
+/* PACKAGES PAGE */
+.packages-page{padding:40px;}
+.tab-bar{
+  display:flex;gap:4px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:4px;
+  width:fit-content;
+  margin-bottom:36px;
+}
+.tab{
+  padding:9px 22px;
+  border-radius:9px;
+  font-size:13px;font-weight:600;
+  cursor:pointer;transition:all 0.2s;
+  color:var(--text2);
+  border:none;background:transparent;
+  font-family:'Manrope',sans-serif;
+}
+.tab.active{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;}
+
+.cat-section{margin-bottom:48px;}
+.cat-title{
+  font-family:'Syne',sans-serif;
+  font-size:20px;font-weight:800;letter-spacing:-0.5px;
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.cat-badge{
+  font-size:11px;font-weight:600;
+  padding:3px 10px;border-radius:100px;
+  background:rgba(124,58,237,0.15);
+  border:1px solid rgba(124,58,237,0.3);
+  color:var(--neon3);
+}
+
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+
+.pkg-card{
+  padding:24px;
+  border-radius:16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  transition:all 0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.pkg-card.featured{
+  border-color:rgba(124,58,237,0.5);
+  background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(168,85,247,0.05));
+}
+.pkg-card.featured::after{
+  content:'POPÜLER';
+  position:absolute;top:12px;right:12px;
+  font-size:9px;font-weight:800;letter-spacing:1.5px;
+  padding:3px 10px;border-radius:100px;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  color:#fff;
+}
+.pkg-card:hover{transform:translateY(-3px);border-color:rgba(124,58,237,0.4);}
+.pkg-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.pkg-ram{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.pkg-price{
+  font-family:'Syne',sans-serif;
+  font-size:28px;font-weight:800;
+  margin:16px 0;
+  background:linear-gradient(135deg,#fff,var(--neon3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.pkg-price span{font-size:13px;color:var(--text3);font-weight:400;-webkit-text-fill-color:var(--text3);}
+.pkg-features{list-style:none;margin-bottom:20px;}
+.pkg-features li{
+  font-size:13px;color:var(--text2);
+  padding:5px 0;
+  display:flex;align-items:center;gap:8px;
+}
+.pkg-features li::before{content:'✦';color:var(--neon2);font-size:8px;}
+
+.btn-buy{
+  width:100%;padding:11px;
+  border-radius:10px;
+  border:1px solid rgba(124,58,237,0.4);
+  background:rgba(124,58,237,0.1);
+  color:var(--neon3);
+  font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.25s;
+  font-family:'Manrope',sans-serif;
+  letter-spacing:0.3px;
+}
+.btn-buy:hover{
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  border-color:transparent;
+  color:#fff;
+  box-shadow:0 0 20px rgba(124,58,237,0.4);
+}
+.btn-buy.featured-btn{
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  border:none;color:#fff;
+  box-shadow:0 0 20px rgba(124,58,237,0.3);
+}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(12px);
+  z-index:5000;
+  display:none;
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-overlay.open{display:flex;animation:fadeIn 0.2s ease;}
+.modal{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:36px;
+  max-width:460px;
+  width:100%;
+  position:relative;
+  box-shadow:0 0 60px rgba(124,58,237,0.2);
+  animation:modalIn 0.3s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95)translateY(10px);}to{opacity:1;transform:none;}}
+
+.modal-title{
+  font-family:'Syne',sans-serif;
+  font-size:22px;font-weight:800;letter-spacing:-0.5px;
+  margin-bottom:8px;
+}
+.modal-sub{font-size:14px;color:var(--text2);margin-bottom:28px;}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  width:32px;height:32px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text2);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.modal-close:hover{color:var(--text);background:var(--surface);}
+
+/* FORM */
+.form-group{margin-bottom:18px;}
+.form-label{font-size:12px;font-weight:600;letter-spacing:0.5px;color:var(--text2);margin-bottom:8px;display:block;text-transform:uppercase;}
+.form-input{
+  width:100%;padding:12px 16px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  color:var(--text);
+  font-size:14px;
+  font-family:'Manrope',sans-serif;
+  outline:none;transition:all 0.2s;
+}
+.form-input:focus{border-color:rgba(124,58,237,0.5);box-shadow:0 0 0 3px rgba(124,58,237,0.1);}
+.form-input::placeholder{color:var(--text3);}
+select.form-input{cursor:pointer;}
+select.form-input option{background:var(--bg3);}
+
+.form-btn{
+  width:100%;padding:13px;
+  border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  color:#fff;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all 0.25s;
+  font-family:'Manrope',sans-serif;
+  box-shadow:0 0 24px rgba(124,58,237,0.3);
+}
+.form-btn:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(124,58,237,0.5);}
+
+.form-switch{
+  text-align:center;margin-top:18px;
+  font-size:13px;color:var(--text2);
+}
+.form-switch a{color:var(--neon3);cursor:pointer;font-weight:600;}
+.form-switch a:hover{text-decoration:underline;}
+
+.alert{
+  padding:12px 16px;border-radius:10px;
+  font-size:13px;font-weight:500;
+  margin-bottom:16px;
+  display:none;
+}
+.alert.show{display:block;}
+.alert-error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;}
+.alert-success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#34d399;}
+
+/* SERVERS PAGE */
+.servers-page{padding:40px;max-width:1200px;margin:0 auto;}
+.page-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:36px;
+}
+.page-header h1{
+  font-family:'Syne',sans-serif;
+  font-size:32px;font-weight:800;letter-spacing:-1px;
+}
+
+.empty-state{
+  text-align:center;padding:80px 20px;
+}
+.empty-icon{font-size:64px;margin-bottom:20px;opacity:0.4;}
+.empty-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:8px;}
+.empty-desc{font-size:15px;color:var(--text2);}
+
+.server-list{display:grid;gap:12px;}
+.server-item{
+  display:flex;align-items:center;gap:20px;
+  padding:20px 24px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;cursor:pointer;transition:all 0.25s;
+}
+.server-item:hover{border-color:rgba(124,58,237,0.4);background:var(--surface2);}
+.server-logo{
+  width:48px;height:48px;border-radius:10px;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;overflow:hidden;
+}
+.server-logo img{width:100%;height:100%;object-fit:cover;}
+.server-info{flex:1;}
+.server-name{font-size:15px;font-weight:700;margin-bottom:3px;}
+.server-plan{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.server-status{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;
+}
+.status-dot{width:7px;height:7px;border-radius:50%;}
+.status-dot.online{background:var(--green);box-shadow:0 0 8px var(--green);}
+.status-dot.offline{background:var(--red);}
+.status-dot.starting{background:var(--orange);animation:blink 1s ease-in-out infinite;}
+
+/* SERVER PANEL */
+.panel-page{padding:0;background:var(--bg2);}
+.panel-layout{display:flex;min-height:calc(100vh - 80px);}
+
+.panel-sidebar{
+  width:240px;flex-shrink:0;
+  background:rgba(5,5,8,0.8);
+  border-right:1px solid var(--border);
+  padding:24px 16px;
+  position:sticky;top:80px;height:calc(100vh - 80px);
+  overflow-y:auto;
+}
+.sidebar-server{
+  padding:16px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:12px;
+  margin-bottom:20px;
+}
+.sidebar-server-logo{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;margin-bottom:10px;overflow:hidden;
+}
+.sidebar-server-logo img{width:100%;height:100%;object-fit:cover;}
+.sidebar-server-name{font-size:13px;font-weight:700;}
+.sidebar-server-plan{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;}
+
+.sidebar-nav{list-style:none;}
+.sidebar-nav li{
+  padding:9px 12px;border-radius:8px;
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:500;
+  cursor:pointer;transition:all 0.2s;color:var(--text2);
+  margin-bottom:2px;
+}
+.sidebar-nav li:hover{color:var(--text);background:var(--surface2);}
+.sidebar-nav li.active{color:var(--neon3);background:rgba(124,58,237,0.1);}
+.sidebar-nav-icon{font-size:15px;width:20px;text-align:center;}
+
+.panel-content{flex:1;padding:32px;overflow-y:auto;}
+.panel-tab{display:none;}
+.panel-tab.active{display:block;animation:fadeIn 0.3s ease;}
+
+/* CONSOLE */
+.console-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.console-controls{display:flex;gap:8px;}
+.ctrl-btn{
+  padding:8px 18px;border-radius:8px;
+  font-size:12px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+  border:none;font-family:'Manrope',sans-serif;
+  letter-spacing:0.5px;text-transform:uppercase;
+}
+.btn-start{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);}
+.btn-start:hover{background:rgba(16,185,129,0.25);}
+.btn-stop{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);}
+.btn-stop:hover{background:rgba(239,68,68,0.25);}
+.btn-restart{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);}
+.btn-restart:hover{background:rgba(245,158,11,0.25);}
+
+.console-box{
+  background:#000;
+  border:1px solid var(--border);
+  border-radius:12px;
+  height:360px;
+  overflow-y:auto;
+  padding:16px;
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  line-height:1.7;
+  position:relative;
+}
+.log-line{margin-bottom:2px;display:flex;gap:12px;align-items:flex-start;}
+.log-time{color:#3f3f5a;white-space:nowrap;flex-shrink:0;}
+.log-info{color:#6ee7b7;}
+.log-warn{color:#fbbf24;}
+.log-error{color:#f87171;}
+.log-dim{color:#4b5563;}
+
+.console-input-row{
+  display:flex;gap:8px;margin-top:10px;
+}
+.console-input{
+  flex:1;padding:10px 14px;
+  background:rgba(0,0,0,0.5);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'DM Mono',monospace;font-size:13px;
+  outline:none;
+}
+.console-input:focus{border-color:rgba(124,58,237,0.4);}
+.console-send{
+  padding:10px 20px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Manrope',sans-serif;transition:all 0.2s;
+}
+.console-send:hover{color:var(--text);}
+
+/* SETTINGS FORM */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.settings-grid .full{grid-column:1/-1;}
+
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;
+}
+.toggle-label{font-size:14px;font-weight:500;}
+.toggle-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.toggle{
+  width:44px;height:24px;
+  background:#222;border-radius:100px;
+  position:relative;cursor:pointer;
+  transition:background 0.25s;
+  flex-shrink:0;border:none;outline:none;
+}
+.toggle.on{background:linear-gradient(135deg,var(--neon),var(--neon2));}
+.toggle::after{
+  content:'';position:absolute;
+  top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;
+  background:#fff;transition:transform 0.25s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle.on::after{transform:translateX(20px);}
+
+/* PLUGINS */
+.plugin-list{display:grid;gap:10px;}
+.plugin-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;
+}
+.plugin-icon{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(168,85,247,0.1));
+  border:1px solid rgba(124,58,237,0.2);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.plugin-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.plugin-ver{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+.plugin-del{
+  margin-left:auto;width:30px;height:30px;border-radius:7px;
+  background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);
+  color:#f87171;font-size:16px;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.plugin-del:hover{background:rgba(239,68,68,0.2);}
+
+.add-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:10px;
+  background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);
+  color:var(--neon3);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+  font-family:'Manrope',sans-serif;
+}
+.add-btn:hover{background:rgba(124,58,237,0.2);}
+
+/* PLAYERS */
+.player-item{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 18px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:8px;
+}
+.player-avatar{
+  width:34px;height:34px;border-radius:8px;
+  background:linear-gradient(135deg,#222,#333);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;font-family:'Syne',sans-serif;
+  color:var(--neon3);
+}
+.player-name{font-size:14px;font-weight:600;}
+.player-role{
+  font-size:10px;font-weight:700;letter-spacing:0.5px;
+  padding:2px 8px;border-radius:100px;margin-left:8px;
+  vertical-align:middle;
+}
+.role-op{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);}
+.role-member{background:rgba(124,58,237,0.15);color:var(--neon3);border:1px solid rgba(124,58,237,0.3);}
+
+/* ADMIN */
+.admin-page{padding:40px;max-width:1200px;margin:0 auto;}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px;}
+.admin-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:24px;
+}
+.admin-card h3{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;
+  margin-bottom:16px;display:flex;align-items:center;gap:8px;
+}
+
+.code-display{
+  font-family:'DM Mono',monospace;
+  font-size:20px;font-weight:500;letter-spacing:4px;
+  color:var(--neon3);
+  background:rgba(124,58,237,0.08);
+  border:1px solid rgba(124,58,237,0.2);
+  padding:14px 20px;border-radius:10px;
+  margin:12px 0;text-align:center;
+}
+
+.code-table{width:100%;border-collapse:collapse;font-size:12px;}
+.code-table th{
+  padding:8px 12px;text-align:left;
+  color:var(--text3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+}
+.code-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.code-table tr:last-child td{border-bottom:none;}
+.used-badge{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;
+}
+.used-true{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);}
+.used-false{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);}
+
+/* USER LIST */
+.user-table{width:100%;border-collapse:collapse;font-size:13px;}
+.user-table th{padding:8px 12px;text-align:left;color:var(--text3);font-weight:600;font-size:11px;letter-spacing:0.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.user-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.user-table tr:last-child td{border-bottom:none;}
+
+/* PANEL SECTION HEADER */
+.panel-section-title{
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:800;
+  letter-spacing:-0.5px;margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+
+/* RESOURCE BARS */
+.resource-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-bottom:24px;
+}
+.resource-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:16px;
+}
+.resource-label{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;}
+.resource-val{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  margin-bottom:8px;
+}
+.resource-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.resource-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+.fill-green{background:linear-gradient(90deg,var(--green),#34d399);}
+.fill-purple{background:linear-gradient(90deg,var(--neon),var(--neon2));}
+.fill-cyan{background:linear-gradient(90deg,var(--cyan),#38bdf8);}
+
+/* DOMAIN CARD */
+.domain-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:20px;margin-bottom:12px;
+}
+.domain-name{
+  font-family:'DM Mono',monospace;font-size:15px;font-weight:500;
+  margin-bottom:4px;color:var(--cyan);
+}
+
+/* LOGO UPLOAD */
+.logo-upload-box{
+  border:2px dashed var(--border2);border-radius:12px;
+  padding:32px;text-align:center;cursor:pointer;
+  transition:all 0.2s;background:var(--surface);
+  position:relative;overflow:hidden;
+}
+.logo-upload-box:hover{border-color:rgba(124,58,237,0.5);background:rgba(124,58,237,0.05);}
+.logo-upload-box input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.logo-preview{
+  width:72px;height:72px;border-radius:14px;
+  object-fit:cover;margin:0 auto 12px;display:block;
+}
+
+/* NOTIFICATION */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:12px;padding:14px 20px;
+  font-size:13px;font-weight:500;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  z-index:9998;
+  transform:translateY(80px);opacity:0;
+  transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+  max-width:320px;
+  display:flex;align-items:center;gap:10px;
+}
+.toast.show{transform:none;opacity:1;}
+.toast-icon{font-size:16px;}
+.toast-success .toast-icon::before{content:'✓';}
+.toast-error .toast-icon::before{content:'✗';}
+.toast-success{border-left:3px solid var(--green);}
+.toast-error{border-left:3px solid var(--red);}
+
+/* RESPONSIVE NAV */
+.nav-user{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 12px 6px 6px;
+  border-radius:100px;
+  background:var(--surface2);border:1px solid var(--border);
+  cursor:pointer;
+}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;
+}
+.user-name{font-size:13px;font-weight:600;}
+
+/* BACK BTN */
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  color:var(--text2);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all 0.2s;
+  margin-bottom:20px;padding:8px 0;width:fit-content;
+}
+.back-btn:hover{color:var(--text);}
+.back-btn::before{content:'←';font-size:16px;}
+
+/* FILE ITEM */
+.file-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;margin-bottom:6px;font-size:13px;
+}
+.file-icon{font-size:16px;}
+.file-name{flex:1;font-family:'DM Mono',monospace;font-size:12px;}
+.file-size{font-size:11px;color:var(--text3);margin-right:8px;}
+
+/* PACKAGE DETAIL */
+.feat-list{display:grid;gap:8px;}
+.feat-list-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;font-size:13px;
+}
+.feat-check{color:var(--green);font-size:14px;font-weight:700;}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:24px 0;}
+
+/* SCROLLABLE */
+.panel-content{overflow-y:auto;height:calc(100vh - 80px);}
+</style>
 </head>
 <body>
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-spinner"></div>
-  </div>
+<div class="grid-overlay"></div>
 
-  <div class="discord-widget">
-    <button class="discord-button" onclick="window.open('https://discord.gg/JzynaecG', '_blank')">
-      <i class="fab fa-discord"></i> Discord
-    </button>
-  </div>
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
 
-  <div id="mainPage">
-    <div class="status-bar">
-      <div class="container">
-        <div class="status-content">
-          <div class="status-left">
-            <div class="status-item"><i class="fas fa-circle"></i> <span id="systemStatus">Tüm Sistemler Çalışıyor</span></div>
-            <div class="status-item"><i class="fas fa-shield-alt"></i> DDoS Koruması Aktif</div>
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-logo" onclick="showPage('home')">Vexar<span style="color:var(--neon2)">.</span></div>
+  <div class="nav-links" id="nav-links">
+    <div class="nav-link active" onclick="showPage('home');setActiveNav(this)">Ana Sayfa</div>
+    <div class="nav-link" onclick="showPage('packages');setActiveNav(this)">Paketler</div>
+    <div class="nav-link" id="servers-nav-link" onclick="gotoServers();setActiveNav(this)">Sunucularım</div>
+    <div id="nav-auth-btns">
+      <button class="nav-btn btn-ghost" onclick="openModal('login-modal')">Giriş Yap</button>
+      <button class="nav-btn btn-primary" onclick="openModal('register-modal')" style="margin-left:6px">Kayıt Ol</button>
+    </div>
+    <div id="nav-user-info" style="display:none;">
+      <div class="nav-user" onclick="handleUserClick()">
+        <div class="user-avatar" id="nav-avatar">?</div>
+        <span class="user-name" id="nav-username">Kullanıcı</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGES -->
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-badge"><span></span>Yeni Nesil Hosting Platformu</div>
+    <h1 class="hero-title"><span class="grad">Sunucunuzun</span><br>Gücünü Hissedin</h1>
+    <p class="hero-sub">Vexar Hosting ile DDoS korumalı, ultra-hızlı Minecraft sunucuları ve özel domain'lerle oyun dünyasına damganızı vurun.</p>
+    <div class="hero-cta">
+      <button class="btn-lg btn-primary" onclick="showPage('packages');setActiveNav(document.querySelectorAll('.nav-link')[1])">Paketleri İncele →</button>
+      <button class="btn-lg" style="background:var(--surface);border:1px solid var(--border);color:var(--text)" onclick="openModal('login-modal')">Hemen Başla</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">99.9%</div><div class="stat-label">Uptime Garantisi</div></div>
+      <div class="stat"><div class="stat-num">2.5Tbps</div><div class="stat-label">DDoS Koruma</div></div>
+      <div class="stat"><div class="stat-num">&lt;5ms</div><div class="stat-label">Ping (TR)</div></div>
+      <div class="stat"><div class="stat-num">7/24</div><div class="stat-label">Destek</div></div>
+    </div>
+  </div>
+  <div class="features">
+    <div class="section-label">Neden Vexar</div>
+    <h2 class="section-title">Rakipsiz Özellikler</h2>
+    <p class="section-desc">Her Minecraft sunucusu sahibinin ihtiyaç duyduğu her şey tek bir çatı altında.</p>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">🛡️</div><div class="feat-title">2.5Tbps DDoS Koruma</div><div class="feat-desc">En gelişmiş saldırı filtreleme sistemimizle sunucunuz her zaman ayakta.</div></div>
+      <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">NVMe SSD Altyapı</div><div class="feat-desc">Samsung NVMe diskler ile anlık yükleme, sıfır gecikme ve mükemmel performans.</div></div>
+      <div class="feat-card"><div class="feat-icon">🎮</div><div class="feat-title">Tam Kontrol Paneli</div><div class="feat-desc">Başlat, durdur, yapılandır — tarayıcınızdan tek tıkla tüm kontrolü elinizde tutun.</div></div>
+      <div class="feat-card"><div class="feat-icon">🔌</div><div class="feat-title">Otomatik Yedekleme</div><div class="feat-desc">Günlük otomatik yedekleme ile verileriniz asla kaybolmaz, gönül rahatlığıyla oynayın.</div></div>
+      <div class="feat-card"><div class="feat-icon">🌐</div><div class="feat-title">Özel Domain Desteği</div><div class="feat-desc">Kendi domain'inizi bağlayın ya da ücretsiz .vexar.mc subdomain kullanın.</div></div>
+      <div class="feat-card"><div class="feat-icon">📦</div><div class="feat-title">Plugin Yönetimi</div><div class="feat-desc">Panel üzerinden direkt plugin yükleyin, yönetin ve yapılandırın.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PACKAGES -->
+<div class="page" id="page-packages">
+  <div class="packages-page">
+    <div class="section-label">Fiyatlandırma</div>
+    <h1 class="section-title" style="margin-bottom:8px">Paketlerimiz</h1>
+    <p class="section-desc" style="margin-bottom:24px">İhtiyacınıza uygun paketi seçin, saniyeler içinde kurulum yapın.</p>
+    <div class="tab-bar">
+      <button class="tab active" onclick="setTab(this,'monthly')">Aylık</button>
+      <button class="tab" onclick="setTab(this,'yearly')">Yıllık <span style="font-size:10px;color:var(--green)">%20 İndirim</span></button>
+      <button class="tab" onclick="setTab(this,'lifetime')">Sonsuz</button>
+    </div>
+    <div id="packages-content"></div>
+  </div>
+</div>
+
+<!-- SERVERS -->
+<div class="page" id="page-servers">
+  <div class="servers-page">
+    <div class="page-header">
+      <div>
+        <h1>Sunucularım</h1>
+        <p style="color:var(--text2);font-size:14px;margin-top:4px">Satın aldığınız paketleri buradan yönetin</p>
+      </div>
+      <button class="btn-primary nav-btn" onclick="showPage('packages');setActiveNav(document.querySelectorAll('.nav-link')[1])">+ Yeni Sunucu</button>
+    </div>
+    <div id="servers-list"></div>
+  </div>
+</div>
+
+<!-- SERVER PANEL -->
+<div class="page" id="page-panel">
+  <div class="panel-layout">
+    <div class="panel-sidebar">
+      <div class="sidebar-server">
+        <div class="sidebar-server-logo" id="sidebar-logo">🎮</div>
+        <div class="sidebar-server-name" id="sidebar-name">-</div>
+        <div class="sidebar-server-plan" id="sidebar-plan">-</div>
+      </div>
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="active" onclick="switchTab('console',this)"><span class="sidebar-nav-icon">🖥️</span> Konsol</li>
+        <li onclick="switchTab('settings',this)"><span class="sidebar-nav-icon">⚙️</span> Ayarlar</li>
+        <li onclick="switchTab('plugins',this)"><span class="sidebar-nav-icon">🔌</span> Eklentiler & Dosyalar</li>
+        <li onclick="switchTab('players',this)"><span class="sidebar-nav-icon">👥</span> Oyuncular</li>
+        <li onclick="switchTab('features',this)"><span class="sidebar-nav-icon">✨</span> Özellikler & Domain</li>
+      </ul>
+    </div>
+    <div class="panel-content" id="panel-content">
+      <!-- Console Tab -->
+      <div class="panel-tab active" id="tab-console">
+        <div class="console-header">
+          <div class="panel-section-title">🖥️ Sunucu Konsolu</div>
+          <div class="console-controls">
+            <button class="ctrl-btn btn-start" id="btn-start" onclick="serverAction('start')">▶ BAŞLAT</button>
+            <button class="ctrl-btn btn-stop" id="btn-stop" onclick="serverAction('stop')">■ DURDUR</button>
+            <button class="ctrl-btn btn-restart" onclick="serverAction('restart')">↺ YENİDEN BAŞLAT</button>
           </div>
-          <div class="status-right">
-            <div class="server-count"><i class="fas fa-server"></i> <strong id="activeServers">0</strong> Aktif Sunucu</div>
+        </div>
+        <div class="resource-row" style="grid-template-columns:repeat(4,1fr)">
+          <div class="resource-card">
+            <div class="resource-label">CPU</div>
+            <div class="resource-val" id="res-cpu">0%</div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px" id="res-cpu-limit">— / —</div>
+            <div class="resource-bar"><div class="resource-fill fill-purple" id="bar-cpu" style="width:0%"></div></div>
+          </div>
+          <div class="resource-card">
+            <div class="resource-label">RAM</div>
+            <div class="resource-val" id="res-ram">0 MB</div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px" id="res-ram-limit">— / —</div>
+            <div class="resource-bar"><div class="resource-fill fill-green" id="bar-ram" style="width:0%"></div></div>
+          </div>
+          <div class="resource-card">
+            <div class="resource-label">Bant Genişliği</div>
+            <div class="resource-val" id="res-net">0 KB/s</div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px" id="res-net-limit">— / —</div>
+            <div class="resource-bar"><div class="resource-fill fill-cyan" id="bar-net" style="width:0%"></div></div>
+          </div>
+          <div class="resource-card">
+            <div class="resource-label">Disk</div>
+            <div class="resource-val" id="res-disk">0 GB</div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px" id="res-disk-limit">— / —</div>
+            <div class="resource-bar"><div class="resource-fill" id="bar-disk" style="width:0%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="container">
-      <nav class="navbar">
-        <div class="logo">VEXAR</div>
-        <div class="nav-links">
-          <a href="#" onclick="showHome()"><i class="fas fa-home"></i> Ana Sayfa</a>
-          <a href="#" onclick="showPackages()"><i class="fas fa-box"></i> Paketler</a>
-          <div class="user-auth" id="userAuthSection"></div>
-          <div class="admin-badge" id="adminBtn" onclick="openAdminPanel()" style="display: none;"><i class="fas fa-crown"></i> Admin Panel</div>
+        <div class="console-box" id="console-output"></div>
+        <div class="console-input-row">
+          <input class="console-input" id="console-cmd" placeholder="Komut girin (örn: /op oyuncu)" onkeydown="if(event.key==='Enter')sendCmd()">
+          <button class="console-send" onclick="sendCmd()">Gönder</button>
         </div>
-      </nav>
-
-      <div class="discount-banner" id="discountBanner">🎉 AÇILIŞA ÖZEL FIRSATLAR! 🎉</div>
-
-      <div class="hero">
-        <h1>Profesyonel Minecraft<br>Hosting Hizmeti</h1>
-        <p>Ryzen 9 işlemciler, NVMe SSD, 1 Tbps+ DDoS koruması.</p>
       </div>
-
-      <div class="category-selector" id="categorySelector"></div>
-
-      <div class="section-title" id="categoryTitle">Minecraft Sunucu Paketleri</div>
-      <div class="packages-grid" id="packagesGrid"></div>
-
-      <div id="testimonialsSection" style="display: none;">
-        <div class="section-title"><i class="fas fa-star"></i> Müşteri Yorumları</div>
-        <div class="packages-grid" id="testimonialsGrid"></div>
-      </div>
-
-      <div class="footer">
-        <div class="footer-content">
-          <div class="footer-section"><h4>VEXAR HOSTING</h4><p style="color:#a1a1aa;font-size:14px">Profesyonel Minecraft hosting.</p><div class="social-links"><a href="#" onclick="window.open('https://discord.gg/JzynaecG','_blank')"><i class="fab fa-discord"></i></a></div></div>
-          <div class="footer-section"><h4>Hızlı Linkler</h4><ul><li><a href="#" onclick="showHome()">Ana Sayfa</a></li><li><a href="#" onclick="showPackages()">Paketler</a></li></ul></div>
-          <div class="footer-section"><h4>İletişim</h4><ul><li><a href="#">destek@vexar.host</a></li><li><a href="#">discord.gg/JzynaecG</a></li></ul></div>
-        </div>
-        <div class="footer-bottom">© 2024 Vexar Hosting.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Panel Page -->
-  <div id="panelPage" class="panel-container">
-    <div class="container">
-      <div style="display:flex;align-items:center;gap:12px;padding:24px 0">
-        <button class="back-btn" onclick="logoutPanel()"><i class="fas fa-arrow-left"></i> Ana Sayfa</button>
-        <button class="logout-btn" onclick="logoutPanel()"><i class="fas fa-sign-out-alt"></i> Çıkış</button>
-      </div>
-      <div class="panel-header">
-        <div class="panel-header-content">
-          <div class="server-info">
-            <h2 id="panelServerName">VEXAR Sunucu</h2>
-            <p id="panelServerSpecs">Paket bilgisi yükleniyor...</p>
+      <!-- Settings Tab -->
+      <div class="panel-tab" id="tab-settings">
+        <div class="panel-section-title">⚙️ Sunucu Ayarları</div>
+        <div class="settings-grid">
+          <div class="form-group">
+            <label class="form-label">Sunucu Adı</label>
+            <input class="form-input" id="s-name" placeholder="Sunucu adınız">
           </div>
-          <div class="server-status">
-            <div class="status-badge" id="serverStatusBadge">
-              <i class="fas fa-circle"></i> <span id="statusText">Çevrimdışı</span>
-            </div>
-            <div class="power-buttons">
-              <button class="power-btn start" onclick="startServer()"><i class="fas fa-play"></i> Başlat</button>
-              <button class="power-btn restart" onclick="restartServer()"><i class="fas fa-sync-alt"></i> Yeniden Başlat</button>
-              <button class="power-btn stop" onclick="stopServer()"><i class="fas fa-stop"></i> Durdur</button>
-            </div>
+          <div class="form-group">
+            <label class="form-label">Max Oyuncu</label>
+            <input class="form-input" type="number" id="s-maxp" min="1" max="500" value="20">
           </div>
-        </div>
-      </div>
-      <div class="panel-tabs">
-        <div class="panel-tab active" onclick="switchTab('console')"><i class="fas fa-terminal"></i> Konsol</div>
-        <div class="panel-tab" onclick="switchTab('players')"><i class="fas fa-users"></i> Oyuncular</div>
-        <div class="panel-tab" onclick="switchTab('plugins')"><i class="fas fa-puzzle-piece"></i> Pluginler</div>
-        <div class="panel-tab" onclick="switchTab('files')"><i class="fas fa-folder"></i> Dosyalar</div>
-        <div class="panel-tab" onclick="switchTab('network')"><i class="fas fa-network-wired"></i> Network</div>
-        <div class="panel-tab" onclick="switchTab('settings')"><i class="fas fa-cog"></i> Ayarlar</div>
-      </div>
-      <div class="panel-content" id="panelContent"></div>
-    </div>
-  </div>
-
-  <!-- Modals (Login, Register, Admin Panel, Package Form, Category Form, Purchase) -->
-  <div id="loginModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2><i class="fas fa-sign-in-alt"></i> Giriş Yap</h2><button class="close-modal" onclick="closeLoginModal()">&times;</button></div>
-      <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="loginUsername"></div>
-      <div class="form-group"><label>Şifre</label><input type="password" id="loginPassword"></div>
-      <div id="loginError" style="color:#ef4444;font-size:14px;margin-bottom:16px"></div>
-      <button class="submit-btn" onclick="login()">Giriş Yap</button>
-      <p style="color:#a1a1aa;font-size:13px;margin-top:16px;text-align:center">
-        Hesabın yok mu? <a href="#" onclick="switchToRegister()" style="color:#a855f7">Kayıt Ol</a>
-      </p>
-    </div>
-  </div>
-
-  <div id="registerModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2><i class="fas fa-user-plus"></i> Kayıt Ol</h2><button class="close-modal" onclick="closeRegisterModal()">&times;</button></div>
-      <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="registerUsername"></div>
-      <div class="form-group"><label>E-posta</label><input type="email" id="registerEmail"></div>
-      <div class="form-group"><label>Şifre</label><input type="password" id="registerPassword"></div>
-      <div class="form-group"><label>Şifre Tekrar</label><input type="password" id="registerPasswordConfirm"></div>
-      <div id="registerError" style="color:#ef4444;font-size:14px;margin-bottom:16px"></div>
-      <button class="submit-btn" onclick="register()">Kayıt Ol</button>
-      <p style="color:#a1a1aa;font-size:13px;margin-top:16px;text-align:center">
-        Zaten hesabın var mı? <a href="#" onclick="switchToLogin()" style="color:#a855f7">Giriş Yap</a>
-      </p>
-    </div>
-  </div>
-
-  <div id="adminPanelModal" class="modal">
-    <div class="modal-content large">
-      <div class="modal-header"><h2><i class="fas fa-crown"></i> Admin Paneli</h2><button class="close-modal" onclick="closeAdminPanelModal()">&times;</button></div>
-      
-      <div class="admin-tabs">
-        <button class="admin-tab active" onclick="switchAdminTab('categories')">Kategoriler</button>
-        <button class="admin-tab" onclick="switchAdminTab('packages')">Paketler</button>
-        <button class="admin-tab" onclick="switchAdminTab('codes')">Satın Alım Kodları</button>
-        <button class="admin-tab" onclick="switchAdminTab('testimonials')">Müşteri Yorumları</button>
-        <button class="admin-tab" onclick="switchAdminTab('settings')">Site Ayarları</button>
-        <button class="admin-tab" onclick="switchAdminTab('users')">Kullanıcılar</button>
-      </div>
-      
-      <div id="adminTabContent"></div>
-    </div>
-  </div>
-
-  <div id="packageFormModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2 id="packageFormTitle">Paket Ekle</h2><button class="close-modal" onclick="closePackageFormModal()">&times;</button></div>
-      <form id="packageForm" onsubmit="savePackage(event)">
-        <input type="hidden" id="packageEditIndex">
-        <input type="hidden" id="packageEditCategory">
-        <input type="hidden" id="packageEditCycle">
-        <div class="form-group"><label>Paket Adı</label><input type="text" id="packageName" required></div>
-        <div class="form-group"><label>Açıklama</label><input type="text" id="packageDesc" required></div>
-        <div class="form-row">
-          <div class="form-group"><label>CPU</label><input type="text" id="packageCpu" placeholder="2 vCPU"></div>
-          <div class="form-group"><label>RAM</label><input type="text" id="packageRam" placeholder="4 GB"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Disk</label><input type="text" id="packageDisk" placeholder="20 GB"></div>
-          <div class="form-group"><label>Subdomain (Domain için)</label><input type="text" id="packageSubdomain" placeholder="play.sunucu.xyz"></div>
-        </div>
-        <div class="form-group"><label>Fiyat (TL)</label><input type="number" id="packagePrice" required></div>
-        <div class="form-group"><label>Kategori</label><select id="packageCategory"></select></div>
-        <div class="form-group"><label>Faturalandırma</label><select id="packageCycle"><option value="aylik">Aylık</option><option value="yillik">Yıllık</option><option value="sonsuz">Sonsuz</option></select></div>
-        <button type="submit" class="submit-btn">Kaydet</button>
-        <button type="button" class="submit-btn delete-btn" id="packageDeleteBtn" style="display: none;" onclick="deletePackageConfirm()">Sil</button>
-      </form>
-    </div>
-  </div>
-
-  <div id="categoryFormModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2 id="categoryFormTitle">Kategori Ekle</h2><button class="close-modal" onclick="closeCategoryFormModal()">&times;</button></div>
-      <form id="categoryForm" onsubmit="saveCategory(event)">
-        <input type="hidden" id="categoryEditId">
-        <div class="form-group"><label>Kategori Adı</label><input type="text" id="categoryName" required></div>
-        <div class="form-group"><label>İkon (Font Awesome)</label><input type="text" id="categoryIcon" placeholder="fa-cube" required></div>
-        <div class="checkbox-group"><input type="checkbox" id="categoryActive" checked> <label>Aktif</label></div>
-        <button type="submit" class="submit-btn">Kaydet</button>
-        <button type="button" class="submit-btn delete-btn" id="categoryDeleteBtn" style="display: none;" onclick="deleteCategoryConfirm()">Sil</button>
-      </form>
-    </div>
-  </div>
-
-  <div id="purchaseModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header"><h2 id="purchaseModalTitle">Satın Al</h2><button class="close-modal" onclick="closePurchaseModal()">&times;</button></div>
-      <div class="form-group"><label>Satın Alım Kodunuz</label><input type="text" id="purchaseCodeCheckInput" placeholder="VEX-XXXXXX-XXXX"></div>
-      <div id="purchaseError" style="color:#ef4444;font-size:14px"></div>
-      <button class="submit-btn" onclick="checkPurchaseCode()">Doğrula ve Panele Git</button>
-      <p style="color:#a1a1aa;font-size:13px;margin-top:16px;text-align:center">
-        Kodunuz yoksa <a href="#" onclick="window.open('https://discord.gg/JzynaecG','_blank');return false;" style="color:#a855f7">Discord sunucumuza</a> gelip satın alabilirsiniz.
-      </p>
-    </div>
-  </div>
-
-  <script>
-    // ==================== GITHUB AYARLARI ====================
-    const GITHUB_TOKEN = 'YENİ_TOKEN_BURAYA'; // 👈 YENİ TOKEN'INI BURAYA YAZ
-    const GITHUB_USERNAME = 'KULLANICI_ADIN'; // 👈 GITHUB KULLANICI ADIN
-    const GITHUB_REPO = 'Vexar'; // 👈 REPO İSMİN
-    const DATA_FILE = 'vexar-data.json';
-    const BRANCH = 'main';
-
-    // ==================== VERİ DEĞİŞKENLERİ ====================
-    let users = [];
-    let currentUser = JSON.parse(localStorage.getItem('vexarCurrentUser')) || null;
-    let siteSettings = { activeServers: 0, systemStatus: 'Tüm Sistemler Çalışıyor', discountBanner: '🎉 AÇILIŞA ÖZEL FIRSATLAR! 🎉', testimonialsEnabled: false };
-    let testimonials = [];
-    let purchaseCodes = [];
-    let categories = [];
-    let packages = {};
-    
-    let currentCategory = 'minecraft';
-    let selectedBillingCycle = 'sonsuz';
-    let pendingPurchasePackage = null;
-    let serverOnline = false;
-    let currentTab = 'console';
-    let panelData = { players: [], plugins: [], files: [] };
-    let serverSettings = { serverName: 'VEXAR Sunucu', version: 'Paper 1.20.4', gamemode: 'Survival', difficulty: 'Normal', maxPlayers: '20', motd: 'Vexar Hosting Sunucusu' };
-
-    // ==================== GITHUB API FONKSİYONLARI ====================
-    async function loadFromGitHub() {
-      showLoading();
-      try {
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
-          headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          const content = JSON.parse(atob(data.content));
-          
-          users = content.users || [];
-          siteSettings = content.siteSettings || siteSettings;
-          testimonials = content.testimonials || [];
-          purchaseCodes = content.purchaseCodes || [];
-          categories = content.categories || getDefaultCategories();
-          packages = content.packages || getDefaultPackages();
-        } else if (response.status === 404) {
-          // Dosya yoksa varsayılanları kullan ve oluştur
-          categories = getDefaultCategories();
-          packages = getDefaultPackages();
-          await saveToGitHub();
-        } else {
-          console.error('GitHub yükleme hatası:', response.status);
-          loadFromLocalFallback();
-        }
-      } catch (e) {
-        console.error('Bağlantı hatası:', e);
-        loadFromLocalFallback();
-      }
-      hideLoading();
-    }
-
-    function loadFromLocalFallback() {
-      categories = JSON.parse(localStorage.getItem('vexarCategories')) || getDefaultCategories();
-      packages = JSON.parse(localStorage.getItem('vexarPackages')) || getDefaultPackages();
-      siteSettings = JSON.parse(localStorage.getItem('vexarSiteSettings')) || siteSettings;
-      testimonials = JSON.parse(localStorage.getItem('vexarTestimonials')) || [];
-      purchaseCodes = JSON.parse(localStorage.getItem('vexarCodes')) || [];
-      users = JSON.parse(localStorage.getItem('vexarUsers')) || [];
-    }
-
-    async function saveToGitHub() {
-      showLoading();
-      try {
-        const content = {
-          users, siteSettings, testimonials, purchaseCodes, categories, packages
-        };
-        
-        // Önce mevcut dosyanın SHA'sını al
-        let sha = null;
-        try {
-          const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
-            headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-          });
-          if (response.ok) {
-            const data = await response.json();
-            sha = data.sha;
-          }
-        } catch (e) {}
-        
-        const body = {
-          message: 'Update Vexar data',
-          content: btoa(JSON.stringify(content, null, 2)),
-          branch: BRANCH
-        };
-        if (sha) body.sha = sha;
-        
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        });
-        
-        if (!response.ok) {
-          console.error('Kaydetme hatası:', response.status);
-          saveToLocalFallback();
-        }
-      } catch (e) {
-        console.error('Kaydetme hatası:', e);
-        saveToLocalFallback();
-      }
-      hideLoading();
-    }
-
-    function saveToLocalFallback() {
-      localStorage.setItem('vexarCategories', JSON.stringify(categories));
-      localStorage.setItem('vexarPackages', JSON.stringify(packages));
-      localStorage.setItem('vexarSiteSettings', JSON.stringify(siteSettings));
-      localStorage.setItem('vexarTestimonials', JSON.stringify(testimonials));
-      localStorage.setItem('vexarCodes', JSON.stringify(purchaseCodes));
-      localStorage.setItem('vexarUsers', JSON.stringify(users));
-    }
-
-    function getDefaultCategories() {
-      return [
-        { id: 'minecraft', name: 'Minecraft Sunucu', icon: 'fa-cube', active: true },
-        { id: 'ddos', name: 'DDoS Koruması', icon: 'fa-shield-alt', active: true },
-        { id: 'anticheat', name: 'Hile Koruması', icon: 'fa-ban', active: true },
-        { id: 'domain', name: 'Domain', icon: 'fa-globe', active: true }
-      ];
-    }
-
-    function getDefaultPackages() {
-      return {
-        minecraft: {
-          sonsuz: [
-            { name: 'STARTER', desc: 'Çok Küçük Sunucular', cpu: '2 vCPU', ram: '4 GB', disk: '20 GB', price: 960 },
-            { name: 'TEMEL', desc: 'Küçük Sunucular', cpu: '4 vCPU', ram: '8 GB', disk: '40 GB', price: 1990 },
-            { name: 'ELITE', desc: 'Ortalama Sunucular', cpu: '6 vCPU', ram: '12 GB', disk: '60 GB', price: 2990 },
-            { name: 'ULTRA', desc: 'Büyük Sunucular', cpu: '8 vCPU', ram: '16 GB', disk: '80 GB', price: 3990 },
-            { name: 'TİTAN', desc: 'Çok Büyük Sunucular', cpu: '10 vCPU', ram: '24 GB', disk: '100 GB', price: 5500 },
-            { name: 'MYTHIC', desc: '100 Oyuncu', cpu: '12 vCPU', ram: '32 GB', disk: '150 GB', price: 7200 },
-            { name: 'LEGENDARY', desc: '300 Oyuncu', cpu: '24 vCPU', ram: '64 GB', disk: '300 GB', price: 11900 },
-            { name: 'GALAXY', desc: '500 Oyuncu', cpu: '32 vCPU', ram: '128 GB', disk: '500 GB', price: 19900 },
-            { name: 'UNIVERSE', desc: '600 Oyuncu', cpu: '48 vCPU', ram: '192 GB', disk: '750 GB', price: 29900 },
-            { name: 'ETERNITY', desc: '800 Oyuncu', cpu: '64 vCPU', ram: '256 GB', disk: '1 TB', price: 35900 },
-            { name: 'GOD', desc: '1000 Oyuncu', cpu: '128 vCPU', ram: '512 GB', disk: '2 TB', price: 59900 }
-          ]
-        },
-        ddos: { aylik: [], yillik: [], sonsuz: [] },
-        anticheat: { aylik: [], yillik: [], sonsuz: [] },
-        domain: { sonsuz: [] }
-      };
-    }
-
-    function showLoading() { document.getElementById('loadingOverlay').classList.add('active'); }
-    function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
-
-    // ==================== SAYFA YÜKLEME ====================
-    async function init() {
-      await loadFromGitHub();
-      applySiteSettings();
-      renderUserAuth();
-      renderCategories();
-      selectCategory('minecraft');
-      if (currentUser) {
-        document.getElementById('adminBtn').style.display = isAdmin() ? 'flex' : 'none';
-      }
-    }
-
-    function isAdmin() { return currentUser && currentUser.role === 'admin'; }
-
-    function applySiteSettings() {
-      document.getElementById('activeServers').textContent = siteSettings.activeServers;
-      document.getElementById('systemStatus').textContent = siteSettings.systemStatus;
-      document.getElementById('discountBanner').textContent = siteSettings.discountBanner;
-      document.getElementById('testimonialsSection').style.display = siteSettings.testimonialsEnabled ? 'block' : 'none';
-      if (siteSettings.testimonialsEnabled) renderTestimonials();
-    }
-
-    function renderUserAuth() {
-      const section = document.getElementById('userAuthSection');
-      if (currentUser) {
-        section.innerHTML = `
-          <div class="user-menu">
-            <button class="user-btn" onclick="toggleUserMenu()"><i class="fas fa-user"></i> ${currentUser.username}</button>
-            <div class="user-dropdown" id="userDropdown" style="position:absolute;top:40px;right:0;background:#1e1e2e;border-radius:12px;padding:8px;display:none;z-index:1000">
-              <div onclick="openPanel()" style="padding:10px 14px;cursor:pointer"><i class="fas fa-server"></i> Sunucu Panelim</div>
-              <div onclick="openCodeModal()" style="padding:10px 14px;cursor:pointer"><i class="fas fa-key"></i> Kod ile Giriş</div>
-              <div onclick="logout()" style="padding:10px 14px;cursor:pointer"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</div>
-            </div>
+          <div class="form-group full">
+            <label class="form-label">Sunucu Açıklaması (MOTD)</label>
+            <input class="form-input" id="s-motd" placeholder="Sunucunuz için kısa açıklama">
           </div>
-        `;
-      } else {
-        section.innerHTML = `
-          <button class="user-btn" onclick="openLoginModal()"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
-          <button class="user-btn" onclick="openRegisterModal()"><i class="fas fa-user-plus"></i> Kayıt Ol</button>
-        `;
-      }
-    }
-
-    function toggleUserMenu() {
-      const dd = document.getElementById('userDropdown');
-      dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
-    }
-
-    // ==================== AUTH İŞLEMLERİ ====================
-    function openLoginModal() { document.getElementById('loginModal').classList.add('active'); }
-    function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); }
-    function openRegisterModal() { document.getElementById('registerModal').classList.add('active'); }
-    function closeRegisterModal() { document.getElementById('registerModal').classList.remove('active'); }
-    function switchToRegister() { closeLoginModal(); openRegisterModal(); }
-    function switchToLogin() { closeRegisterModal(); openLoginModal(); }
-
-    async function register() {
-      const username = document.getElementById('registerUsername').value.trim();
-      const email = document.getElementById('registerEmail').value.trim();
-      const password = document.getElementById('registerPassword').value;
-      const confirm = document.getElementById('registerPasswordConfirm').value;
-      const error = document.getElementById('registerError');
-      
-      if (!username || !email || !password) { error.textContent = 'Tüm alanları doldurun!'; return; }
-      if (password !== confirm) { error.textContent = 'Şifreler eşleşmiyor!'; return; }
-      if (users.find(u => u.username === username)) { error.textContent = 'Bu kullanıcı adı zaten kullanılıyor!'; return; }
-      
-      const adminCode = prompt('Admin olmak için kodunuz var mı? (Varsa girin, yoksa boş bırakın)');
-      const role = (adminCode === 'VEXAR2024') ? 'admin' : 'user';
-      
-      const newUser = { username, email, password, role, createdAt: new Date().toISOString() };
-      users.push(newUser);
-      
-      currentUser = newUser;
-      localStorage.setItem('vexarCurrentUser', JSON.stringify(currentUser));
-      
-      await saveToGitHub();
-      
-      closeRegisterModal();
-      renderUserAuth();
-      document.getElementById('adminBtn').style.display = role === 'admin' ? 'flex' : 'none';
-      
-      if (role === 'admin') alert('✅ Admin olarak kaydedildiniz!');
-    }
-
-    async function login() {
-      const username = document.getElementById('loginUsername').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      const error = document.getElementById('loginError');
-      
-      const user = users.find(u => u.username === username && u.password === password);
-      if (!user) { error.textContent = 'Kullanıcı adı veya şifre hatalı!'; return; }
-      
-      currentUser = user;
-      localStorage.setItem('vexarCurrentUser', JSON.stringify(currentUser));
-      
-      closeLoginModal();
-      renderUserAuth();
-      document.getElementById('adminBtn').style.display = isAdmin() ? 'flex' : 'none';
-    }
-
-    async function logout() {
-      currentUser = null;
-      localStorage.removeItem('vexarCurrentUser');
-      renderUserAuth();
-      document.getElementById('adminBtn').style.display = 'none';
-      document.getElementById('userDropdown').style.display = 'none';
-    }
-
-    // ==================== KATEGORİ İŞLEMLERİ ====================
-    function renderCategories() {
-      const selector = document.getElementById('categorySelector');
-      selector.innerHTML = categories.filter(c => c.active).map(cat => `
-        <button class="category-btn ${currentCategory === cat.id ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
-          <i class="fas ${cat.icon}"></i> ${cat.name}
-        </button>
-      `).join('');
-    }
-
-    function selectCategory(catId) {
-      currentCategory = catId;
-      const cat = categories.find(c => c.id === catId);
-      selectedBillingCycle = catId === 'domain' ? 'sonsuz' : 'sonsuz';
-      renderCategories();
-      renderPackages();
-      document.getElementById('categoryTitle').textContent = cat ? cat.name + ' Paketleri' : 'Paketler';
-    }
-
-    // ==================== PAKET İŞLEMLERİ ====================
-    function renderPackages() {
-      const grid = document.getElementById('packagesGrid');
-      const catPkgs = packages[currentCategory];
-      if (!catPkgs) { grid.innerHTML = '<p style="color:#a1a1aa;text-align:center;grid-column:1/-1">Bu kategoride paket bulunmuyor.</p>'; return; }
-      
-      const pkgList = catPkgs[selectedBillingCycle] || catPkgs.sonsuz || [];
-      const billingText = selectedBillingCycle === 'aylik' ? '/ Ay' : selectedBillingCycle === 'yillik' ? '/ Yıl' : '/ Sonsuz';
-      
-      if (pkgList.length === 0) { grid.innerHTML = '<p style="color:#a1a1aa;text-align:center;grid-column:1/-1">Bu kategoride paket bulunmuyor.</p>'; return; }
-      
-      grid.innerHTML = pkgList.map((pkg, i) => `
-        <div class="package-card">
-          <div class="package-header">
-            <div class="package-name">VEXAR - ${pkg.name}</div>
-            <div class="package-menu" onclick="togglePackageMenu(event, '${currentCategory}', '${selectedBillingCycle}', ${i})">
-              <i class="fas fa-ellipsis-v"></i>
-              <div class="package-menu-dropdown" id="menu-${currentCategory}-${selectedBillingCycle}-${i}">
-                <div onclick="selectBillingCycle('aylik', '${currentCategory}')"><i class="fas fa-calendar"></i> Aylık</div>
-                <div onclick="selectBillingCycle('yillik', '${currentCategory}')"><i class="fas fa-calendar-alt"></i> Yıllık</div>
-                ${currentCategory !== 'domain' ? '<div onclick="selectBillingCycle(\'sonsuz\', \'' + currentCategory + '\')"><i class="fas fa-infinity"></i> Sonsuz</div>' : ''}
+          <div class="form-group">
+            <label class="form-label">Oyun Modu</label>
+            <select class="form-input" id="s-mode">
+              <option>Survival</option>
+              <option>Creative</option>
+              <option>Adventure</option>
+              <option>Spectator</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Zorluk</label>
+            <select class="form-input" id="s-diff">
+              <option>Peaceful</option>
+              <option>Easy</option>
+              <option selected>Normal</option>
+              <option>Hard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Yazılım</label>
+            <select class="form-input" id="s-soft">
+              <option>Paper</option>
+              <option>Spigot</option>
+              <option>Vanilla</option>
+              <option>Purpur</option>
+              <option>Fabric</option>
+              <option>Forge</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sürüm</label>
+            <select class="form-input" id="s-ver">
+              <option>1.21.4 (Son)</option>
+              <option>1.21.3</option>
+              <option>1.21.1</option>
+              <option>1.20.4</option>
+              <option>1.20.1</option>
+              <option>1.19.4</option>
+              <option>1.18.2</option>
+              <option>1.16.5</option>
+              <option>1.12.2</option>
+              <option>1.8.9</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Sunucu Logosu</label>
+            <div class="logo-upload-box" id="logo-upload-box">
+              <input type="file" accept="image/*" onchange="handleLogoUpload(event)">
+              <img src="" id="logo-preview" class="logo-preview" style="display:none">
+              <div id="logo-placeholder">
+                <div style="font-size:32px;margin-bottom:8px">🖼️</div>
+                <div style="font-size:13px;color:var(--text2)">Logo yüklemek için tıklayın</div>
+                <div style="font-size:11px;color:var(--text3);margin-top:4px">PNG, JPG — Maks 2MB</div>
               </div>
             </div>
           </div>
-          <div class="package-desc">${pkg.desc}</div>
-          <ul class="package-specs">
-            ${pkg.cpu ? `<li><i class="fas fa-microchip"></i> ${pkg.cpu} (Ryzen 9)</li>` : ''}
-            ${pkg.ram ? `<li><i class="fas fa-memory"></i> ${pkg.ram} RAM</li>` : ''}
-            ${pkg.disk ? `<li><i class="fas fa-hdd"></i> ${pkg.disk} NVMe SSD</li>` : ''}
-            ${pkg.subdomain ? `<li><i class="fas fa-link"></i> ${pkg.subdomain}</li>` : ''}
-            <li><i class="fas fa-map-pin"></i> İstanbul</li>
-          </ul>
-          <div class="price-section">
-            <span class="discounted-price">${pkg.price} TL</span>
-            <span class="price-period">${billingText}</span>
+          <div class="toggle-row">
+            <div><div class="toggle-label">PVP</div><div class="toggle-sub">Oyuncular arası savaş</div></div>
+            <button class="toggle" id="toggle-pvp" onclick="toggleBtn(this)"></button>
           </div>
-          <button class="buy-btn" onclick="openPurchaseModal('${currentCategory}', '${selectedBillingCycle}', ${i})">
-            <i class="fas fa-shopping-cart"></i> Satın Al
-          </button>
+          <div class="toggle-row">
+            <div><div class="toggle-label">Crack (Offline Mode)</div><div class="toggle-sub">Lisanssız giriş izni</div></div>
+            <button class="toggle" id="toggle-crack" onclick="toggleBtn(this)"></button>
+          </div>
+          <div class="form-group full" style="margin-top:8px">
+            <button class="form-btn" onclick="saveSettings()">Değişiklikleri Kaydet</button>
+          </div>
         </div>
-      `).join('');
-    }
-
-    function togglePackageMenu(event, cat, cycle, idx) {
-      event.stopPropagation();
-      document.querySelectorAll('.package-menu-dropdown').forEach(m => m.classList.remove('active'));
-      document.getElementById(`menu-${cat}-${cycle}-${idx}`).classList.add('active');
-    }
-
-    function selectBillingCycle(cycle, cat) {
-      selectedBillingCycle = cycle;
-      currentCategory = cat;
-      document.querySelectorAll('.package-menu-dropdown').forEach(m => m.classList.remove('active'));
-      renderPackages();
-    }
-
-    function openPurchaseModal(cat, cycle, idx) {
-      if (!currentUser) { openLoginModal(); return; }
-      const pkg = packages[cat][cycle][idx];
-      pendingPurchasePackage = { category: cat, package: pkg, packageName: pkg.name };
-      document.getElementById('purchaseModalTitle').textContent = `Satın Al - ${pkg.name}`;
-      document.getElementById('purchaseModal').classList.add('active');
-    }
-
-    function closePurchaseModal() {
-      document.getElementById('purchaseModal').classList.remove('active');
-      pendingPurchasePackage = null;
-    }
-
-    function openCodeModal() {
-      if (!currentUser) { openLoginModal(); return; }
-      document.getElementById('purchaseModal').classList.add('active');
-      document.getElementById('purchaseModalTitle').textContent = 'Kod ile Giriş';
-    }
-
-    function checkPurchaseCode() {
-      const code = document.getElementById('purchaseCodeCheckInput').value.trim().toUpperCase();
-      const found = purchaseCodes.find(c => c.code === code);
-      
-      if (found) {
-        currentPackage = { name: found.packageName, cpu: 'N/A', ram: 'N/A', disk: 'N/A' };
-        closePurchaseModal();
-        openPanel();
-      } else {
-        document.getElementById('purchaseError').textContent = 'Geçersiz satın alım kodu!';
-      }
-    }
-
-    // ==================== YORUMLAR ====================
-    function renderTestimonials() {
-      const grid = document.getElementById('testimonialsGrid');
-      if (!testimonials.length) {
-        grid.innerHTML = '<p style="color:#a1a1aa;text-align:center;grid-column:1/-1">Henüz yorum bulunmuyor.</p>';
-        return;
-      }
-      grid.innerHTML = testimonials.map(t => `
-        <div class="package-card">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-            <div style="width:48px;height:48px;background:${t.color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">${t.name[0]}</div>
-            <div><h4>${t.name}</h4><p style="color:#a1a1aa;font-size:13px">${t.title}</p></div>
-          </div>
-          <div style="color:#d4d4d8;line-height:1.6;margin-bottom:16px">${t.comment}</div>
-          <div style="color:#eab308">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
+      </div>
+      <!-- Plugins Tab -->
+      <div class="panel-tab" id="tab-plugins">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div class="panel-section-title" style="margin:0">🔌 Eklentiler & Dosyalar</div>
+          <button class="add-btn" onclick="openAddPlugin()">+ Eklenti Ekle</button>
         </div>
-      `).join('');
-    }
+        <div class="plugin-list" id="plugin-list"></div>
+        <div class="divider"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div class="panel-section-title" style="margin:0;font-size:16px">📁 Dosyalar</div>
+          <button class="add-btn" onclick="openAddFile()">+ Dosya Yükle</button>
+        </div>
+        <div id="file-list"></div>
+      </div>
+      <!-- Players Tab -->
+      <div class="panel-tab" id="tab-players">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div class="panel-section-title" style="margin:0">👥 Oyuncular</div>
+          <button class="add-btn" onclick="openAddPlayer()">+ Oyuncu Ekle</button>
+        </div>
+        <div id="player-list"></div>
+      </div>
+      <!-- Features Tab -->
+      <div class="panel-tab" id="tab-features">
+        <div class="panel-section-title">✨ Özellikler & Domain</div>
+        <div id="features-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    // ==================== PANEL İŞLEMLERİ ====================
-    function openPanel() {
-      if (!currentUser) { openLoginModal(); return; }
-      document.getElementById('mainPage').style.display = 'none';
-      document.getElementById('panelPage').classList.add('active');
-      document.getElementById('panelServerName').textContent = serverSettings.serverName;
-      document.getElementById('panelServerSpecs').textContent = currentPackage ? `${currentPackage.cpu} | ${currentPackage.ram} | ${currentPackage.disk}` : 'Paket bilgisi';
-      serverOnline = false;
-      updateServerStatus();
-      switchTab('console');
-    }
-
-    function logoutPanel() {
-      document.getElementById('mainPage').style.display = 'block';
-      document.getElementById('panelPage').classList.remove('active');
-    }
-
-    function updateServerStatus() {
-      const badge = document.getElementById('serverStatusBadge');
-      const text = document.getElementById('statusText');
-      badge.className = serverOnline ? 'status-badge online' : 'status-badge';
-      text.textContent = serverOnline ? 'Çevrimiçi' : 'Çevrimdışı';
-    }
-
-    function startServer() { serverOnline = true; updateServerStatus(); if (currentTab === 'console') switchTab('console'); }
-    function stopServer() { serverOnline = false; updateServerStatus(); if (currentTab === 'console') switchTab('console'); }
-    function restartServer() { stopServer(); setTimeout(() => startServer(), 1000); }
-
-    function switchTab(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
-      event.target.closest('.panel-tab').classList.add('active');
-      const content = document.getElementById('panelContent');
-      
-      if (tab === 'console') {
-        content.innerHTML = `
-          <div class="stats-grid">
-            <div class="stat-card"><div class="stat-label">TPS</div><div class="stat-value">${serverOnline ? '20.0' : '0'}</div></div>
-            <div class="stat-card"><div class="stat-label">RAM</div><div class="stat-value">${serverOnline ? '35%' : '0%'}</div></div>
-            <div class="stat-card"><div class="stat-label">CPU</div><div class="stat-value">${serverOnline ? '12%' : '0%'}</div></div>
-            <div class="stat-card"><div class="stat-label">Oyuncu</div><div class="stat-value">${panelData.players.length}</div></div>
+<!-- ADMIN PAGE -->
+<div class="page" id="page-admin">
+  <div class="admin-page">
+    <div class="section-label">Yönetim</div>
+    <h1 class="section-title" style="margin-bottom:4px">Admin Paneli</h1>
+    <p style="color:var(--text2);font-size:14px;margin-bottom:0">Sistem yönetim merkezi</p>
+    <div class="admin-grid" style="grid-template-columns:1fr 1fr;gap:18px">
+      <div class="admin-card">
+        <h3>🎟️ Satın Alım Kodu Üret</h3>
+        <div class="form-group">
+          <label class="form-label">Paket Seç</label>
+          <select class="form-input" id="admin-pkg-select" onchange="updateAdminPkg()"></select>
+        </div>
+        <button class="form-btn" onclick="generateCode()">Kod Üret</button>
+        <div class="code-display" id="gen-code" style="display:none"></div>
+        <button class="add-btn" id="copy-code-btn" style="display:none;width:100%;justify-content:center;margin-top:8px" onclick="copyCode()">📋 Kodu Kopyala</button>
+      </div>
+      <div class="admin-card">
+        <h3>📋 Üretilen Kodlar</h3>
+        <div style="overflow-x:auto;max-height:260px;overflow-y:auto">
+          <table class="code-table" id="code-table">
+            <thead><tr><th>Kod</th><th>Paket</th><th>Durum</th><th></th></tr></thead>
+            <tbody id="code-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- RESOURCE ASSIGNMENT CARD — full width -->
+      <div class="admin-card" style="grid-column:1/-1">
+        <h3>⚡ Kullanıcıya Kaynak Ata</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px">
+          <div class="form-group">
+            <label class="form-label">Kullanıcı Adı</label>
+            <input class="form-input" id="admin-res-user" placeholder="kullaniciadi" oninput="adminLoadUserServers()">
           </div>
-          <div class="console-output" id="consoleOutput">
-            ${serverOnline ? '<div class="console-line"><span class="timestamp">[' + new Date().toLocaleTimeString() + ']</span> Sunucu başlatıldı.</div>' : '<div class="console-line">Sunucu çevrimdışı.</div>'}
+          <div class="form-group">
+            <label class="form-label">Sunucu Seç</label>
+            <select class="form-input" id="admin-res-server"><option value="">— Kullanıcı girin —</option></select>
           </div>
-          <div class="console-input">
-            <input type="text" placeholder="Komut girin..." id="consoleCommand" ${!serverOnline ? 'disabled' : ''}>
-            <button class="submit-btn" style="width:auto" onclick="sendCommand()" ${!serverOnline ? 'disabled' : ''}>Gönder</button>
-          </div>
-        `;
-      } else if (tab === 'network') {
-        content.innerHTML = `
-          <h3 style="margin-bottom:24px">Network İstatistikleri</h3>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">
-            <div class="stat-card"><div class="stat-label">Ping</div><div class="stat-value">${serverOnline ? '0.8ms' : '0ms'}</div></div>
-            <div class="stat-card"><div class="stat-label">Bant Genişliği</div><div class="stat-value">${serverOnline ? '8.2 Gbps' : '0 Gbps'}</div></div>
-            <div class="stat-card"><div class="stat-label">DDoS Filtre</div><div class="stat-value">${serverOnline ? '1.2 Tbps' : '0 Tbps'}</div></div>
-            <div class="stat-card"><div class="stat-label">Node Yükü</div><div class="stat-value">${serverOnline ? '34%' : '0%'}</div></div>
-          </div>
-        `;
-      } else if (tab === 'settings') {
-        content.innerHTML = `
-          <h3 style="margin-bottom:24px">Sunucu Ayarları</h3>
-          <div class="form-group"><label>Sunucu Adı</label><input type="text" id="settingName" value="${serverSettings.serverName}"></div>
-          <div class="form-group"><label>Sürüm</label><select id="settingVersion">${['Paper 1.20.4','Purpur 1.20.4','Spigot 1.20.4'].map(v => `<option ${serverSettings.version===v?'selected':''}>${v}</option>`).join('')}</select></div>
-          <div class="form-group"><label>Oyun Modu</label><select id="settingGamemode">${['Survival','Creative','Adventure'].map(g => `<option ${serverSettings.gamemode===g?'selected':''}>${g}</option>`).join('')}</select></div>
-          <div class="form-group"><label>Zorluk</label><select id="settingDifficulty">${['Peaceful','Easy','Normal','Hard'].map(d => `<option ${serverSettings.difficulty===d?'selected':''}>${d}</option>`).join('')}</select></div>
-          <div class="form-group"><label>Max Oyuncu</label><input type="number" id="settingMaxPlayers" value="${serverSettings.maxPlayers}"></div>
-          <div class="form-group"><label>MOTD</label><input type="text" id="settingMotd" value="${serverSettings.motd}"></div>
-          <button class="submit-btn" onclick="saveSettings()">Kaydet</button>
-        `;
-      } else {
-        content.innerHTML = `<h3>${tab}</h3><p style="color:#a1a1aa">Bu bölüm yapım aşamasında.</p>`;
-      }
-    }
-
-    function sendCommand() {
-      const input = document.getElementById('consoleCommand');
-      const output = document.getElementById('consoleOutput');
-      if (input.value.trim() && serverOnline) {
-        output.innerHTML += `<div class="console-line"><span class="timestamp">[${new Date().toLocaleTimeString()}]</span> > ${input.value}</div>`;
-        input.value = '';
-        output.scrollTop = output.scrollHeight;
-      }
-    }
-
-    function saveSettings() {
-      serverSettings.serverName = document.getElementById('settingName').value;
-      serverSettings.version = document.getElementById('settingVersion').value;
-      serverSettings.gamemode = document.getElementById('settingGamemode').value;
-      serverSettings.difficulty = document.getElementById('settingDifficulty').value;
-      serverSettings.maxPlayers = document.getElementById('settingMaxPlayers').value;
-      serverSettings.motd = document.getElementById('settingMotd').value;
-      document.getElementById('panelServerName').textContent = serverSettings.serverName;
-      switchTab('settings');
-    }
-
-    // ==================== ADMIN PANELİ ====================
-    function openAdminPanel() {
-      if (!isAdmin()) return;
-      document.getElementById('adminPanelModal').classList.add('active');
-      switchAdminTab('categories');
-    }
-
-    function closeAdminPanelModal() { document.getElementById('adminPanelModal').classList.remove('active'); }
-
-    function switchAdminTab(tab) {
-      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      const content = document.getElementById('adminTabContent');
-      
-      if (tab === 'categories') {
-        content.innerHTML = `
-          <button class="submit-btn" style="margin-bottom:20px" onclick="openCategoryForm()"><i class="fas fa-plus"></i> Kategori Ekle</button>
-          <div id="categoriesList">
-            ${categories.map((cat, i) => `
-              <div class="category-item">
-                <div><i class="fas ${cat.icon}"></i> ${cat.name} ${cat.active ? '' : '(Gizli)'}</div>
-                <div class="category-actions">
-                  <button class="edit-btn" onclick="openCategoryForm('${cat.id}')"><i class="fas fa-edit"></i></button>
-                  <button class="delete-btn-sm" onclick="deleteCategory('${cat.id}')"><i class="fas fa-trash"></i></button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      } else if (tab === 'packages') {
-        let html = '<button class="submit-btn" style="margin-bottom:20px" onclick="openPackageForm()"><i class="fas fa-plus"></i> Paket Ekle</button>';
-        html += '<select id="adminPackageCategory" class="form-group" onchange="renderAdminPackages()">';
-        html += categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-        html += '</select>';
-        html += '<select id="adminPackageCycle" class="form-group" onchange="renderAdminPackages()"><option value="aylik">Aylık</option><option value="yillik">Yıllık</option><option value="sonsuz">Sonsuz</option></select>';
-        html += '<div id="packagesList" style="margin-top:20px"></div>';
-        content.innerHTML = html;
-        renderAdminPackages();
-      } else if (tab === 'codes') {
-        content.innerHTML = `
-          <button class="submit-btn" onclick="generateCode()"><i class="fas fa-plus"></i> Kod Oluştur</button>
-          <div id="codesList" style="margin-top:20px"></div>
-        `;
-        renderCodesList();
-      } else if (tab === 'testimonials') {
-        content.innerHTML = `
-          <div class="testimonials-toggle">
-            <span>Yorumları Göster</span>
-            <div class="toggle-switch ${siteSettings.testimonialsEnabled ? 'active' : ''}" onclick="toggleTestimonials()"></div>
-          </div>
-          <button class="submit-btn" onclick="addTestimonial()"><i class="fas fa-plus"></i> Yorum Ekle</button>
-          <div id="testimonialsList" style="margin-top:20px"></div>
-        `;
-        renderTestimonialsList();
-      } else if (tab === 'settings') {
-        content.innerHTML = `
-          <div class="form-group"><label>Aktif Sunucu Sayısı</label><input type="number" id="settingActiveServers" value="${siteSettings.activeServers}"></div>
-          <div class="form-group"><label>Sistem Durumu</label><input type="text" id="settingSystemStatus" value="${siteSettings.systemStatus}"></div>
-          <div class="form-group"><label>İndirim Banner Yazısı</label><input type="text" id="settingDiscountBanner" value="${siteSettings.discountBanner}"></div>
-          <button class="submit-btn" onclick="saveSiteSettings()">Kaydet</button>
-        `;
-      } else if (tab === 'users') {
-        content.innerHTML = `
-          <h3>Kullanıcılar</h3>
-          <div id="usersList">
-            ${users.map((u, i) => `
-              <div class="category-item">
-                <div><strong>${u.username}</strong> (${u.email}) - ${u.role}</div>
-                <div class="category-actions">
-                  <select onchange="changeUserRole(${i}, this.value)">
-                    <option value="user" ${u.role === 'user' ? 'selected' : ''}>User</option>
-                    <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+          <div class="form-group" style="grid-column:span 2">
+            <label class="form-label">&nbsp;</label>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+              <div>
+                <label class="form-label" style="font-size:10px">CPU</label>
+                <div style="display:flex;gap:4px">
+                  <input class="form-input" id="admin-res-cpu" type="number" min="1" placeholder="örn: 4" style="min-width:0">
+                  <select class="form-input" id="admin-res-cpu-unit" style="width:auto;padding:10px 8px">
+                    <option>%</option><option>vCore</option>
                   </select>
-                  <button class="delete-btn-sm" onclick="deleteUser(${i})"><i class="fas fa-trash"></i></button>
                 </div>
               </div>
-            `).join('')}
+              <div>
+                <label class="form-label" style="font-size:10px">RAM</label>
+                <div style="display:flex;gap:4px">
+                  <input class="form-input" id="admin-res-ram" type="number" min="1" placeholder="örn: 4096" style="min-width:0">
+                  <select class="form-input" id="admin-res-ram-unit" style="width:auto;padding:10px 8px">
+                    <option>MB</option><option>GB</option><option>TB</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="form-label" style="font-size:10px">Bant Genişliği</label>
+                <div style="display:flex;gap:4px">
+                  <input class="form-input" id="admin-res-net" type="number" min="1" placeholder="örn: 1000" style="min-width:0">
+                  <select class="form-input" id="admin-res-net-unit" style="width:auto;padding:10px 8px">
+                    <option>KB/s</option><option>MB/s</option><option>GB/s</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="form-label" style="font-size:10px">Disk</label>
+                <div style="display:flex;gap:4px">
+                  <input class="form-input" id="admin-res-disk" type="number" min="1" placeholder="örn: 50" style="min-width:0">
+                  <select class="form-input" id="admin-res-disk-unit" style="width:auto;padding:10px 8px">
+                    <option>GB</option><option>TB</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
-        `;
-      }
-    }
-
-    function renderAdminPackages() {
-      const cat = document.getElementById('adminPackageCategory')?.value || 'minecraft';
-      const cycle = document.getElementById('adminPackageCycle')?.value || 'sonsuz';
-      const pkgs = packages[cat]?.[cycle] || [];
-      const list = document.getElementById('packagesList');
-      if (!list) return;
-      list.innerHTML = pkgs.map((p, i) => `
-        <div class="package-item">
-          <div>${p.name} - ${p.price} TL</div>
-          <div class="package-actions">
-            <button class="edit-btn" onclick="openPackageForm('${cat}', '${cycle}', ${i})">Düzenle</button>
-            <button class="delete-btn-sm" onclick="deletePackage('${cat}', '${cycle}', ${i})">Sil</button>
-          </div>
         </div>
-      `).join('');
-    }
-
-    function openCategoryForm(catId = null) {
-      if (catId) {
-        const cat = categories.find(c => c.id === catId);
-        document.getElementById('categoryFormTitle').textContent = 'Kategori Düzenle';
-        document.getElementById('categoryEditId').value = catId;
-        document.getElementById('categoryName').value = cat.name;
-        document.getElementById('categoryIcon').value = cat.icon;
-        document.getElementById('categoryActive').checked = cat.active;
-        document.getElementById('categoryDeleteBtn').style.display = 'block';
-      } else {
-        document.getElementById('categoryFormTitle').textContent = 'Kategori Ekle';
-        document.getElementById('categoryEditId').value = '';
-        document.getElementById('categoryName').value = '';
-        document.getElementById('categoryIcon').value = 'fa-cube';
-        document.getElementById('categoryActive').checked = true;
-        document.getElementById('categoryDeleteBtn').style.display = 'none';
-      }
-      document.getElementById('categoryFormModal').classList.add('active');
-    }
-
-    function closeCategoryFormModal() { document.getElementById('categoryFormModal').classList.remove('active'); }
-
-    async function saveCategory(e) {
-      e.preventDefault();
-      const id = document.getElementById('categoryEditId').value || 'cat_' + Date.now();
-      const name = document.getElementById('categoryName').value;
-      const icon = document.getElementById('categoryIcon').value;
-      const active = document.getElementById('categoryActive').checked;
-      
-      const existingIndex = categories.findIndex(c => c.id === id);
-      if (existingIndex >= 0) {
-        categories[existingIndex] = { ...categories[existingIndex], name, icon, active };
-      } else {
-        categories.push({ id, name, icon, active });
-        if (!packages[id]) packages[id] = { aylik: [], yillik: [], sonsuz: [] };
-      }
-      
-      await saveToGitHub();
-      closeCategoryFormModal();
-      switchAdminTab('categories');
-      renderCategories();
-    }
-
-    async function deleteCategory(catId) {
-      if (confirm('Bu kategoriyi silmek istediğinize emin misiniz?')) {
-        categories = categories.filter(c => c.id !== catId);
-        delete packages[catId];
-        await saveToGitHub();
-        switchAdminTab('categories');
-        renderCategories();
-      }
-    }
-
-    function deleteCategoryConfirm() {
-      const id = document.getElementById('categoryEditId').value;
-      deleteCategory(id);
-      closeCategoryFormModal();
-    }
-
-    function openPackageForm(cat = '', cycle = '', index = -1) {
-      const categorySelect = document.getElementById('packageCategory');
-      categorySelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-      
-      if (index >= 0) {
-        const pkg = packages[cat][cycle][index];
-        document.getElementById('packageFormTitle').textContent = 'Paket Düzenle';
-        document.getElementById('packageEditIndex').value = index;
-        document.getElementById('packageEditCategory').value = cat;
-        document.getElementById('packageEditCycle').value = cycle;
-        document.getElementById('packageName').value = pkg.name;
-        document.getElementById('packageDesc').value = pkg.desc;
-        document.getElementById('packageCpu').value = pkg.cpu || '';
-        document.getElementById('packageRam').value = pkg.ram || '';
-        document.getElementById('packageDisk').value = pkg.disk || '';
-        document.getElementById('packageSubdomain').value = pkg.subdomain || '';
-        document.getElementById('packagePrice').value = pkg.price;
-        document.getElementById('packageCategory').value = cat;
-        document.getElementById('packageCycle').value = cycle;
-        document.getElementById('packageDeleteBtn').style.display = 'block';
-      } else {
-        document.getElementById('packageFormTitle').textContent = 'Paket Ekle';
-        document.getElementById('packageEditIndex').value = '';
-        document.getElementById('packageEditCategory').value = '';
-        document.getElementById('packageEditCycle').value = '';
-        document.getElementById('packageName').value = '';
-        document.getElementById('packageDesc').value = '';
-        document.getElementById('packageCpu').value = '';
-        document.getElementById('packageRam').value = '';
-        document.getElementById('packageDisk').value = '';
-        document.getElementById('packageSubdomain').value = '';
-        document.getElementById('packagePrice').value = '';
-        document.getElementById('packageCategory').value = cat || 'minecraft';
-        document.getElementById('packageCycle').value = cycle || 'sonsuz';
-        document.getElementById('packageDeleteBtn').style.display = 'none';
-      }
-      document.getElementById('packageFormModal').classList.add('active');
-    }
-
-    function closePackageFormModal() { document.getElementById('packageFormModal').classList.remove('active'); }
-
-    async function savePackage(e) {
-      e.preventDefault();
-      const editIndex = document.getElementById('packageEditIndex').value;
-      const editCat = document.getElementById('packageEditCategory').value;
-      const editCycle = document.getElementById('packageEditCycle').value;
-      
-      const cat = document.getElementById('packageCategory').value;
-      const cycle = document.getElementById('packageCycle').value;
-      
-      const pkg = {
-        name: document.getElementById('packageName').value,
-        desc: document.getElementById('packageDesc').value,
-        cpu: document.getElementById('packageCpu').value,
-        ram: document.getElementById('packageRam').value,
-        disk: document.getElementById('packageDisk').value,
-        subdomain: document.getElementById('packageSubdomain').value,
-        price: parseFloat(document.getElementById('packagePrice').value)
-      };
-      
-      if (!packages[cat]) packages[cat] = { aylik: [], yillik: [], sonsuz: [] };
-      if (!packages[cat][cycle]) packages[cat][cycle] = [];
-      
-      if (editIndex !== '' && editCat === cat && editCycle === cycle) {
-        packages[cat][cycle][editIndex] = pkg;
-      } else {
-        if (editIndex !== '') packages[editCat][editCycle].splice(editIndex, 1);
-        packages[cat][cycle].push(pkg);
-      }
-      
-      await saveToGitHub();
-      closePackageFormModal();
-      switchAdminTab('packages');
-      if (currentCategory === cat) selectCategory(cat);
-    }
-
-    async function deletePackage(cat, cycle, index) {
-      if (confirm('Bu paketi silmek istediğinize emin misiniz?')) {
-        packages[cat][cycle].splice(index, 1);
-        await saveToGitHub();
-        renderAdminPackages();
-        if (currentCategory === cat) selectCategory(cat);
-      }
-    }
-
-    function deletePackageConfirm() {
-      const cat = document.getElementById('packageEditCategory').value;
-      const cycle = document.getElementById('packageEditCycle').value;
-      const index = document.getElementById('packageEditIndex').value;
-      deletePackage(cat, cycle, index);
-      closePackageFormModal();
-    }
-
-    async function generateCode() {
-      const pkgName = prompt('Paket adı girin (örn: STARTER):');
-      if (!pkgName) return;
-      const code = 'VEX-' + Math.random().toString(36).substring(2,8).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
-      purchaseCodes.push({ code, packageName: pkgName, createdAt: new Date().toLocaleDateString('tr-TR') });
-      await saveToGitHub();
-      renderCodesList();
-    }
-
-    function renderCodesList() {
-      const list = document.getElementById('codesList');
-      if (!purchaseCodes.length) { list.innerHTML = '<p style="color:#a1a1aa">Kod yok</p>'; return; }
-      list.innerHTML = purchaseCodes.map((c, i) => `
-        <div class="code-item">
-          <div><strong>${c.code}</strong><br><span style="color:#a1a1aa;font-size:13px">${c.packageName} - ${c.createdAt}</span></div>
-          <button class="delete-btn-sm" onclick="deleteCode(${i})"><i class="fas fa-trash"></i></button>
+        <button class="form-btn" onclick="adminAssignResources()">Kaynakları Ata</button>
+        <div class="alert alert-success" id="admin-res-ok" style="margin-top:10px"></div>
+        <div class="alert alert-error" id="admin-res-err" style="margin-top:10px"></div>
+      </div>
+      <div class="admin-card">
+        <h3>👤 Kullanıcılar</h3>
+        <div style="overflow-x:auto">
+          <table class="user-table" id="user-table">
+            <thead><tr><th>Kullanıcı Adı</th><th>E-posta</th><th>Sunucu</th></tr></thead>
+            <tbody id="user-table-body"></tbody>
+          </table>
         </div>
-      `).join('');
-    }
-
-    async function deleteCode(i) { 
-      purchaseCodes.splice(i, 1); 
-      await saveToGitHub(); 
-      renderCodesList(); 
-    }
-
-    async function toggleTestimonials() {
-      siteSettings.testimonialsEnabled = !siteSettings.testimonialsEnabled;
-      await saveToGitHub();
-      applySiteSettings();
-      switchAdminTab('testimonials');
-    }
-
-    async function addTestimonial() {
-      const name = prompt('İsim:');
-      const title = prompt('Başlık:');
-      const comment = prompt('Yorum:');
-      const rating = parseInt(prompt('Puan (1-5):'));
-      if (name && comment && rating) {
-        testimonials.push({ name, title, comment, rating, color: '#' + Math.floor(Math.random()*16777215).toString(16) });
-        await saveToGitHub();
-        renderTestimonialsList();
-        applySiteSettings();
-      }
-    }
-
-    function renderTestimonialsList() {
-      const list = document.getElementById('testimonialsList');
-      list.innerHTML = testimonials.map((t, i) => `
-        <div class="testimonial-item">
-          <div><strong>${t.name}</strong> - ${'★'.repeat(t.rating)}<br><span style="color:#a1a1aa">${t.comment.substring(0,50)}...</span></div>
-          <button class="delete-btn-sm" onclick="deleteTestimonial(${i})"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="admin-card">
+        <h3>📊 İstatistikler</h3>
+        <div style="display:grid;gap:12px">
+          <div class="resource-card"><div class="resource-label">Kayıtlı Kullanıcı</div><div class="resource-val" id="stat-users" style="font-size:28px">0</div></div>
+          <div class="resource-card"><div class="resource-label">Toplam Sunucu</div><div class="resource-val" id="stat-servers" style="font-size:28px">0</div></div>
+          <div class="resource-card"><div class="resource-label">Kullanılan Kod</div><div class="resource-val" id="stat-codes" style="font-size:28px">0</div></div>
         </div>
-      `).join('');
-    }
+      </div>
+    </div>
+  </div>
+</div>
 
-    async function deleteTestimonial(i) { 
-      testimonials.splice(i, 1); 
-      await saveToGitHub(); 
-      renderTestimonialsList(); 
-      applySiteSettings(); 
-    }
+<!-- MODALS -->
 
-    async function saveSiteSettings() {
-      siteSettings.activeServers = parseInt(document.getElementById('settingActiveServers').value) || 0;
-      siteSettings.systemStatus = document.getElementById('settingSystemStatus').value;
-      siteSettings.discountBanner = document.getElementById('settingDiscountBanner').value;
-      await saveToGitHub();
-      applySiteSettings();
-      closeAdminPanelModal();
-    }
+<!-- LOGIN -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    <div class="modal-title">Tekrar Hoşgeldin</div>
+    <div class="modal-sub">Hesabına giriş yap ve sunucularına ulaş</div>
+    <div class="alert alert-error" id="login-error"></div>
+    <div class="form-group"><label class="form-label">Kullanıcı Adı</label><input class="form-input" id="login-user" placeholder="kullaniciadi"></div>
+    <div class="form-group"><label class="form-label">Şifre</label><input class="form-input" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="form-btn" onclick="doLogin()">Giriş Yap</button>
+    <div class="form-switch">Hesabın yok mu? <a onclick="switchModal('login-modal','register-modal')">Kayıt Ol</a></div>
+  </div>
+</div>
 
-    async function changeUserRole(index, role) {
-      users[index].role = role;
-      await saveToGitHub();
-      if (currentUser && currentUser.username === users[index].username) {
-        currentUser.role = role;
-        localStorage.setItem('vexarCurrentUser', JSON.stringify(currentUser));
-        document.getElementById('adminBtn').style.display = isAdmin() ? 'flex' : 'none';
-      }
-    }
+<!-- REGISTER -->
+<div class="modal-overlay" id="register-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
+    <div class="modal-title">Hesap Oluştur</div>
+    <div class="modal-sub">Ücretsiz hesabınla hemen başla</div>
+    <div class="alert alert-error" id="reg-error"></div>
+    <div class="alert alert-success" id="reg-success"></div>
+    <div class="form-group"><label class="form-label">Kullanıcı Adı</label><input class="form-input" id="reg-user" placeholder="kullaniciadi"></div>
+    <div class="form-group"><label class="form-label">E-posta</label><input class="form-input" type="email" id="reg-email" placeholder="ornek@email.com"></div>
+    <div class="form-group"><label class="form-label">Şifre</label><input class="form-input" type="password" id="reg-pass" placeholder="••••••••"></div>
+    <button class="form-btn" onclick="doRegister()">Kayıt Ol</button>
+    <div class="form-switch">Zaten hesabın var mı? <a onclick="switchModal('register-modal','login-modal')">Giriş Yap</a></div>
+  </div>
+</div>
 
-    async function deleteUser(index) {
-      if (confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
-        users.splice(index, 1);
-        await saveToGitHub();
-        switchAdminTab('users');
-      }
-    }
+<!-- BUY MODAL -->
+<div class="modal-overlay" id="buy-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('buy-modal')">✕</button>
+    <div class="modal-title">Paketi Aktifleştir</div>
+    <div class="modal-sub" id="buy-modal-sub">Satın alım kodunuzu girerek paketi aktif edin</div>
+    <div class="alert alert-error" id="buy-error"></div>
+    <div class="form-group">
+      <label class="form-label">Sunucu Adı</label>
+      <input class="form-input" id="buy-srvname" placeholder="Sunucu adınız">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Satın Alım Kodu</label>
+      <input class="form-input" id="buy-code" placeholder="VEXAR-XXXX-XXXX" style="font-family:'DM Mono',monospace;letter-spacing:2px" onkeydown="if(event.key==='Enter')redeemCode()">
+    </div>
+    <button class="form-btn" onclick="redeemCode()">Aktifleştir</button>
+  </div>
+</div>
 
-    function showHome() { selectCategory('minecraft'); }
-    function showPackages() { selectCategory('minecraft'); }
+<!-- ADD PLUGIN MODAL -->
+<div class="modal-overlay" id="plugin-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('plugin-modal')">✕</button>
+    <div class="modal-title">Eklenti Ekle</div>
+    <div class="modal-sub">Sunucunuza yeni bir eklenti ekleyin</div>
+    <div class="form-group"><label class="form-label">Eklenti Adı</label><input class="form-input" id="plugin-name" placeholder="örn: EssentialsX"></div>
+    <div class="form-group"><label class="form-label">Sürüm</label><input class="form-input" id="plugin-ver" placeholder="örn: 2.20.1"></div>
+    <button class="form-btn" onclick="addPlugin()">Eklentiyi Ekle</button>
+  </div>
+</div>
 
-    // Init
-    window.onclick = e => { 
-      if (e.target.classList.contains('modal')) e.target.classList.remove('active');
-      if (!e.target.closest('.package-menu')) document.querySelectorAll('.package-menu-dropdown').forEach(m => m.classList.remove('active'));
-      if (!e.target.closest('.user-menu')) document.getElementById('userDropdown').style.display = 'none';
-    };
+<!-- ADD PLAYER MODAL -->
+<div class="modal-overlay" id="player-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('player-modal')">✕</button>
+    <div class="modal-title">Oyuncu Ekle</div>
+    <div class="modal-sub">Whitelist veya OP listesine oyuncu ekleyin</div>
+    <div class="form-group"><label class="form-label">Oyuncu Adı</label><input class="form-input" id="player-name" placeholder="Minecraft kullanıcı adı"></div>
+    <div class="form-group"><label class="form-label">Rol</label>
+      <select class="form-input" id="player-role"><option value="member">Üye</option><option value="op">OP (Operatör)</option></select>
+    </div>
+    <button class="form-btn" onclick="addPlayer()">Ekle</button>
+  </div>
+</div>
 
-    init();
-  </script>
+<!-- ADD FILE MODAL -->
+<div class="modal-overlay" id="file-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('file-modal')">✕</button>
+    <div class="modal-title">Dosya Yükle</div>
+    <div class="modal-sub">Sunucuya yeni bir dosya yükleyin</div>
+    <div class="form-group"><label class="form-label">Dosya Adı</label><input class="form-input" id="file-name" placeholder="örn: config.yml"></div>
+    <div class="form-group"><label class="form-label">Tür</label>
+      <select class="form-input" id="file-type">
+        <option>config.yml</option><option>plugins/</option><option>world/</option>
+        <option>server.properties</option><option>ops.json</option>
+      </select>
+    </div>
+    <button class="form-btn" onclick="addFile()">Yükle</button>
+  </div>
+</div>
+
+<script>
+// ==================== CONFIG ====================
+const ADMIN_CONFIG = {u:'admin', p:atob('a3VydWN1emVybGF4')};
+// (Şifre base64 olarak saklanmaktadır, düz metin olarak kodda yer almamaktadır)
+
+const PACKAGES = {
+  minecraft:[
+    {id:'mc-starter',name:'STARTER',ram:'1GB RAM',cpu:'1 vCore',disk:'10GB',monthly:110,yearly:790,lifetime:960,
+     features:['1GB DDR4 RAM','1 vCore CPU','10GB NVMe Disk','20 Slot Oyuncu','Temel DDoS Koruma','Paper/Spigot/Vanilla'],icon:'⚪'},
+    {id:'mc-temel',name:'TEMEL',ram:'2GB RAM',cpu:'2 vCore',disk:'20GB',monthly:220,yearly:1550,lifetime:1990,
+     features:['2GB DDR4 RAM','2 vCore CPU','20GB NVMe Disk','50 Slot Oyuncu','DDoS Koruma','Tüm Yazılımlar'],icon:'🔵'},
+    {id:'mc-elite',name:'ELİTE',ram:'4GB RAM',cpu:'2 vCore',disk:'30GB',monthly:350,yearly:2450,lifetime:2990,
+     features:['4GB DDR4 RAM','2 vCore CPU','30GB NVMe Disk','80 Slot Oyuncu','Gelişmiş DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme'],icon:'🟣'},
+    {id:'mc-ultra',name:'ULTRA',ram:'6GB RAM',cpu:'3 vCore',disk:'50GB',monthly:480,yearly:3350,lifetime:3990,
+     features:['6GB DDR4 RAM','3 vCore CPU','50GB NVMe Disk','150 Slot Oyuncu','Premium DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme','Özel Domain'],icon:'🔷',featured:true},
+    {id:'mc-titan',name:'TİTAN',ram:'8GB RAM',cpu:'4 vCore',disk:'80GB',monthly:690,yearly:4750,lifetime:5500,
+     features:['8GB DDR4 RAM','4 vCore CPU','80GB NVMe Disk','250 Slot Oyuncu','Premium DDoS Koruma','Tüm Yazılımlar','Otomatik Yedekleme','Özel Domain','Öncelikli Destek'],icon:'🟡'},
+    {id:'mc-mythic',name:'MYTHIC',ram:'12GB RAM',cpu:'6 vCore',disk:'120GB',monthly:950,yearly:6200,lifetime:7200,
+     features:['12GB DDR4 RAM','6 vCore CPU','120GB NVMe Disk','500 Slot Oyuncu','2.5Tbps DDoS Koruma','Tüm Yazılımlar','Günlük Yedekleme','Özel Domain','Öncelikli Destek'],icon:'🟠'},
+    {id:'mc-legendary',name:'LEGENDARY',ram:'16GB RAM',cpu:'8 vCore',disk:'200GB',monthly:1800,yearly:10500,lifetime:11900,
+     features:['16GB DDR4 RAM','8 vCore CPU','200GB NVMe Disk','1000 Slot Oyuncu','2.5Tbps DDoS Koruma','Tüm Yazılımlar','Saatlik Yedekleme','Özel Domain','7/24 Destek'],icon:'🔴'},
+    {id:'mc-galaxy',name:'GALAXY',ram:'24GB RAM',cpu:'12 vCore',disk:'350GB',monthly:3400,yearly:17500,lifetime:19900,
+     features:['24GB DDR4 RAM','12 vCore CPU','350GB NVMe Disk','2000 Slot Oyuncu','3Tbps DDoS Koruma','Dedicated Resources','Saatlik Yedekleme','3x Özel Domain','7/24 VIP Destek'],icon:'🌌'},
+    {id:'mc-universe',name:'UNIVERSE',ram:'32GB RAM',cpu:'16 vCore',disk:'500GB',monthly:4900,yearly:25900,lifetime:29900,
+     features:['32GB DDR4 RAM','16 vCore CPU','500GB NVMe Disk','5000 Slot Oyuncu','5Tbps DDoS Koruma','Dedicated Resources','Gerçek Zamanlı Yedek','5x Özel Domain','VIP Destek Hattı'],icon:'🌠'},
+    {id:'mc-eternity',name:'ETERNITY',ram:'64GB RAM',cpu:'24 vCore',disk:'1TB',monthly:6500,yearly:31500,lifetime:35900,
+     features:['64GB DDR4 RAM','24 vCore CPU','1TB NVMe Disk','10000 Slot Oyuncu','10Tbps DDoS Koruma','Dedicated Server','Gerçek Zamanlı Yedek','10x Özel Domain','Özel Destek Mühendisi'],icon:'♾️'},
+    {id:'mc-god',name:'GOD',ram:'128GB RAM',cpu:'32 vCore',disk:'2TB',monthly:12000,yearly:49900,lifetime:59900,
+     features:['128GB DDR4 RAM','32 vCore CPU','2TB NVMe RAID Disk','Sınırsız Slot','25Tbps DDoS Koruma','Bare Metal Dedicated','Anlık Yedekleme','Sınırsız Domain','SLA %99.99','Özel Veri Merkezi Rafı'],icon:'👑'},
+  ],
+  ddos:[
+    {id:'ddos-lite',name:'LITE',ram:'',cpu:'',disk:'',monthly:45,yearly:350,lifetime:490,
+     features:['100Gbps Koruma','Layer 3/4 Filtreleme','Otomatik Mitigation','Gerçek Zamanlı İzleme'],icon:'🛡️'},
+    {id:'ddos-pro',name:'PRO',ram:'',cpu:'',disk:'',monthly:90,yearly:750,lifetime:990,
+     features:['500Gbps Koruma','Layer 3/4/7 Filtreleme','Otomatik Mitigation','Gerçek Zamanlı İzleme','Özel Kurallar'],icon:'🔰',featured:true},
+    {id:'ddos-elite',name:'ELİTE',ram:'',cpu:'',disk:'',monthly:190,yearly:1600,lifetime:2100,
+     features:['1Tbps Koruma','Tam Katman Filtreleme','Akıllı Mitigation','Gerçek Zamanlı Dashboard','Özel Kurallar','Anlık Uyarı'],icon:'⚔️'},
+    {id:'ddos-titan',name:'TİTAN',ram:'',cpu:'',disk:'',monthly:350,yearly:3000,lifetime:3900,
+     features:['2.5Tbps Koruma','Tam Katman Filtreleme','AI Destekli Mitigation','7/24 İzleme','Özel Kurallar','SLA %99.9'],icon:'🏰'},
+    {id:'ddos-godshield',name:'GOD SHIELD',ram:'',cpu:'',disk:'',monthly:650,yearly:5500,lifetime:7500,
+     features:['5Tbps+ Koruma','Sıfır Gecikme Filtreleme','Makine Öğrenmeli Mitigation','7/24 Mühendis','Tam Özelleştirme','SLA %99.99','Öncelikli Bant Genişliği'],icon:'⚡'},
+  ],
+  vac:[
+    {id:'vac-lite',name:'VAC LITE',ram:'',cpu:'',disk:'',monthly:40,yearly:320,lifetime:450,
+     features:['Temel Anti-Cheat','Gerçek Zamanlı Tarama','Otomatik Ban','Raporlama Paneli'],icon:'🔍'},
+    {id:'vac-plus',name:'VAC PLUS',ram:'',cpu:'',disk:'',monthly:85,yearly:700,lifetime:890,
+     features:['Gelişmiş Tarama','Hareket Analizi','Otomatik Ban','Temyiz Sistemi','Detaylı Loglama'],icon:'🔎'},
+    {id:'vac-pro',name:'VAC PRO',ram:'',cpu:'',disk:'',monthly:150,yearly:1250,lifetime:1700,
+     features:['Makro/Bot Tespiti','Hareket Analizi','Otomatik Ban','Temyiz Sistemi','Özel Kurallar'],icon:'👁️',featured:true},
+    {id:'vac-elite',name:'VAC ELİTE',ram:'',cpu:'',disk:'',monthly:280,yearly:2400,lifetime:3200,
+     features:['AI Tabanlı Tespit','Makro/Bot/Exploit','Gerçek Zamanlı Analiz','Otomatik Ban','Temyiz Sistemi','7/24 İzleme'],icon:'🤖'},
+    {id:'vac-ultimate',name:'VAC ULTIMATE',ram:'',cpu:'',disk:'',monthly:500,yearly:4200,lifetime:5500,
+     features:['Tam AI Motoru','Her Türlü Hile Tespiti','Sıfır Gecikme Analiz','Otomatik + Manuel Ban','Temyiz Paneli','7/24 İnsan İncelemesi','Özel Filtre Desteği'],icon:'🛡️'},
+  ],
+  domain:[
+    {id:'dom-xyz',name:'sunucu.xyz',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:100,
+     features:['.xyz uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik'],icon:'🌐',domainOnly:true},
+    {id:'dom-online',name:'sunucu.online',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:120,
+     features:['.online uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik'],icon:'🌍',domainOnly:true},
+    {id:'dom-comtr',name:'sunucu.com.tr',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:150,
+     features:['.com.tr uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik','Yerli Alan Adı'],icon:'🇹🇷',domainOnly:true},
+    {id:'dom-network',name:'sunucu.network',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:160,
+     features:['.network uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik'],icon:'🔗',domainOnly:true,featured:true},
+    {id:'dom-com',name:'sunucu.com',ram:'',cpu:'',disk:'',monthly:0,yearly:0,lifetime:180,
+     features:['.com uzantısı','DNS Yönetimi','SSL Sertifikası (Ücretsiz)','Sonsuz Geçerlilik','En Prestijli Uzantı'],icon:'✨',domainOnly:true},
+  ]
+};
+
+const FAKE_LOGS = [
+  ['info','Sunucu başlatılıyor...'],
+  ['info','Java sürümü kontrol ediliyor...'],
+  ['info','Eklentiler yükleniyor...'],
+  ['info','Dünya oluşturuluyor...'],
+  ['info','Spawn noktası ayarlanıyor...'],
+  ['info','Oyuncu bağlantıları kabul ediliyor'],
+  ['info','Sunucu başarıyla açıldı! Bağlantı noktası: 25565'],
+  ['warn','Uyarı: Spawn koruma alanı etkin'],
+  ['info','[EssentialsX] Eklenti yüklendi'],
+  ['info','[WorldEdit] Eklenti yüklendi'],
+  ['info','Yedekleme sistemi hazır'],
+  ['dim','[10:23:41] Heartbeat OK'],
+];
+
+// ==================== STATE ====================
+let currentUser = null;
+let currentServer = null;
+let currentTab = 'monthly';
+let resInterval = null;
+let logInterval = null;
+let serverRunning = false;
+
+// ==================== STORAGE HELPERS ====================
+const DB = {
+  users: () => JSON.parse(localStorage.getItem('vxUsers')||'[]'),
+  saveUsers: (d) => localStorage.setItem('vxUsers',JSON.stringify(d)),
+  codes: () => JSON.parse(localStorage.getItem('vxCodes')||'[]'),
+  saveCodes: (d) => localStorage.setItem('vxCodes',JSON.stringify(d)),
+  servers: () => JSON.parse(localStorage.getItem('vxServers')||'[]'),
+  saveServers: (d) => localStorage.setItem('vxServers',JSON.stringify(d)),
+};
+
+// ==================== TOAST ====================
+function toast(msg, type='success'){
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  t.className = 'toast show toast-'+type;
+  m.textContent = msg;
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ==================== PAGE NAVIGATION ====================
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(id==='packages') renderPackages();
+  if(id==='servers') renderServers();
+  if(id==='admin') renderAdmin();
+}
+
+function setActiveNav(el){
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function gotoServers(){
+  if(!currentUser){openModal('login-modal');return;}
+  showPage('servers');
+}
+
+// ==================== AUTH ====================
+function doLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  err.classList.remove('show');
+
+  if(u===ADMIN_CONFIG.u && p===ADMIN_CONFIG.p){
+    currentUser={username:'admin',email:'admin@vexar.gg',isAdmin:true};
+    afterLogin();
+    return;
+  }
+
+  const users = DB.users();
+  const user = users.find(x=>x.username===u && x.password===btoa(p));
+  if(!user){err.textContent='Kullanıcı adı veya şifre hatalı.';err.classList.add('show');return;}
+  currentUser = user;
+  afterLogin();
+}
+
+function afterLogin(){
+  closeModal('login-modal');
+  updateNavAuth();
+  toast('Hoşgeldin, '+currentUser.username+'!','success');
+  if(currentUser.isAdmin){
+    showPage('admin');
+  } else {
+    showPage('servers');
+    setActiveNav(document.querySelectorAll('.nav-link')[2]);
+  }
+}
+
+function doRegister(){
+  const u = document.getElementById('reg-user').value.trim();
+  const e = document.getElementById('reg-email').value.trim();
+  const p = document.getElementById('reg-pass').value;
+  const err = document.getElementById('reg-error');
+  const suc = document.getElementById('reg-success');
+  err.classList.remove('show'); suc.classList.remove('show');
+
+  if(!u||!e||!p){err.textContent='Tüm alanları doldurun.';err.classList.add('show');return;}
+  if(p.length<6){err.textContent='Şifre en az 6 karakter olmalı.';err.classList.add('show');return;}
+  if(u===ADMIN_CONFIG.u){err.textContent='Bu kullanıcı adı kullanılamaz.';err.classList.add('show');return;}
+
+  const users = DB.users();
+  if(users.find(x=>x.username===u)){err.textContent='Bu kullanıcı adı zaten alınmış.';err.classList.add('show');return;}
+
+  users.push({username:u,email:e,password:btoa(p),servers:[]});
+  DB.saveUsers(users);
+  suc.textContent='Kayıt başarılı! Giriş yapabilirsiniz.';
+  suc.classList.add('show');
+  setTimeout(()=>switchModal('register-modal','login-modal'),1500);
+}
+
+function doLogout(){
+  currentUser=null;
+  updateNavAuth();
+  showPage('home');
+  setActiveNav(document.querySelectorAll('.nav-link')[0]);
+  toast('Çıkış yapıldı.','success');
+}
+
+function handleUserClick(){
+  if(currentUser&&currentUser.isAdmin){showPage('admin');return;}
+  if(confirm('Çıkış yapmak istiyor musunuz?')) doLogout();
+}
+
+function updateNavAuth(){
+  const btns = document.getElementById('nav-auth-btns');
+  const info = document.getElementById('nav-user-info');
+  if(currentUser){
+    btns.style.display='none';
+    info.style.display='block';
+    document.getElementById('nav-username').textContent=currentUser.username;
+    document.getElementById('nav-avatar').textContent=currentUser.username[0].toUpperCase();
+  } else {
+    btns.style.display='block';
+    info.style.display='none';
+  }
+}
+
+// ==================== MODALS ====================
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function switchModal(close,open){closeModal(close);openModal(open);}
+
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
+});
+
+// ==================== PACKAGES ====================
+function setTab(el, tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentTab=tab;
+  renderPackages();
+}
+
+function getPrice(pkg){
+  if(pkg.domainOnly) return pkg.lifetime+'₺ <span>sonsuz</span>';
+  if(currentTab==='yearly') return pkg.yearly+'₺ <span>/yıl</span>';
+  if(currentTab==='lifetime') return pkg.lifetime+'₺ <span>sonsuz</span>';
+  return pkg.monthly+'₺ <span>/ay</span>';
+}
+
+function renderPackages(){
+  const cats=[
+    {key:'minecraft',label:'🎮 Minecraft Sunucusu',desc:'Oyun sunucuları'},
+    {key:'ddos',label:'🛡️ DDoS Koruması',desc:'Güvenlik çözümleri'},
+    {key:'vac',label:'🚫 Hile Koruması (VAC)',desc:'Anti-cheat'},
+    {key:'domain',label:'🌐 Domain Paketleri',desc:'Sonsuz · Tek Seferlik'},
+  ];
+  const c = document.getElementById('packages-content');
+  c.innerHTML = cats.map(cat=>{
+    const isDomain = cat.key==='domain';
+    const pkgs = PACKAGES[cat.key].filter(pkg=>{
+      if(pkg.domainOnly) return true;
+      if(currentTab==='monthly') return pkg.monthly>0;
+      if(currentTab==='yearly') return pkg.yearly>0;
+      if(currentTab==='lifetime') return pkg.lifetime>0;
+      return true;
+    });
+    return '<div class="cat-section">' +
+      '<div class="cat-title">' + cat.label + ' <span class="cat-badge">' + (isDomain?'Sonsuz &middot; Tek Seferlik':cat.desc) + '</span></div>' +
+      '<div class="pkg-grid">' +
+      pkgs.map(pkg=>
+        '<div class="pkg-card ' + (pkg.featured?'featured':'') + '">' +
+        '<div style="font-size:28px;margin-bottom:8px">' + pkg.icon + '</div>' +
+        '<div class="pkg-name">' + pkg.name + '</div>' +
+        '<div class="pkg-ram">' + pkg.ram + (pkg.cpu?' &middot; '+pkg.cpu:'') + '</div>' +
+        '<div class="pkg-price">' + getPrice(pkg) + '</div>' +
+        '<ul class="pkg-features">' + pkg.features.map(f=>'<li>'+f+'</li>').join('') + '</ul>' +
+        '<button class="btn-buy ' + (pkg.featured?'featured-btn':'') + '" onclick="openBuy(\'' + pkg.id + '\',\'' + pkg.name + '\')">Satın Al</button>' +
+        '</div>'
+      ).join('') +
+      '</div></div>';
+  }).join('');
+}
+
+let buyPkgId = null;
+function openBuy(pkgId, pkgName){
+  if(!currentUser){openModal('login-modal');return;}
+  buyPkgId = pkgId;
+  document.getElementById('buy-modal-sub').textContent = `"${pkgName}" paketini aktifleştirmek için kod girin`;
+  document.getElementById('buy-error').classList.remove('show');
+  document.getElementById('buy-code').value='';
+  document.getElementById('buy-srvname').value='';
+  openModal('buy-modal');
+}
+
+function redeemCode(){
+  const code = document.getElementById('buy-code').value.trim().toUpperCase();
+  const sname = document.getElementById('buy-srvname').value.trim();
+  const err = document.getElementById('buy-error');
+  err.classList.remove('show');
+  if(!sname){err.textContent='Sunucu adı boş olamaz.';err.classList.add('show');return;}
+  if(!code){err.textContent='Lütfen bir kod girin.';err.classList.add('show');return;}
+
+  const codes = DB.codes();
+  const codeObj = codes.find(c=>c.code===code&&!c.used);
+  if(!codeObj){err.textContent='Geçersiz veya kullanılmış kod.';err.classList.add('show');return;}
+  if(codeObj.pkgId!==buyPkgId){
+    err.textContent='Bu kod farklı bir paket için üretilmiş.';
+    err.classList.add('show');return;
+  }
+
+  // Mark code used
+  codeObj.used=true;
+  codeObj.usedBy=currentUser.username;
+  DB.saveCodes(codes);
+
+  // Create server
+  const pkg = Object.values(PACKAGES).flat().find(p=>p.id===buyPkgId);
+  const server = {
+    id:'srv-'+Date.now(),
+    name:sname,
+    pkgId:buyPkgId,
+    pkgName:pkg.name,
+    pkgFeatures:pkg.features,
+    ram:pkg.ram,
+    icon:'🎮',
+    status:'offline',
+    owner:currentUser.username,
+    motd:'Vexar Hosting tarafından desteklenmektedir',
+    maxPlayers:20,
+    mode:'Survival',
+    difficulty:'Normal',
+    software:'Paper',
+    version:'1.21.4 (Son)',
+    pvp:true,
+    crack:false,
+    logo:'',
+    plugins:[
+      {name:'EssentialsX',ver:'2.21.0',icon:'⚙️'},
+      {name:'LuckPerms',ver:'5.4.131',icon:'🔑'},
+    ],
+    files:['server.properties','ops.json','whitelist.json','eula.txt'],
+    players:[],
+    domain:sname.toLowerCase().replace(/\s+/g,'-')+'.vexar.mc',
+    customDomain:'',
+    createdAt: new Date().toLocaleDateString('tr-TR'),
+  };
+
+  const servers = DB.servers();
+  servers.push(server);
+  DB.saveServers(servers);
+
+  // Update user
+  const users = DB.users();
+  const ui = users.findIndex(u=>u.username===currentUser.username);
+  if(ui>-1){if(!users[ui].servers)users[ui].servers=[];users[ui].servers.push(server.id);DB.saveUsers(users);}
+  currentUser.servers = (currentUser.servers||[]).concat(server.id);
+
+  closeModal('buy-modal');
+  toast('🎉 Sunucu başarıyla oluşturuldu!','success');
+  showPage('servers');
+  setActiveNav(document.querySelectorAll('.nav-link')[2]);
+}
+
+// ==================== SERVERS ====================
+function renderServers(){
+  if(!currentUser){return;}
+  const servers = DB.servers().filter(s=>s.owner===currentUser.username||(currentUser.isAdmin));
+  const el = document.getElementById('servers-list');
+  if(!servers.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">🖥️</div><div class="empty-title">Henüz sunucunuz yok</div><div class="empty-desc">Bir paket satın alarak ilk sunucunuzu oluşturun</div></div>`;
+    return;
+  }
+  el.innerHTML=`<div class="server-list">${servers.map(s=>`
+    <div class="server-item" onclick="openPanel('${s.id}')">
+      <div class="server-logo">${s.logo?`<img src="${s.logo}">`:(s.icon||'🎮')}</div>
+      <div class="server-info">
+        <div class="server-name">${s.name}</div>
+        <div class="server-plan">${s.pkgName} · ${s.domain}</div>
+      </div>
+      <div class="server-status">
+        <div class="status-dot ${s.status}"></div>
+        <span>${s.status==='online'?'Çevrimiçi':s.status==='starting'?'Başlatılıyor':'Çevrimdışı'}</span>
+      </div>
+      <span style="color:var(--text3);font-size:18px;margin-left:8px">›</span>
+    </div>
+  `).join('')}</div>`;
+}
+
+// ==================== SERVER PANEL ====================
+function openPanel(id){
+  const servers = DB.servers();
+  currentServer = servers.find(s=>s.id===id);
+  if(!currentServer) return;
+
+  // Update sidebar
+  document.getElementById('sidebar-name').textContent=currentServer.name;
+  document.getElementById('sidebar-plan').textContent=currentServer.pkgName;
+  const sl=document.getElementById('sidebar-logo');
+  sl.innerHTML=currentServer.logo?`<img src="${currentServer.logo}">`:(currentServer.icon||'🎮');
+
+  // Load settings
+  document.getElementById('s-name').value=currentServer.name;
+  document.getElementById('s-maxp').value=currentServer.maxPlayers||20;
+  document.getElementById('s-motd').value=currentServer.motd||'';
+  document.getElementById('s-mode').value=currentServer.mode||'Survival';
+  document.getElementById('s-diff').value=currentServer.difficulty||'Normal';
+  document.getElementById('s-soft').value=currentServer.software||'Paper';
+  document.getElementById('s-ver').value=currentServer.version||'1.21.4 (Son)';
+  const tpvp=document.getElementById('toggle-pvp');
+  const tcrack=document.getElementById('toggle-crack');
+  currentServer.pvp?tpvp.classList.add('on'):tpvp.classList.remove('on');
+  currentServer.crack?tcrack.classList.add('on'):tcrack.classList.remove('on');
+
+  if(currentServer.logo){
+    document.getElementById('logo-preview').src=currentServer.logo;
+    document.getElementById('logo-preview').style.display='block';
+    document.getElementById('logo-placeholder').style.display='none';
+  } else {
+    document.getElementById('logo-preview').style.display='none';
+    document.getElementById('logo-placeholder').style.display='block';
+  }
+
+  switchTab('console', document.querySelector('#sidebar-nav li'));
+  renderPlugins(); renderFiles(); renderPlayers(); renderFeatures();
+  initConsole();
+
+  showPage('panel');
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.panel-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#sidebar-nav li').forEach(l=>l.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+// CONSOLE
+function initConsole(){
+  const box = document.getElementById('console-output');
+  box.innerHTML='';
+  clearInterval(resInterval); clearInterval(logInterval);
+  serverRunning = currentServer.status==='online';
+  updateServerBtns();
+  if(serverRunning) startResourceSim();
+}
+
+function addLog(type, msg){
+  const box = document.getElementById('console-output');
+  const now = new Date();
+  const ts = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+  const line = document.createElement('div');
+  line.className='log-line';
+  line.innerHTML=`<span class="log-time">[${ts}]</span><span class="log-${type}">${msg}</span>`;
+  box.appendChild(line);
+  box.scrollTop=box.scrollHeight;
+}
+
+function serverAction(action){
+  if(action==='start'){
+    if(serverRunning) return;
+    addLog('info','Sunucu başlatılıyor...');
+    setTimeout(()=>{
+      let i=0;
+      const run=()=>{
+        if(i<FAKE_LOGS.length){addLog(FAKE_LOGS[i][0],FAKE_LOGS[i][1]);i++;setTimeout(run,350+Math.random()*400);}
+        else{serverRunning=true;updateServerStatus('online');startResourceSim();}
+      };run();
+    },300);
+  } else if(action==='stop'){
+    if(!serverRunning) return;
+    addLog('warn','Sunucu durduruluyor...');
+    setTimeout(()=>{
+      addLog('info','Dünya kaydediliyor...');
+      setTimeout(()=>{
+        addLog('info','Sunucu durduruldu.');
+        serverRunning=false;updateServerStatus('offline');
+        clearInterval(resInterval);clearInterval(logInterval);
+        const _cfg=getResCfg();
+        document.getElementById('res-cpu').textContent='0 / '+_cfg.cpuTotal+_cfg.cpuUnit;
+        document.getElementById('res-ram').textContent='0 / '+_cfg.ramTotal+' '+_cfg.ramUnit;
+        document.getElementById('res-net').textContent='0 / '+_cfg.netTotal+' '+_cfg.netUnit;
+        document.getElementById('res-disk').textContent='0 / '+_cfg.diskTotal+' '+_cfg.diskUnit;
+        document.getElementById('bar-cpu').style.width='0%';
+        document.getElementById('bar-ram').style.width='0%';
+        document.getElementById('bar-net').style.width='0%';
+        document.getElementById('bar-disk').style.width='0%';
+      },800);
+    },400);
+  } else if(action==='restart'){
+    addLog('warn','Yeniden başlatılıyor...');
+    if(serverRunning) serverAction('stop');
+    setTimeout(()=>serverAction('start'),3500);
+  }
+}
+
+function updateServerStatus(status){
+  currentServer.status=status;
+  const servers = DB.servers();
+  const idx = servers.findIndex(s=>s.id===currentServer.id);
+  if(idx>-1){servers[idx].status=status;DB.saveServers(servers);}
+  updateServerBtns();
+}
+
+function updateServerBtns(){
+  document.getElementById('btn-start').style.opacity=serverRunning?'0.4':'1';
+  document.getElementById('btn-stop').style.opacity=serverRunning?'1':'0.4';
+}
+
+function getResCfg(){
+  if(currentServer.resCfg && currentServer.resCfg.ramTotal) return currentServer.resCfg;
+  // Parse defaults from package ram string e.g. "4GB RAM" or "1TB Disk"
+  const ramStr = currentServer.ram || '2GB RAM';
+  const ramMatch = ramStr.match(/(\d+)(GB|MB|TB)/i);
+  let ramTotal = 2048, ramUnit = 'MB';
+  if(ramMatch){
+    if(ramMatch[2].toUpperCase()==='GB'){ramTotal=parseInt(ramMatch[1])*1024;ramUnit='MB';}
+    else if(ramMatch[2].toUpperCase()==='TB'){ramTotal=parseInt(ramMatch[1])*1024;ramUnit='GB';}
+    else{ramTotal=parseInt(ramMatch[1]);ramUnit='MB';}
+  }
+  // Disk from package
+  const diskStr = currentServer.disk || '20GB';
+  const diskMatch = diskStr.match(/(\d+)(GB|TB)/i);
+  let diskTotal = 20, diskUnit = 'GB';
+  if(diskMatch){diskTotal=parseInt(diskMatch[1]);diskUnit=diskMatch[2].toUpperCase();}
+  return {
+    cpuTotal: 100, cpuUnit: '%',
+    ramTotal: ramTotal, ramUnit: ramUnit,
+    netTotal: 1000, netUnit: 'KB/s',
+    diskTotal: diskTotal, diskUnit: diskUnit
+  };
+}
+
+function updateResLabels(){
+  const cfg=getResCfg();
+  document.getElementById('res-cpu-limit').textContent='Kullanım / '+cfg.cpuTotal+cfg.cpuUnit;
+  document.getElementById('res-ram-limit').textContent='Kullanım / '+cfg.ramTotal+' '+cfg.ramUnit;
+  document.getElementById('res-net-limit').textContent='Kullanım / '+cfg.netTotal+' '+cfg.netUnit;
+  document.getElementById('res-disk-limit').textContent='Kullanım / '+cfg.diskTotal+' '+cfg.diskUnit;
+}
+
+function startResourceSim(){
+  updateResLabels();
+  const cfg=getResCfg();
+
+  resInterval = setInterval(()=>{
+    if(!serverRunning) return;
+    const cpuPct = Math.max(5,Math.min(98,30+Math.random()*45));
+    const ramPct = Math.max(10,Math.min(92,35+Math.random()*40));
+    const netPct = Math.max(5,Math.min(95,20+Math.random()*55));
+    const diskPct = Math.max(5,Math.min(99,15+(Math.random()*25)));
+
+    const cpuVal=(cpuPct/100*cfg.cpuTotal).toFixed(1);
+    const ramVal=(ramPct/100*cfg.ramTotal).toFixed(0);
+    const netVal=(netPct/100*cfg.netTotal).toFixed(0);
+    const diskVal=(diskPct/100*cfg.diskTotal).toFixed(1);
+
+    document.getElementById('res-cpu').textContent=cpuVal+cfg.cpuUnit+' / '+cfg.cpuTotal+cfg.cpuUnit;
+    document.getElementById('res-ram').textContent=ramVal+' / '+cfg.ramTotal+' '+cfg.ramUnit;
+    document.getElementById('res-net').textContent=netVal+' / '+cfg.netTotal+' '+cfg.netUnit;
+    document.getElementById('res-disk').textContent=diskVal+' / '+cfg.diskTotal+' '+cfg.diskUnit;
+    document.getElementById('bar-cpu').style.width=cpuPct+'%';
+    document.getElementById('bar-ram').style.width=ramPct+'%';
+    document.getElementById('bar-net').style.width=netPct+'%';
+    document.getElementById('bar-disk').style.width=diskPct+'%';
+  },2000);
+
+  const runLogs = [
+    ['dim','[Heartbeat] OK — TPS: 20.0'],
+    ['info','Otomatik yedekleme tamamlandı'],
+    ['warn','Yüksek bellek kullanımı uyarısı'],
+    ['dim','[Heartbeat] OK — TPS: 19.8'],
+    ['info','Yeni bağlantı isteği alındı'],
+    ['dim','[AntiCheat] Scan tamamlandı — temiz'],
+  ];
+  let li=0;
+  logInterval = setInterval(()=>{
+    if(!serverRunning) return;
+    const l=runLogs[li%runLogs.length];
+    addLog(l[0],l[1]);li++;
+  },8000+Math.random()*4000);
+}
+
+function sendCmd(){
+  const input = document.getElementById('console-cmd');
+  const cmd = input.value.trim();
+  if(!cmd) return;
+  addLog('warn','> '+cmd);
+  input.value='';
+  setTimeout(()=>{
+    if(cmd.startsWith('/op ')) addLog('info',`Made ${cmd.split(' ')[1]} a server operator`);
+    else if(cmd.startsWith('/deop ')) addLog('info',`Removed operator status from ${cmd.split(' ')[1]}`);
+    else if(cmd.startsWith('/say ')) addLog('info',`[Server] ${cmd.substring(5)}`);
+    else if(cmd==='/stop') serverAction('stop');
+    else if(cmd==='/list') addLog('info',`There are ${currentServer.players?.length||0} players online`);
+    else addLog('info','Komut çalıştırıldı.');
+  },300);
+}
+
+// SETTINGS
+function toggleBtn(el){el.classList.toggle('on');}
+
+function saveSettings(){
+  const servers = DB.servers();
+  const idx = servers.findIndex(s=>s.id===currentServer.id);
+  const upd = {
+    name: document.getElementById('s-name').value||currentServer.name,
+    maxPlayers: parseInt(document.getElementById('s-maxp').value)||20,
+    motd: document.getElementById('s-motd').value,
+    mode: document.getElementById('s-mode').value,
+    difficulty: document.getElementById('s-diff').value,
+    software: document.getElementById('s-soft').value,
+    version: document.getElementById('s-ver').value,
+    pvp: document.getElementById('toggle-pvp').classList.contains('on'),
+    crack: document.getElementById('toggle-crack').classList.contains('on'),
+  };
+  Object.assign(currentServer, upd);
+  if(idx>-1){Object.assign(servers[idx],upd);DB.saveServers(servers);}
+  document.getElementById('sidebar-name').textContent=currentServer.name;
+  toast('Ayarlar kaydedildi ✓','success');
+}
+
+function handleLogoUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload=(ev)=>{
+    const src=ev.target.result;
+    document.getElementById('logo-preview').src=src;
+    document.getElementById('logo-preview').style.display='block';
+    document.getElementById('logo-placeholder').style.display='none';
+    currentServer.logo=src;
+    const servers=DB.servers();
+    const idx=servers.findIndex(s=>s.id===currentServer.id);
+    if(idx>-1){servers[idx].logo=src;DB.saveServers(servers);}
+    const sl=document.getElementById('sidebar-logo');
+    sl.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`;
+    toast('Logo yüklendi ✓','success');
+  };
+  reader.readAsDataURL(file);
+}
+
+// PLUGINS
+function renderPlugins(){
+  const el = document.getElementById('plugin-list');
+  const plugins = currentServer.plugins||[];
+  const icons=['⚙️','🔑','🗡️','🏠','💬','🗺️','💰','🎯','🛡️','⚡'];
+  el.innerHTML = plugins.map((p,i)=>`
+    <div class="plugin-item">
+      <div class="plugin-icon">${p.icon||icons[i%icons.length]}</div>
+      <div><div class="plugin-name">${p.name}</div><div class="plugin-ver">v${p.ver}</div></div>
+      <button class="plugin-del" onclick="removePlugin(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function openAddPlugin(){openModal('plugin-modal');document.getElementById('plugin-name').value='';document.getElementById('plugin-ver').value='';}
+
+function addPlugin(){
+  const name=document.getElementById('plugin-name').value.trim();
+  const ver=document.getElementById('plugin-ver').value.trim()||'1.0.0';
+  if(!name) return;
+  currentServer.plugins=(currentServer.plugins||[]);
+  currentServer.plugins.push({name,ver,icon:'🔌'});
+  saveCurrentServer();
+  renderPlugins();
+  closeModal('plugin-modal');
+  toast('Eklenti eklendi: '+name,'success');
+  if(serverRunning) addLog('info',`[PluginManager] ${name} v${ver} yüklendi`);
+}
+
+function removePlugin(i){
+  currentServer.plugins.splice(i,1);
+  saveCurrentServer();renderPlugins();toast('Eklenti kaldırıldı.','success');
+}
+
+// FILES
+function renderFiles(){
+  const el=document.getElementById('file-list');
+  const files=currentServer.files||[];
+  const exts={'properties':'📄','json':'📋','yml':'⚙️','yaml':'⚙️','txt':'📝','jar':'☕','zip':'🗜️','png':'🖼️','log':'📃'};
+  el.innerHTML=files.map((f,i)=>{
+    const ext=f.split('.').pop();
+    const icon=exts[ext]||'📁';
+    const sizes=['4.2 KB','12.8 KB','256 B','1.1 MB','8.7 KB'];
+    return `<div class="file-item"><span class="file-icon">${icon}</span><span class="file-name">${f}</span><span class="file-size">${sizes[i%sizes.length]}</span><button class="plugin-del" onclick="removeFile(${i})">✕</button></div>`;
+  }).join('');
+}
+
+function openAddFile(){openModal('file-modal');document.getElementById('file-name').value='';}
+
+function addFile(){
+  const name=document.getElementById('file-name').value.trim()||document.getElementById('file-type').value;
+  currentServer.files=(currentServer.files||[]);
+  currentServer.files.push(name);
+  saveCurrentServer();renderFiles();closeModal('file-modal');toast('Dosya yüklendi.','success');
+}
+
+function removeFile(i){currentServer.files.splice(i,1);saveCurrentServer();renderFiles();}
+
+// PLAYERS
+function renderPlayers(){
+  const el=document.getElementById('player-list');
+  const players=currentServer.players||[];
+  if(!players.length){el.innerHTML=`<div style="color:var(--text3);font-size:14px;padding:20px 0">Henüz oyuncu eklenmemiş.</div>`;return;}
+  el.innerHTML=players.map((p,i)=>`
+    <div class="player-item">
+      <div class="player-avatar">${p.name[0].toUpperCase()}</div>
+      <div>
+        <span class="player-name">${p.name}</span>
+        <span class="player-role ${p.role==='op'?'role-op':'role-member'}">${p.role==='op'?'OP':'Üye'}</span>
+      </div>
+      <button class="plugin-del" style="margin-left:auto" onclick="removePlayer(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function openAddPlayer(){openModal('player-modal');document.getElementById('player-name').value='';}
+
+function addPlayer(){
+  const name=document.getElementById('player-name').value.trim();
+  const role=document.getElementById('player-role').value;
+  if(!name) return;
+  currentServer.players=(currentServer.players||[]);
+  currentServer.players.push({name,role});
+  saveCurrentServer();renderPlayers();closeModal('player-modal');
+  toast(`${name} eklendi (${role==='op'?'OP':'Üye'}).`,'success');
+  if(serverRunning) addLog('info',`${name} sunucuya eklendi`);
+}
+
+function removePlayer(i){
+  const p=currentServer.players[i];
+  currentServer.players.splice(i,1);
+  saveCurrentServer();renderPlayers();
+  toast(p.name+' kaldırıldı.','success');
+}
+
+// FEATURES
+function renderFeatures(){
+  const el=document.getElementById('features-content');
+  const features=currentServer.pkgFeatures||[];
+  el.innerHTML=`
+    <div class="domain-card" style="margin-bottom:20px">
+      <div class="form-label" style="margin-bottom:8px">Otomatik Domain</div>
+      <div class="domain-name">${currentServer.domain}</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">Bu domain otomatik olarak atanmıştır</div>
+    </div>
+    <div class="domain-card" style="margin-bottom:24px">
+      <div class="form-label" style="margin-bottom:8px">Özel Domain</div>
+      ${currentServer.customDomain
+        ?`<div class="domain-name">${currentServer.customDomain}</div>`
+        :`<div style="display:flex;gap:8px">
+          <input class="form-input" id="custom-domain-inp" placeholder="sunucum.com" style="flex:1">
+          <button class="add-btn" onclick="setCustomDomain()">Bağla</button>
+        </div>`}
+    </div>
+    <div class="panel-section-title" style="font-size:16px;margin-bottom:16px">📦 Paket Özellikleri</div>
+    <div class="feat-list">
+      ${features.map(f=>`<div class="feat-list-item"><span class="feat-check">✓</span><span>${f}</span></div>`).join('')}
+    </div>
+  `;
+}
+
+function setCustomDomain(){
+  const val=document.getElementById('custom-domain-inp')?.value.trim();
+  if(!val) return;
+  currentServer.customDomain=val;
+  saveCurrentServer();renderFeatures();
+  toast('Özel domain bağlandı: '+val,'success');
+}
+
+function saveCurrentServer(){
+  const servers=DB.servers();
+  const idx=servers.findIndex(s=>s.id===currentServer.id);
+  if(idx>-1){servers[idx]=currentServer;DB.saveServers(servers);}
+}
+
+// ==================== ADMIN ====================
+function renderAdmin(){
+  // Populate package select
+  const sel=document.getElementById('admin-pkg-select');
+  const allPkgs=Object.values(PACKAGES).flat().filter(p=>p.monthly>0);
+  sel.innerHTML=allPkgs.map(p=>`<option value="${p.id}">${p.name} — ${p.monthly}₺/ay</option>`).join('');
+
+  renderCodeTable();
+
+  // Users
+  const users=DB.users();
+  const servers=DB.servers();
+  const utb=document.getElementById('user-table-body');
+  utb.innerHTML=users.map(u=>`<tr><td>${u.username}</td><td>${u.email}</td><td>${servers.filter(s=>s.owner===u.username).length}</td></tr>`).join('');
+
+  // Stats
+  document.getElementById('stat-users').textContent=users.length;
+  document.getElementById('stat-servers').textContent=servers.length;
+  document.getElementById('stat-codes').textContent=DB.codes().filter(c=>c.used).length;
+}
+
+function renderCodeTable(){
+  const codes=DB.codes();
+  const tbody=document.getElementById('code-table-body');
+  tbody.innerHTML=codes.map((c,i)=>`
+    <tr>
+      <td style="font-family:'DM Mono',monospace;letter-spacing:2px;font-size:11px">${c.code}</td>
+      <td>${c.pkgName}</td>
+      <td><span class="used-badge ${c.used?'used-true':'used-false'}">${c.used?'Kullanıldı':'Aktif'}</span></td>
+      <td>${!c.used?`<button onclick="deleteCode(${i})" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#f87171;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-family:Manrope,sans-serif">Sil</button>`:''}</td>
+    </tr>
+  `).join('')||'<tr><td colspan="4" style="color:var(--text3);padding:16px;text-align:center">Henüz kod üretilmedi</td></tr>';
+}
+
+function deleteCode(i){
+  const codes=DB.codes();
+  if(codes[i].used){toast('Kullanılmış kodlar silinemez.','error');return;}
+  codes.splice(i,1);
+  DB.saveCodes(codes);
+  renderCodeTable();
+  toast('Kod silindi.','success');
+}
+
+function adminLoadUserServers(){
+  const uname=document.getElementById('admin-res-user').value.trim();
+  const sel=document.getElementById('admin-res-server');
+  if(!uname){sel.innerHTML='<option value="">— Kullanıcı girin —</option>';return;}
+  const srvs=DB.servers().filter(s=>s.owner===uname);
+  if(!srvs.length){sel.innerHTML='<option value="">Bu kullanıcının sunucusu yok</option>';return;}
+  sel.innerHTML=srvs.map(s=>`<option value="${s.id}">${s.name} (${s.pkgName})</option>`).join('');
+}
+
+function adminAssignResources(){
+  const ok=document.getElementById('admin-res-ok');
+  const err=document.getElementById('admin-res-err');
+  ok.classList.remove('show');err.classList.remove('show');
+  const uname=document.getElementById('admin-res-user').value.trim();
+  const srvId=document.getElementById('admin-res-server').value;
+  const cpu=parseFloat(document.getElementById('admin-res-cpu').value)||0;
+  const cpuUnit=document.getElementById('admin-res-cpu-unit').value;
+  const ram=parseFloat(document.getElementById('admin-res-ram').value)||0;
+  const ramUnit=document.getElementById('admin-res-ram-unit').value;
+  const net=parseFloat(document.getElementById('admin-res-net').value)||0;
+  const netUnit=document.getElementById('admin-res-net-unit').value;
+  const disk=parseFloat(document.getElementById('admin-res-disk').value)||0;
+  const diskUnit=document.getElementById('admin-res-disk-unit').value;
+  if(!uname){err.textContent='Kullanıcı adı girin.';err.classList.add('show');return;}
+  if(!srvId){err.textContent='Sunucu seçin.';err.classList.add('show');return;}
+  if(!cpu&&!ram&&!net&&!disk){err.textContent='En az bir kaynak değeri girin.';err.classList.add('show');return;}
+  const srvs=DB.servers();
+  const si=srvs.findIndex(s=>s.id===srvId&&s.owner===uname);
+  if(si<0){err.textContent='Sunucu bulunamadı.';err.classList.add('show');return;}
+  if(!srvs[si].resCfg) srvs[si].resCfg={};
+  if(cpu) {srvs[si].resCfg.cpuTotal=cpu;srvs[si].resCfg.cpuUnit=cpuUnit;}
+  if(ram) {srvs[si].resCfg.ramTotal=ram;srvs[si].resCfg.ramUnit=ramUnit;}
+  if(net) {srvs[si].resCfg.netTotal=net;srvs[si].resCfg.netUnit=netUnit;}
+  if(disk){srvs[si].resCfg.diskTotal=disk;srvs[si].resCfg.diskUnit=diskUnit;}
+  DB.saveServers(srvs);
+  // If this server is currently open in panel, update live
+  if(currentServer&&currentServer.id===srvId){
+    currentServer.resCfg=srvs[si].resCfg;
+    updateResLabels();
+  }
+  ok.textContent=`✓ ${uname} / ${srvs[si].name} sunucusuna kaynaklar atandı.`;
+  ok.classList.add('show');
+  toast('Kaynaklar atandı! ✓','success');
+}
+
+let lastGenCode='';
+function generateCode(){
+  const sel=document.getElementById('admin-pkg-select');
+  const pkgId=sel.value;
+  const pkgName=sel.options[sel.selectedIndex].text;
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const seg=()=>Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  const code=`VEXAR-${seg()}-${seg()}`;
+  lastGenCode=code;
+
+  const codes=DB.codes();
+  codes.push({code,pkgId,pkgName,used:false,createdAt:new Date().toLocaleDateString('tr-TR')});
+  DB.saveCodes(codes);
+
+  document.getElementById('gen-code').textContent=code;
+  document.getElementById('gen-code').style.display='block';
+  document.getElementById('copy-code-btn').style.display='flex';
+  renderCodeTable();
+  renderAdmin();
+  toast('Kod üretildi!','success');
+}
+
+function copyCode(){
+  navigator.clipboard.writeText(lastGenCode).then(()=>toast('Kod kopyalandı!','success'));
+}
+
+function updateAdminPkg(){}
+
+// ==================== INIT ====================
+renderPackages();
+updateNavAuth();
+</script>
 </body>
 </html>
