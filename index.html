@@ -1023,29 +1023,49 @@ select.form-input option{background:var(--bg3);}
             <button class="ctrl-btn btn-restart" onclick="serverAction('restart')">↺ YENİDEN BAŞLAT</button>
           </div>
         </div>
-        <div class="resource-row" style="grid-template-columns:repeat(4,1fr)">
-          <div class="resource-card">
-            <div class="resource-label">CPU</div>
-            <div class="resource-val" id="res-cpu">0%</div>
-            <div style="font-size:10px;color:var(--text3);margin-bottom:6px" id="res-cpu-limit">— / —</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px">
+          <div class="resource-card" style="padding:18px">
+            <div class="resource-label" style="font-size:11px;margin-bottom:8px">⚡ CPU</div>
+            <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:2px">
+              <span style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;color:var(--neon3)" id="res-cpu-used">0</span>
+              <span style="font-size:12px;color:var(--text3)" id="res-cpu-used-unit">%</span>
+              <span style="font-size:14px;color:var(--text3);margin:0 4px">/</span>
+              <span style="font-size:15px;font-weight:700;color:var(--text2)" id="res-cpu-total">100%</span>
+            </div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:8px">Kullanılan / Toplam</div>
             <div class="resource-bar"><div class="resource-fill fill-purple" id="bar-cpu" style="width:0%"></div></div>
           </div>
-          <div class="resource-card">
-            <div class="resource-label">RAM</div>
-            <div class="resource-val" id="res-ram">0 MB</div>
-            <div style="font-size:10px;color:var(--text3);margin-bottom:6px" id="res-ram-limit">— / —</div>
+          <div class="resource-card" style="padding:18px">
+            <div class="resource-label" style="font-size:11px;margin-bottom:8px">🧠 RAM</div>
+            <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:2px">
+              <span style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;color:var(--green)" id="res-ram-used">0</span>
+              <span style="font-size:12px;color:var(--text3)" id="res-ram-used-unit">MB</span>
+              <span style="font-size:14px;color:var(--text3);margin:0 4px">/</span>
+              <span style="font-size:15px;font-weight:700;color:var(--text2)" id="res-ram-total">2048 MB</span>
+            </div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:8px">Kullanılan / Toplam</div>
             <div class="resource-bar"><div class="resource-fill fill-green" id="bar-ram" style="width:0%"></div></div>
           </div>
-          <div class="resource-card">
-            <div class="resource-label">Bant Genişliği</div>
-            <div class="resource-val" id="res-net">0 KB/s</div>
-            <div style="font-size:10px;color:var(--text3);margin-bottom:6px" id="res-net-limit">— / —</div>
+          <div class="resource-card" style="padding:18px">
+            <div class="resource-label" style="font-size:11px;margin-bottom:8px">📡 Bant Genişliği</div>
+            <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:2px">
+              <span style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;color:var(--cyan)" id="res-net-used">0</span>
+              <span style="font-size:12px;color:var(--text3)" id="res-net-used-unit">KB/s</span>
+              <span style="font-size:14px;color:var(--text3);margin:0 4px">/</span>
+              <span style="font-size:15px;font-weight:700;color:var(--text2)" id="res-net-total">500 KB/s</span>
+            </div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:8px">Kullanılan / Toplam</div>
             <div class="resource-bar"><div class="resource-fill fill-cyan" id="bar-net" style="width:0%"></div></div>
           </div>
-          <div class="resource-card">
-            <div class="resource-label">Disk</div>
-            <div class="resource-val" id="res-disk">0 GB</div>
-            <div style="font-size:10px;color:var(--text3);margin-bottom:6px" id="res-disk-limit">— / —</div>
+          <div class="resource-card" style="padding:18px">
+            <div class="resource-label" style="font-size:11px;margin-bottom:8px">💾 Disk</div>
+            <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:2px">
+              <span style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;color:var(--orange)" id="res-disk-used">0</span>
+              <span style="font-size:12px;color:var(--text3)" id="res-disk-used-unit">GB</span>
+              <span style="font-size:14px;color:var(--text3);margin:0 4px">/</span>
+              <span style="font-size:15px;font-weight:700;color:var(--text2)" id="res-disk-total">20 GB</span>
+            </div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:8px">Kullanılan / Toplam</div>
             <div class="resource-bar"><div class="resource-fill" id="bar-disk" style="width:0%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
           </div>
         </div>
@@ -1200,7 +1220,7 @@ select.form-input option{background:var(--bg3);}
       <!-- RESOURCE ASSIGNMENT CARD — full width -->
       <div class="admin-card" style="grid-column:1/-1">
         <h3>⚡ Kullanıcıya Kaynak Ata</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
           <div class="form-group">
             <label class="form-label">Kullanıcı Adı</label>
             <input class="form-input" id="admin-res-user" placeholder="kullaniciadi" oninput="adminLoadUserServers()">
@@ -1209,51 +1229,52 @@ select.form-input option{background:var(--bg3);}
             <label class="form-label">Sunucu Seç</label>
             <select class="form-input" id="admin-res-server"><option value="">— Kullanıcı girin —</option></select>
           </div>
-          <div class="form-group" style="grid-column:span 2">
-            <label class="form-label">&nbsp;</label>
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-              <div>
-                <label class="form-label" style="font-size:10px">CPU</label>
-                <div style="display:flex;gap:4px">
-                  <input class="form-input" id="admin-res-cpu" type="number" min="1" placeholder="örn: 4" style="min-width:0">
-                  <select class="form-input" id="admin-res-cpu-unit" style="width:auto;padding:10px 8px">
-                    <option>%</option><option>vCore</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label class="form-label" style="font-size:10px">RAM</label>
-                <div style="display:flex;gap:4px">
-                  <input class="form-input" id="admin-res-ram" type="number" min="1" placeholder="örn: 4096" style="min-width:0">
-                  <select class="form-input" id="admin-res-ram-unit" style="width:auto;padding:10px 8px">
-                    <option>MB</option><option>GB</option><option>TB</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label class="form-label" style="font-size:10px">Bant Genişliği</label>
-                <div style="display:flex;gap:4px">
-                  <input class="form-input" id="admin-res-net" type="number" min="1" placeholder="örn: 1000" style="min-width:0">
-                  <select class="form-input" id="admin-res-net-unit" style="width:auto;padding:10px 8px">
-                    <option>KB/s</option><option>MB/s</option><option>GB/s</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label class="form-label" style="font-size:10px">Disk</label>
-                <div style="display:flex;gap:4px">
-                  <input class="form-input" id="admin-res-disk" type="number" min="1" placeholder="örn: 50" style="min-width:0">
-                  <select class="form-input" id="admin-res-disk-unit" style="width:auto;padding:10px 8px">
-                    <option>GB</option><option>TB</option>
-                  </select>
-                </div>
-              </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px">
+          <div>
+            <label class="form-label" style="margin-bottom:8px;display:block">⚡ CPU Limiti</label>
+            <input class="form-input" id="admin-res-cpu" type="number" min="1" placeholder="örn: 4" style="margin-bottom:6px">
+            <select class="form-input" id="admin-res-cpu-unit">
+              <option value="%">% (Yüzde)</option>
+              <option value="vCore">vCore</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" style="margin-bottom:8px;display:block">🧠 RAM Limiti</label>
+            <input class="form-input" id="admin-res-ram" type="number" min="1" placeholder="örn: 4096">
+            <div style="margin-top:6px">
+              <select class="form-input" id="admin-res-ram-unit">
+                <option value="MB">MB</option>
+                <option value="GB">GB</option>
+                <option value="TB">TB</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="form-label" style="margin-bottom:8px;display:block">📡 Bant Genişliği</label>
+            <input class="form-input" id="admin-res-net" type="number" min="1" placeholder="örn: 1000">
+            <div style="margin-top:6px">
+              <select class="form-input" id="admin-res-net-unit">
+                <option value="KB/s">KB/s</option>
+                <option value="MB/s">MB/s</option>
+                <option value="GB/s">GB/s</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="form-label" style="margin-bottom:8px;display:block">💾 Disk Limiti</label>
+            <input class="form-input" id="admin-res-disk" type="number" min="1" placeholder="örn: 50">
+            <div style="margin-top:6px">
+              <select class="form-input" id="admin-res-disk-unit">
+                <option value="GB">GB</option>
+                <option value="TB">TB</option>
+              </select>
             </div>
           </div>
         </div>
-        <button class="form-btn" onclick="adminAssignResources()">Kaynakları Ata</button>
-        <div class="alert alert-success" id="admin-res-ok" style="margin-top:10px"></div>
-        <div class="alert alert-error" id="admin-res-err" style="margin-top:10px"></div>
+        <button class="form-btn" onclick="adminAssignResources()" style="max-width:300px">⚡ Kaynakları Ata</button>
+        <div class="alert alert-success" id="admin-res-ok" style="margin-top:12px"></div>
+        <div class="alert alert-error" id="admin-res-err" style="margin-top:12px"></div>
       </div>
       <div class="admin-card">
         <h3>👤 Kullanıcılar</h3>
@@ -1833,15 +1854,10 @@ function serverAction(action){
         addLog('info','Sunucu durduruldu.');
         serverRunning=false;updateServerStatus('offline');
         clearInterval(resInterval);clearInterval(logInterval);
-        const _cfg=getResCfg();
-        document.getElementById('res-cpu').textContent='0 / '+_cfg.cpuTotal+_cfg.cpuUnit;
-        document.getElementById('res-ram').textContent='0 / '+_cfg.ramTotal+' '+_cfg.ramUnit;
-        document.getElementById('res-net').textContent='0 / '+_cfg.netTotal+' '+_cfg.netUnit;
-        document.getElementById('res-disk').textContent='0 / '+_cfg.diskTotal+' '+_cfg.diskUnit;
-        document.getElementById('bar-cpu').style.width='0%';
-        document.getElementById('bar-ram').style.width='0%';
-        document.getElementById('bar-net').style.width='0%';
-        document.getElementById('bar-disk').style.width='0%';
+        updateResLabels();
+        const _z=()=>{};
+        ['res-cpu-used','res-ram-used','res-net-used','res-disk-used'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='0';});
+        ['bar-cpu','bar-ram','bar-net','bar-disk'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.width='0%';});
       },800);
     },400);
   } else if(action==='restart'){
@@ -1890,10 +1906,24 @@ function getResCfg(){
 
 function updateResLabels(){
   const cfg=getResCfg();
-  document.getElementById('res-cpu-limit').textContent='Kullanım / '+cfg.cpuTotal+cfg.cpuUnit;
-  document.getElementById('res-ram-limit').textContent='Kullanım / '+cfg.ramTotal+' '+cfg.ramUnit;
-  document.getElementById('res-net-limit').textContent='Kullanım / '+cfg.netTotal+' '+cfg.netUnit;
-  document.getElementById('res-disk-limit').textContent='Kullanım / '+cfg.diskTotal+' '+cfg.diskUnit;
+  // Total labels
+  const ct=document.getElementById('res-cpu-total');
+  const rt=document.getElementById('res-ram-total');
+  const nt=document.getElementById('res-net-total');
+  const dt=document.getElementById('res-disk-total');
+  if(ct)ct.textContent=cfg.cpuTotal+cfg.cpuUnit;
+  if(rt)rt.textContent=cfg.ramTotal+' '+cfg.ramUnit;
+  if(nt)nt.textContent=cfg.netTotal+' '+cfg.netUnit;
+  if(dt)dt.textContent=cfg.diskTotal+' '+cfg.diskUnit;
+  // Unit spans
+  const cu=document.getElementById('res-cpu-used-unit');
+  const ru=document.getElementById('res-ram-used-unit');
+  const nu=document.getElementById('res-net-used-unit');
+  const du=document.getElementById('res-disk-used-unit');
+  if(cu)cu.textContent=cfg.cpuUnit;
+  if(ru)ru.textContent=cfg.ramUnit;
+  if(nu)nu.textContent=cfg.netUnit;
+  if(du)du.textContent=cfg.diskUnit;
 }
 
 function startResourceSim(){
@@ -1912,10 +1942,19 @@ function startResourceSim(){
     const netVal=(netPct/100*cfg.netTotal).toFixed(0);
     const diskVal=(diskPct/100*cfg.diskTotal).toFixed(1);
 
-    document.getElementById('res-cpu').textContent=cpuVal+cfg.cpuUnit+' / '+cfg.cpuTotal+cfg.cpuUnit;
-    document.getElementById('res-ram').textContent=ramVal+' / '+cfg.ramTotal+' '+cfg.ramUnit;
-    document.getElementById('res-net').textContent=netVal+' / '+cfg.netTotal+' '+cfg.netUnit;
-    document.getElementById('res-disk').textContent=diskVal+' / '+cfg.diskTotal+' '+cfg.diskUnit;
+    // Kullanılan değerleri yaz
+    document.getElementById('res-cpu-used').textContent=cpuVal;
+    document.getElementById('res-cpu-used-unit').textContent=cfg.cpuUnit;
+    document.getElementById('res-cpu-total').textContent=cfg.cpuTotal+cfg.cpuUnit;
+    document.getElementById('res-ram-used').textContent=ramVal;
+    document.getElementById('res-ram-used-unit').textContent=cfg.ramUnit;
+    document.getElementById('res-ram-total').textContent=cfg.ramTotal+' '+cfg.ramUnit;
+    document.getElementById('res-net-used').textContent=netVal;
+    document.getElementById('res-net-used-unit').textContent=cfg.netUnit;
+    document.getElementById('res-net-total').textContent=cfg.netTotal+' '+cfg.netUnit;
+    document.getElementById('res-disk-used').textContent=diskVal;
+    document.getElementById('res-disk-used-unit').textContent=cfg.diskUnit;
+    document.getElementById('res-disk-total').textContent=cfg.diskTotal+' '+cfg.diskUnit;
     document.getElementById('bar-cpu').style.width=cpuPct+'%';
     document.getElementById('bar-ram').style.width=ramPct+'%';
     document.getElementById('bar-net').style.width=netPct+'%';
