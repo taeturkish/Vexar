@@ -3,34 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VexarHosting - Sunucu Durum Paneli</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@100;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+    <title>Minecraft Hosting - Sunucu Durumu</title>
     <style>
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #13131a;
-            --bg-card: #1a1a24;
-            --bg-card-hover: #22222e;
-            --accent-green: #00f593;
-            --accent-red: #ff4757;
-            --accent-yellow: #ffa502;
-            --accent-blue: #3742fa;
-            --accent-purple: #a55eea;
-            --accent-cyan: #00d2d3;
-            --accent-orange: #ff6348;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0b0;
-            --text-muted: #6c6c80;
-            --border: #2a2a3a;
-            --glow-green: rgba(0, 245, 147, 0.3);
-            --glow-red: rgba(255, 71, 87, 0.3);
-            --glow-yellow: rgba(255, 165, 2, 0.3);
-            --glow-purple: rgba(165, 94, 234, 0.3);
-            --glow-orange: rgba(255, 99, 72, 0.3);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -38,744 +12,351 @@
         }
 
         body {
-            font-family: 'Space Grotesk', 'Outfit', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
         }
 
-        /* Arkaplan Animasyonlu Parçacıklar */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .particle {
-            position: absolute;
-            background: var(--accent-purple);
-            border-radius: 50%;
-            animation: float 15s infinite;
-            opacity: 0.1;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) translateX(0) scale(1);
-            }
-            25% {
-                transform: translateY(-100px) translateX(50px) scale(1.5);
-            }
-            50% {
-                transform: translateY(-200px) translateX(-50px) scale(1);
-            }
-            75% {
-                transform: translateY(-100px) translateX(100px) scale(0.5);
-            }
-        }
-
-        /* Ana Konteyner */
-        .main-container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            width: 100%;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 30px 20px 20px;
-            position: relative;
-        }
-
-        .logo-container {
-            display: inline-block;
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        .logo {
-            font-size: 55px;
-            color: var(--accent-purple);
-            animation: logoPulse 2s ease-in-out infinite;
-            filter: drop-shadow(0 0 30px rgba(165, 94, 234, 0.6));
-        }
-
-        @keyframes logoPulse {
-            0%, 100% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 30px rgba(165, 94, 234, 0.6));
-            }
-            50% {
-                transform: scale(1.1);
-                filter: drop-shadow(0 0 50px rgba(165, 94, 234, 0.9));
-            }
-        }
-
-        .logo-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 110px;
-            height: 110px;
-            border: 2px solid var(--accent-purple);
-            border-radius: 50%;
-            animation: ringRotate 4s linear infinite;
-            opacity: 0.3;
-        }
-
-        @keyframes ringRotate {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        .site-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 42px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #fff 0%, #a55eea 50%, #00d2d3 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            letter-spacing: -1px;
-        }
-
-        .site-subtitle {
-            font-size: 16px;
-            color: var(--text-secondary);
-            font-weight: 300;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-
-        /* Kategori Seçim Butonları */
-        .category-selector {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-
-        .category-btn {
-            font-family: 'Space Grotesk', sans-serif;
-            padding: 14px 30px;
-            border: 2px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border-radius: 50px;
-            font-size: 14px;
+        .card-title {
+            font-size: 1.3em;
+            color: #333;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            white-space: nowrap;
         }
 
-        .category-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, var(--btn-glow), transparent);
-            transition: transform 0.5s ease;
-        }
-
-        .category-btn:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .category-btn:hover {
-            border-color: var(--btn-color);
-            box-shadow: 0 10px 30px var(--btn-glow);
-            transform: translateY(-3px);
-        }
-
-        .category-btn.active {
-            background: var(--btn-color);
-            border-color: var(--btn-color);
-            box-shadow: 0 10px 30px var(--btn-glow);
-            color: #000;
-            font-weight: 700;
-        }
-
-        .category-btn[data-category="sunucu"] {
-            --btn-color: var(--accent-purple);
-            --btn-glow: var(--glow-purple);
-        }
-        .category-btn[data-category="kapasite"] {
-            --btn-color: var(--accent-orange);
-            --btn-glow: var(--glow-orange);
-        }
-
-        /* İstatistik Kartları Konteyner */
-        .stats-wrapper {
-            display: none;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .stats-wrapper.active {
-            display: block;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Sunucu İstatistikleri Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 35px 30px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 50% 0%, var(--glow-color), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .stat-card:hover::before {
-            opacity: 1;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--accent-color);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--glow-color);
-        }
-
-        .stat-card.total-servers {
-            --accent-color: var(--accent-purple);
-            --glow-color: rgba(165, 94, 234, 0.2);
-        }
-        .stat-card.active-servers {
-            --accent-color: var(--accent-green);
-            --glow-color: var(--glow-green);
-        }
-        .stat-card.closed-servers {
-            --accent-color: var(--accent-red);
-            --glow-color: var(--glow-red);
-        }
-
-        /* Kapasite Kartları */
-        .stat-card.ram-card {
-            --accent-color: var(--accent-blue);
-            --glow-color: rgba(55, 66, 250, 0.2);
-        }
-        .stat-card.cpu-card {
-            --accent-color: var(--accent-orange);
-            --glow-color: var(--glow-orange);
-        }
-        .stat-card.disk-card {
-            --accent-color: var(--accent-cyan);
-            --glow-color: rgba(0, 210, 211, 0.2);
-        }
-
-        .stat-icon {
-            font-size: 38px;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .total-servers .stat-icon { color: var(--accent-purple); }
-        .active-servers .stat-icon { color: var(--accent-green); }
-        .closed-servers .stat-icon { color: var(--accent-red); }
-        .ram-card .stat-icon { color: var(--accent-blue); }
-        .cpu-card .stat-icon { color: var(--accent-orange); }
-        .disk-card .stat-icon { color: var(--accent-cyan); }
-
-        .stat-number {
-            font-family: 'Outfit', sans-serif;
-            font-size: 46px;
-            font-weight: 900;
-            position: relative;
-            z-index: 2;
-            margin: 10px 0;
-            background: linear-gradient(135deg, #fff, var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-number small {
-            font-size: 20px;
-            -webkit-text-fill-color: var(--text-secondary);
+        .stat-item {
+            margin: 15px 0;
         }
 
         .stat-label {
-            font-size: 15px;
-            color: var(--text-secondary);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            z-index: 2;
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .stat-subtitle {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 8px;
-            position: relative;
-            z-index: 2;
-            font-weight: 400;
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
         }
 
-        .stat-progress {
-            position: relative;
-            z-index: 2;
-            margin-top: 18px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 3px;
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 10px;
             overflow: hidden;
+            margin-top: 8px;
         }
 
-        .stat-progress-bar {
+        .progress-fill {
             height: 100%;
-            border-radius: 3px;
-            animation: progressAnimation 2s ease-out;
-            position: relative;
+            border-radius: 10px;
+            transition: width 1s ease;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         }
 
-        .stat-progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
         }
 
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        .status-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }
 
-        @keyframes progressAnimation {
-            from { width: 0%; }
+        .status-item:hover {
+            background: #e9ecef;
         }
 
-        .percentage-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            z-index: 2;
+        .status-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .status-text {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Loading Ekranı */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-primary);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeOut 0.5s ease 1.5s forwards;
+        .green { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .purple { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .orange { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+
+        .green-text { color: #28a745; }
+        .blue-text { color: #007bff; }
+        .red-text { color: #dc3545; }
+
+        .percentage {
+            font-size: 0.9em;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 5px;
+            background: #e9ecef;
         }
 
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                visibility: hidden;
-            }
-        }
-
-        .loader {
-            width: 60px;
-            height: 60px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent-purple);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .site-title {
-                font-size: 30px;
+            .header h1 {
+                font-size: 2em;
             }
             
-            .stats-grid {
+            .grid {
                 grid-template-columns: 1fr;
             }
-            
-            .category-btn {
-                padding: 12px 20px;
-                font-size: 12px;
-            }
-            
-            .stat-number {
-                font-size: 36px;
-            }
         }
 
-        /* Scroll Bar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent-purple);
-            border-radius: 4px;
+        .pulse {
+            animation: pulse 2s infinite;
         }
 
-        .footer {
-            text-align: center;
-            padding: 25px;
-            color: var(--text-muted);
-            font-size: 13px;
-            margin-top: 20px;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
-        .footer span {
-            color: var(--accent-purple);
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
             font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
         }
     </style>
 </head>
 <body>
-    <!-- Loading Ekranı -->
-    <div class="loading-overlay">
-        <div class="loader"></div>
-    </div>
-
-    <!-- Arkaplan Parçacıkları -->
-    <div class="particles" id="particles"></div>
-
-    <!-- Ana İçerik -->
-    <div class="main-container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo-container">
-                <div class="logo-ring"></div>
-                <i class="fas fa-server logo"></i>
-            </div>
-            <h1 class="site-title">VexarHosting</h1>
-            <p class="site-subtitle">✦ Durum Paneli ✦</p>
-        </header>
-
-        <!-- Kategori Seçici -->
-        <div class="category-selector">
-            <button class="category-btn active" data-category="sunucu" onclick="switchCategory('sunucu')">
-                <i class="fas fa-server"></i> Sunucu Durumu
-            </button>
-            <button class="category-btn" data-category="kapasite" onclick="switchCategory('kapasite')">
-                <i class="fas fa-chart-bar"></i> Kapasite
-            </button>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Minecraft Hosting</h1>
+            <p>Gerçek Zamanlı Sunucu İzleme Paneli</p>
         </div>
 
-        <!-- Sunucu İstatistikleri -->
-        <div class="stats-wrapper active" id="sunucuStats">
-            <div class="stats-grid">
-                <div class="stat-card total-servers">
-                    <span class="percentage-badge" style="color: var(--accent-purple);">100%</span>
-                    <div class="stat-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <div class="stat-number" id="totalCount" data-target="1102">0</div>
-                    <div class="stat-label">Açılmış Sunucu</div>
-                    <div class="stat-subtitle">Toplam oluşturulan sunucu sayısı</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: 100%; background: var(--accent-purple);"></div>
-                    </div>
+        <!-- Sunucu Durumu -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon green">
+                    <span>🖥️</span>
                 </div>
-
-                <div class="stat-card active-servers">
-                    <span class="percentage-badge" style="color: var(--accent-green);">36.5%</span>
-                    <div class="stat-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-number" id="activeCount" data-target="402">0</div>
-                    <div class="stat-label">Aktif Sunucu</div>
-                    <div class="stat-subtitle">Şu anda çalışan sunucular</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: 36.5%; background: var(--accent-green); animation-delay: 0.3s;"></div>
-                    </div>
+                <div>
+                    <div class="card-title">Sunucu Durumu</div>
                 </div>
-
-                <div class="stat-card closed-servers">
-                    <span class="percentage-badge" style="color: var(--accent-red);">63.5%</span>
-                    <div class="stat-icon">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
-                    <div class="stat-number" id="closedCount" data-target="700">0</div>
-                    <div class="stat-label">Kapalı Sunucu</div>
-                    <div class="stat-subtitle">Pasif durumdaki sunucular</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: 63.5%; background: var(--accent-red); animation-delay: 0.6s;"></div>
-                    </div>
+            </div>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-number green-text pulse">1235</div>
+                    <div class="status-text">Açılmış Sunucu</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-number blue-text pulse">436</div>
+                    <div class="status-text">Aktif Sunucu</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-number red-text">713</div>
+                    <div class="status-text">Kapalı Sunucu</div>
                 </div>
             </div>
         </div>
 
-        <!-- Kapasite İstatistikleri -->
-        <div class="stats-wrapper" id="kapasiteStats">
-            <div class="stats-grid">
-                <div class="stat-card ram-card">
-                    <span class="percentage-badge" style="color: var(--accent-blue);">63%</span>
-                    <div class="stat-icon">
-                        <i class="fas fa-memory"></i>
+        <!-- Kapasite Kartları -->
+        <div class="grid">
+            <!-- RAM Kartı -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon blue">
+                        <span>💾</span>
                     </div>
-                    <div class="stat-number" id="usedRam" data-target="1890">0 <small>GB</small></div>
-                    <div class="stat-label">Kullanılan RAM</div>
-                    <div class="stat-subtitle">Toplam Kapasite: 3.000 GB RAM</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: 63%; background: var(--accent-blue); animation-delay: 0.2s;"></div>
+                    <div>
+                        <div class="card-title">RAM Kullanımı</div>
+                        <span class="badge badge-success">Normal</span>
                     </div>
                 </div>
-
-                <div class="stat-card cpu-card">
-                    <span class="percentage-badge" style="color: var(--accent-orange);">39.5%</span>
-                    <div class="stat-icon">
-                        <i class="fas fa-microchip"></i>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>Kullanılan RAM</span>
+                        <span class="percentage">65.67%</span>
                     </div>
-                    <div class="stat-number" id="usedCpu" data-target="79000">0 <small>TB</small></div>
-                    <div class="stat-label">Kullanılan CPU</div>
-                    <div class="stat-subtitle">Toplam Kapasite: 200.000 TB CPU</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: 39.5%; background: var(--accent-orange); animation-delay: 0.4s;"></div>
+                    <div class="stat-value blue-text">1,970 GB</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65.67%; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);"></div>
                     </div>
                 </div>
-
-                <div class="stat-card disk-card">
-                    <span class="percentage-badge" style="color: var(--accent-cyan);">59.4%</span>
-                    <div class="stat-icon">
-                        <i class="fas fa-hdd"></i>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>Toplam RAM</span>
                     </div>
-                    <div class="stat-number" id="usedDisk" data-target="570000">0 <small>TB</small></div>
-                    <div class="stat-label">Kullanılan Disk</div>
-                    <div class="stat-subtitle">Toplam Kapasite: 960.000 TB Disk</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: 59.4%; background: var(--accent-cyan); animation-delay: 0.6s;"></div>
-                    </div>
+                    <div class="stat-value">3,000 GB</div>
                 </div>
             </div>
-        </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <span>VexarHosting</span> © 2026 - Tüm hakları saklıdır.
+            <!-- CPU Kartı -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon purple">
+                        <span>⚡</span>
+                    </div>
+                    <div>
+                        <div class="card-title">CPU Kullanımı</div>
+                        <span class="badge badge-warning">Yüksek</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>Kullanılan CPU</span>
+                        <span class="percentage">41.75%</span>
+                    </div>
+                    <div class="stat-value" style="color: #a855f7;">83,500 TB</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 41.75%; background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%);"></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>Toplam CPU</span>
+                    </div>
+                    <div class="stat-value">200,000 TB</div>
+                </div>
+            </div>
+
+            <!-- Disk Kartı -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon orange">
+                        <span>💿</span>
+                    </div>
+                    <div>
+                        <div class="card-title">Disk Kullanımı</div>
+                        <span class="badge badge-success">Normal</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>Kullanılan Disk</span>
+                        <span class="percentage">59.38%</span>
+                    </div>
+                    <div class="stat-value" style="color: #f97316;">570,000 TB</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 59.38%; background: linear-gradient(90deg, #fbc2eb 0%, #a6c1ee 100%);"></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>Toplam Disk</span>
+                    </div>
+                    <div class="stat-value">960,000 TB</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Sayfa yüklendiğinde
-        document.addEventListener('DOMContentLoaded', function() {
-            createParticles();
-            
-            // Sayfa yüklendikten 1 saniye sonra sayıları animasyonla
-            setTimeout(() => {
-                animateNumbers();
-            }, 1000);
-            
-            // Loading ekranını kaldır
-            setTimeout(() => {
-                document.querySelector('.loading-overlay').style.display = 'none';
-            }, 1500);
-        });
-
-        // Arkaplan parçacıkları
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 40; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.width = Math.random() * 3 + 1 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.animationDuration = Math.random() * 15 + 10 + 's';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                container.appendChild(particle);
-            }
-        }
-
-        // Kategori değiştirme
-        function switchCategory(category) {
-            // Butonları güncelle
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.getAttribute('data-category') === category) {
-                    btn.classList.add('active');
-                }
-            });
-
-            // İstatistik alanlarını değiştir
-            document.querySelectorAll('.stats-wrapper').forEach(wrapper => {
-                wrapper.classList.remove('active');
-            });
-
-            if (category === 'sunucu') {
-                document.getElementById('sunucuStats').classList.add('active');
-                // Sayıları tekrar animasyonla
-                resetAndAnimate(['totalCount', 'activeCount', 'closedCount']);
-            } else {
-                document.getElementById('kapasiteStats').classList.add('active');
-                // Sayıları tekrar animasyonla
-                resetAndAnimate(['usedRam', 'usedCpu', 'usedDisk']);
-            }
-        }
-
-        // Sayıları sıfırla ve tekrar animasyonla
-        function resetAndAnimate(ids) {
-            ids.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.textContent = '0';
-                    if (id === 'usedRam' || id === 'usedCpu' || id === 'usedDisk') {
-                        element.innerHTML = '0 <small>' + getUnit(id) + '</small>';
-                    }
-                }
-            });
-            
-            setTimeout(() => {
-                animateNumbers();
-            }, 100);
-        }
-
-        // Birim belirleme
-        function getUnit(id) {
-            switch(id) {
-                case 'usedRam': return 'GB';
-                case 'usedCpu': return 'TB';
-                case 'usedDisk': return 'TB';
-                default: return '';
-            }
-        }
-
-        // Rakamları animasyonla say
-        function animateNumbers() {
-            const counters = document.querySelectorAll('.stats-wrapper.active .stat-number');
-            
-            counters.forEach(counter => {
-                const targetText = counter.getAttribute('data-target');
-                const target = parseInt(targetText);
-                const speed = 30;
-                
-                // Birim kontrolü
-                const hasUnit = counter.querySelector('small') !== null;
-                
-                const updateCount = () => {
-                    const currentText = counter.childNodes[0] ? counter.childNodes[0].textContent.trim() : '0';
-                    const current = parseInt(currentText.replace(/\./g, '')) || 0;
-                    const increment = Math.ceil(target / speed);
-                    
-                    if (current < target) {
-                        const newValue = Math.min(current + increment, target);
-                        const formattedValue = newValue.toLocaleString('tr-TR');
-                        
-                        if (hasUnit) {
-                            const unitElement = counter.querySelector('small');
-                            counter.innerHTML = formattedValue + ' ';
-                            counter.appendChild(unitElement);
-                        } else {
-                            counter.textContent = formattedValue;
-                        }
-                        
-                        setTimeout(updateCount, 25);
-                    } else {
-                        const formattedValue = target.toLocaleString('tr-TR');
-                        if (hasUnit) {
-                            const unitElement = counter.querySelector('small');
-                            counter.innerHTML = formattedValue + ' ';
-                            counter.appendChild(unitElement);
-                        } else {
-                            counter.textContent = formattedValue;
-                        }
-                    }
-                };
-                
-                updateCount();
-            });
-        }
-
-        // Kategori değiştiğinde progress bar animasyonlarını yeniden başlat
-        document.addEventListener('DOMContentLoaded', function() {
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.target.classList.contains('active')) {
-                        const progressBars = mutation.target.querySelectorAll('.stat-progress-bar');
-                        progressBars.forEach(bar => {
-                            bar.style.animation = 'none';
-                            bar.offsetHeight; // Reflow
-                            bar.style.animation = 'progressAnimation 2s ease-out';
-                        });
-                    }
-                });
-            });
-
-            document.querySelectorAll('.stats-wrapper').forEach(wrapper => {
-                observer.observe(wrapper, { attributes: true, attributeFilter: ['class'] });
+        // Progress bar animasyonu
+        window.addEventListener('load', function() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
             });
         });
+
+        // Gerçek zamanlı güncelleme simülasyonu (isteğe bağlı)
+        setInterval(() => {
+            const pulseElements = document.querySelectorAll('.pulse');
+            pulseElements.forEach(el => {
+                el.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    el.style.transform = 'scale(1)';
+                }, 200);
+            });
+        }, 3000);
     </script>
 </body>
 </html>
